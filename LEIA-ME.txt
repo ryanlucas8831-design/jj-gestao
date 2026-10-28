@@ -1,0 +1,30 @@
+JJ Gestão — versão para publicar e instalar no celular
+=====================================================
+
+O que tem nesta pasta
+- index.html ............ o app inteiro
+- manifest.webmanifest .. nome, ícone e o "Compartilhar com JJ Gestão"
+- sw.js ................. faz o app abrir sem internet e receber comprovantes do app do banco
+- icon-*.png ............ ícones da tela inicial
+
+Como publicar no GitHub Pages (grátis)
+1. Crie um repositório no GitHub (por exemplo: jj-gestao).
+2. Envie todos os arquivos desta pasta para a raiz do repositório.
+3. No repositório: Settings > Pages > Branch: main / (root) > Save.
+4. Em 1 ou 2 minutos o endereço fica pronto, algo como https://SEU-USUARIO.github.io/jj-gestao/
+
+Como instalar no Android
+1. Abra o endereço no Chrome.
+2. Menu (três pontinhos) > Instalar app.
+3. Pronto: o ícone da JJ aparece na tela inicial.
+
+Como mandar um comprovante do app do banco
+1. Depois do Pix, no app do banco, toque em Compartilhar comprovante.
+2. Escolha "JJ Gestão".
+3. O app pergunta de quem é o pagamento, lê o comprovante e confere o valor.
+
+Observações do protótipo
+- Os dados ficam guardados no próprio celular ou computador (no navegador).
+  Na versão com Firebase, ficam na nuvem com login do Google e backup automático.
+- A leitura automática do comprovante e o assistente com IA usam a IA quando ela estiver ligada
+  (no Claude, ou com o Gemini na versão final). Sem IA, dá para conferir o valor à mão.
