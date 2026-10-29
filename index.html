@@ -192,6 +192,9 @@ select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50
 .gbtn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:56px;border-radius:12px;background:#fff;color:#1F1F1F;font-weight:700;font-size:1.05rem;margin-top:26px;border:1px solid #DADCE0;transition:transform .12s}
 .gbtn:active{transform:scale(.98)}
 .ob-out{display:block;margin:-14px auto 18px;color:var(--cy);font-weight:600;font-size:.92rem;padding:6px 10px}
+.cst{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;color:var(--mu2);margin-left:2px}
+.cst svg{width:1.05rem;height:1.05rem}
+.cst.ok{color:var(--ok)}.cst.push,.cst.load{color:var(--cy);animation:blink 1.1s infinite}.cst.offline{color:var(--or)}.cst.err{color:var(--rd)}
 .lg-st{min-height:1.4em;margin-top:12px;font-size:.92rem;color:var(--mu);text-align:center}
 .lg-st .er{color:var(--rd)}.lg-st b{color:var(--tx)}
 .gbtn.busy{opacity:.75;pointer-events:none}
@@ -875,6 +878,7 @@ body:has(.mw) .toast{bottom:auto;top:22px}
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
  <symbol id="logo" viewBox="0 0 120 80"><g fill="#FF8A2B"><rect x="0" y="22" width="22" height="6" rx="3"/><rect x="6" y="36" width="18" height="6" rx="3" opacity=".75"/><rect x="12" y="50" width="12" height="6" rx="3" opacity=".5"/></g><g transform="skewX(-14)"><path d="M52 10h18v38c0 13-8 21-21 21-6 0-11-1.5-15-4l4-13c3 2 6 3 9 3 4 0 5-2.5 5-7z" fill="#fff"/><path d="M84 10h18v38c0 13-8 21-21 21-6 0-11-1.5-15-4l4-13c3 2 6 3 9 3 4 0 5-2.5 5-7z" fill="#FF8A2B"/></g></symbol>
+ <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5z"/></symbol>
  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></symbol>
  <symbol id="i-money" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></symbol>
  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 0 1 0 8M22 21c0-3-2-5-4-5.5"/></symbol>
@@ -1058,7 +1062,7 @@ const paysOf=k=>{const v=S.pagos[k];return Array.isArray(v)?v:v?[v]:[]};
 let EARLIEST=TODAY;
 function refreshEarliest(){EARLIEST=TODAY;[S.dias,S.vales,S.cartao].forEach(a=>a.forEach(o=>{if(o.date<EARLIEST)EARLIEST=o.date}))}
 const memo=new Map();
-function changed(){memo.clear();refreshEarliest();save()}
+function changed(){memo.clear();refreshEarliest();S.mod=Math.max(Date.now(),(S.mod||0)+1);save();cloudPush()}
 
 /* ================= cálculo ================= */
 function calc(pid,q,depth){
@@ -1198,12 +1202,12 @@ function chrome(){
   const pend=qTotals(qOf(TODAY)).pend;const s=S.settings,u=S.session||{};
   const items=[["hoje","Hoje","i-today"],["devo","Quanto eu devo","i-money"],["pessoas","Pessoas","i-people"],["relatorios","Relatórios","i-doc"]];
   const mark=`<div class="mark">${s.logo?`<img src="${s.logo}" alt="">`:LOGO(30,20)}</div>`;
-  $("#side").innerHTML=`<div class="brand">${mark}<div><b>JJ Gestão</b><span>${esc(s.empresa)}</span></div></div>
+  $("#side").innerHTML=`<div class="brand">${mark}<div style="flex:1;min-width:0"><b>JJ Gestão</b><span>${esc(s.empresa)}</span></div>${cloudDot()}</div>
    <nav aria-label="Menu">${items.map(([k,l,ic])=>`<button class="navb" data-act="go" data-v="${k}" ${UI.view===k?'aria-current="page"':""}>${I(ic)}${l}${k==="devo"&&pend?`<em>${pend}</em>`:""}</button>`).join("")}
    <div style="height:10px"></div><button class="navb" data-act="go" data-v="ajustes" ${UI.view==="ajustes"?'aria-current="page"':""}>${I("i-gear")}Ajustes</button></nav>
    <button class="talk" data-act="falar"><span class="micb" style="width:44px;height:44px">${I("i-mic")}</span><span><b>Falar com o assistente</b><span>"Hoje foram o João e o Pedro"</span></span></button>
    <button class="acct" data-act="go" data-v="ajustes">${u.foto?`<i class="ph"><img src="${esc(u.foto)}" alt="" referrerpolicy="no-referrer"></i>`:`<i>${esc(ini(s.empresa))}${esc((s.empresa.split(/\s+/)[0]||"").slice(1,2).toUpperCase())}</i>`}<div style="min-width:0"><b>${esc(u.nome||"Conta da JJ")}</b><span>${u.uid?esc(u.email):u.modo==="google"?"entrou com o Google":"entrou com e-mail"}</span></div></button>`;
-  $("#mtop").innerHTML=`${mark}<b>${esc(s.empresa)}</b><div class="sp"></div><button class="iconb" data-act="falar" aria-label="Falar com o assistente">${I("i-mic")}</button><button class="iconb" data-act="go" data-v="ajustes" aria-label="Ajustes">${I("i-gear")}</button>`;
+  $("#mtop").innerHTML=`${mark}<b>${esc(s.empresa)}</b>${cloudDot()}<div class="sp"></div><button class="iconb" data-act="falar" aria-label="Falar com o assistente">${I("i-mic")}</button><button class="iconb" data-act="go" data-v="ajustes" aria-label="Ajustes">${I("i-gear")}</button>`;
   $("#tabbar").innerHTML=items.map(([k,l,ic])=>`<button data-act="go" data-v="${k}" ${UI.view===k?'aria-current="page"':""}>${I(ic)}${k==="devo"?"Quanto devo":l}${k==="devo"&&pend?`<em>${pend}</em>`:""}</button>`).join("");
 }
 function renderView(anim){
@@ -1267,7 +1271,7 @@ function setAuthMsg(m,err){UI.authMsg=m?`<span class="${err?"er":""}">${m}</span
 function sessFrom(u){return {modo:"google",uid:u.uid,email:u.email||"",nome:u.displayName||first(String(u.email||"").split("@")[0])||"Conta Google",foto:u.photoURL||""}}
 /* cada conta tem os seus dados neste aparelho; trocar de conta não mistura nada */
 function useAccount(u){
-  if(S.owner&&S.owner!==u.uid){try{localStorage.setItem(KEY+":"+S.owner,JSON.stringify(S))}catch(e){}
+  if(S.owner&&S.owner!==u.uid){cloudStop();try{localStorage.setItem(KEY+":"+S.owner,JSON.stringify(S))}catch(e){}
     let o=null;try{o=migrate(JSON.parse(localStorage.getItem(KEY+":"+u.uid)||"null"))}catch(e){}S=o||blank();CIMG.clear()}
   S.owner=u.uid;S.session=sessFrom(u);save();
 }
@@ -1278,8 +1282,8 @@ function initAuth(){
   fbLoad().then(fb=>{
     fb.auth.getRedirectResult().catch(authErr);
     fb.auth.onAuthStateChanged(u=>{AUTH_BUSY=false;
-      if(u){const was=S.session&&S.session.uid===u.uid;useAccount(u);if(!was){UI.view="hoje";UI.diaDate=TODAY;initSel();render();if(S.settings.onboarded)toast(`Bem-vindo de volta, ${esc(first(S.session.nome))}`)}else if($("#side"))chrome()}
-      else if(S.session){S.session=null;save();render()}
+      if(u){const was=S.session&&S.session.uid===u.uid;useAccount(u);cloudStart();if(!was){UI.view="hoje";UI.diaDate=TODAY;initSel();render();if(S.settings.onboarded)toast(`Bem-vindo de volta, ${esc(first(S.session.nome))}`)}else if($("#side"))chrome()}
+      else if(S.session){cloudStop();S.session=null;save();render()}
       else setAuthMsg("")});
   }).catch(()=>{setAuthMsg(S.session?"":"Sem internet para entrar agora. Quando a conexão voltar, toque em Continuar com o Google.",true)});
 }
@@ -1293,7 +1297,65 @@ function loginGoogle(){
   if(FB)go(FB);   // já carregado: abre na hora, sem o navegador bloquear a janela
   else{setAuthMsg("Carregando o Google…");fbLoad().then(go).catch(()=>setAuthMsg("Sem internet para entrar agora. Confira a conexão e tente de novo.",true))}
 }
-function sair(){UI.asst=false;if(realAuth()&&FB){FB.auth.signOut().catch(()=>{});S.session=null;save();render();return}S.session=null;save();render()}
+/* ================= dados na nuvem (Firestore) =================
+   contas/{uid}: tudo da empresa num documento (texto JSON).  contas/{uid}/comps/{id}: imagem de cada comprovante.
+   O Firestore guarda uma cópia no aparelho: funciona sem internet e manda quando a conexão volta. */
+let DB=null,DBP=null,CLOUD={st:"off",at:0,unsub:null},PUSHT=null,REMOTE=null;
+const cloudOn=()=>realAuth()&&!!(S&&S.session&&S.session.uid);
+function dbLoad(){if(DBP)return DBP;DBP=fbLoad().then(fb=>loadScript(FB_CDN("firestore")).then(()=>{const db=fb.fb.firestore();
+    return db.enablePersistence({synchronizeTabs:true}).catch(()=>{}).then(()=>{DB=db;return db})})).catch(e=>{DBP=null;throw e});return DBP}
+const docRef=()=>DB.collection("contas").doc(S.session.uid);
+function cloudPayload(){const o=Object.assign({},S);delete o.session;delete o.owner;delete o.chat;delete o.cloud;return o}
+function cloudState(st){CLOUD.st=st;if(st==="ok")CLOUD.at=Date.now();const el=$("#cloudSt");if(el)el.innerHTML=cloudTxt();$$(".cst").forEach(m=>{m.outerHTML=cloudDot()})}
+function cloudTxt(){return {off:"Neste aparelho",load:"Conectando à nuvem…",push:"Salvando na nuvem…",ok:`Na nuvem · salvo ${CLOUD.at?"às "+hhmmOf(CLOUD.at):""}`,offline:"Sem internet: salva na nuvem quando a conexão voltar",err:"Não consegui salvar na nuvem. Os dados estão no aparelho e eu tento de novo."}[CLOUD.st]||""}
+const hhmmOf=t=>{const d=new Date(t);return pad(d.getHours())+":"+pad(d.getMinutes())};
+function cloudDot(){return cloudOn()?`<span class="cst ${CLOUD.st}" title="${esc(cloudTxt())}" aria-label="${esc(cloudTxt())}">${I("i-cloud")}</span>`:""}
+function cloudPush(now){if(!cloudOn())return;clearTimeout(PUSHT);PUSHT=setTimeout(doPush,now?0:1500)}
+async function doPush(){if(!cloudOn())return;
+  try{await dbLoad();if(!cloudOn())return;const data=JSON.stringify(cloudPayload());
+    if(data.length>950000){cloudState("err");toast("Os dados ficaram grandes demais para a nuvem. Fale com o Ryan.",{err:true});return}
+    cloudState(navigator.onLine===false?"offline":"push");const mod=S.mod||Date.now();
+    await docRef().set({dados:data,mod,v:3,app:"jj-gestao",em:new Date().toISOString()});S.cloudMod=mod;save();cloudState("ok")}
+  catch(e){console.error(e);cloudState(navigator.onLine===false?"offline":"err");if(e&&e.code==="permission-denied")toast("A nuvem recusou: confira as regras do Firestore.",{err:true})}}
+function applyRemote(d){
+  let o=null;try{o=migrate(JSON.parse(d.dados))}catch(e){}if(!o)return;
+  const keep={session:S.session,owner:S.owner,chat:S.chat};S=Object.assign(o,keep);S.mod=d.mod;S.cloudMod=d.mod;
+  memo.clear();refreshEarliest();save();CIMG.clear();
+  if(!S.settings.onboarded){render();return}
+  if(UI.view==="hoje")initSel();
+  if($("#view"))renderView();else render();
+}
+function cloudStart(){
+  if(!cloudOn())return;const uid=S.session.uid;cloudState("load");
+  dbLoad().then(db=>{if(!cloudOn()||S.session.uid!==uid)return;
+    if(CLOUD.unsub){CLOUD.unsub();CLOUD.unsub=null}
+    let first=true;
+    CLOUD.unsub=docRef().onSnapshot({includeMetadataChanges:false},snap=>{
+      if(snap.metadata.hasPendingWrites)return;
+      const d=snap.exists?snap.data():null;
+      if(first){first=false;
+        if(!d){ // nuvem vazia: sobe o que já tem no aparelho
+          if(S.settings.onboarded||S.people.length){S.mod=S.mod||Date.now();cloudPush(true);toast("Pronto: seus dados agora ficam guardados na nuvem.",{bolt:true})}else cloudState("ok");return}
+        if((d.mod||0)>(S.mod||0)){applyRemote(d);cloudState("ok");return}
+        if((S.mod||0)>(d.mod||0)){cloudPush(true);return}
+        cloudState("ok");return}
+      if(d&&(d.mod||0)>(S.mod||0)){ // mudou em outro aparelho
+        if($("#modalRoot .mw")){REMOTE=d;return}
+        applyRemote(d);toast("Atualizado com o que foi lançado no outro aparelho.")}
+      cloudState("ok");
+    },e=>{console.error(e);cloudState(e&&e.code==="permission-denied"?"err":"offline");if(e&&e.code==="permission-denied")toast("A nuvem recusou o acesso: confira as regras do Firestore.",{err:true})});
+  }).catch(e=>{console.error(e);cloudState("offline")});
+}
+function cloudStop(){if(CLOUD.unsub){CLOUD.unsub();CLOUD.unsub=null}clearTimeout(PUSHT);CLOUD.st="off"}
+window.addEventListener("online",()=>{if(!cloudOn())return;if((S.mod||0)>(S.cloudMod||0))cloudPush(true);else cloudState("ok")});
+window.addEventListener("offline",()=>{if(cloudOn())cloudState("offline")});
+/* comprovantes: imagem menor vai para a nuvem (cada uma em um documento) */
+function shrinkData(data,maxLen){return new Promise(res=>{if(!data||data.length<=maxLen){res(data);return}const im=new Image();im.onload=()=>{let w=im.width,h=im.height,q=.78,k=Math.min(1,1200/Math.max(w,h)),out=data;
+  for(let i=0;i<6;i++){const cv=document.createElement("canvas");cv.width=Math.round(w*k);cv.height=Math.round(h*k);const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.drawImage(im,0,0,cv.width,cv.height);out=cv.toDataURL("image/jpeg",q);if(out.length<=maxLen)break;k*=.8;q=Math.max(.55,q-.06)}res(out)};im.onerror=()=>res(null);im.src=data})}
+async function cloudCompPut(id,data){if(!cloudOn())return;try{await dbLoad();const img=await shrinkData(data,900000);if(img)await docRef().collection("comps").doc(id).set({img,em:new Date().toISOString()})}catch(e){console.error(e)}}
+async function cloudCompGet(id){if(!cloudOn())return null;try{await dbLoad();const d=await docRef().collection("comps").doc(id).get();return d.exists?d.data().img:null}catch(e){return null}}
+function cloudCompDel(id){if(!cloudOn()||!DB)return;try{docRef().collection("comps").doc(id).delete().catch(()=>{})}catch(e){}}
+function sair(){cloudStop();UI.asst=false;if(realAuth()&&FB){FB.auth.signOut().catch(()=>{});S.session=null;save();render();return}S.session=null;save();render()}
 function doLogin(modo,email){S.session={modo,email:email||"jjtransporte@gmail.com",nome:modo==="google"?"Conta da JJ":first(String(email).split("@")[0])};save();render();toast(S.settings.onboarded?"Bem-vindo de volta":"Conta conectada. Vamos configurar em 1 minuto.")}
 
 /* ================= PRIMEIRO ACESSO ================= */
@@ -1321,7 +1383,7 @@ function vOnboarding(){
   return `<div class="ob"><div class="brand" style="padding:0 0 26px;justify-content:center"><div class="mark">${LOGO(30,20)}</div><div><b>JJ Gestão</b><span>Primeiro acesso${u.email?" · "+esc(u.email):""}</span></div></div>
   ${u.uid?`<button type="button" class="ob-out" data-act="sair">Usar outra conta</button>`:""}
    <div class="steps">${steps}</div><div class="card obc view">${body}
-   <div class="obf">${st===0?`<button class="linkb" data-act="demo">Prefiro ver com dados de exemplo</button>`:st===1?`<span class="k">Pode pular e cadastrar depois</span>`:""}<div class="sp"></div>${st>0&&st<3?`<button class="btn sec" data-act="obBack">Voltar</button>`:""}<button class="btn pri" data-act="obNext">${st===3?"Começar":st===1?"Salvar e continuar":"Continuar"}</button></div></div></div>`;
+   <div class="obf">${st===0&&!realAuth()?`<button class="linkb" data-act="demo">Prefiro ver com dados de exemplo</button>`:st===1?`<span class="k">Pode pular e cadastrar depois</span>`:""}<div class="sp"></div>${st>0&&st<3?`<button class="btn sec" data-act="obBack">Voltar</button>`:""}<button class="btn pri" data-act="obNext">${st===3?"Começar":st===1?"Salvar e continuar":"Continuar"}</button></div></div></div>`;
 }
 function obCollect(){
   if(UI.ob.step===0){S.settings.empresa=($("#obEmp").value.trim()||"JJ Transporte");S.settings.cnpj=$("#obCnpj").value.trim()}
@@ -1868,9 +1930,9 @@ function vAjustes(){
    <div class="card box"><h3>Assistente</h3>${tg("voz","Anotar por voz","Entende áudio e texto em português")}<p class="hlp">${AI_ON?`IA ligada: entende frases soltas e ${AI_IMG?"lê os comprovantes":"conversa como gente"}. Nada é salvo sem você confirmar.`:"Neste modo, entende frases simples. Com a IA (no app final, o Gemini do Google), entende frases soltas e lê os comprovantes sozinho."}</p></div>
    <div class="card box"><h3>Instalar no celular</h3>${installHTML()}</div>
    <div class="card box"><h3>Conta e dados</h3>
-    <div class="kv"><span>Conta</span><b>${esc(u.email||"")}</b></div><div class="kv"><span>Login</span><span>${u.uid?"Google (de verdade)":"Simulado (protótipo)"}</span></div><div class="kv"><span>Onde os dados ficam</span><span>Neste aparelho${u.uid?" (a nuvem é a próxima etapa)":""}</span></div>
+    <div class="kv"><span>Conta</span><b>${esc(u.email||"")}</b></div><div class="kv"><span>Login</span><span>${u.uid?"Google (de verdade)":"Simulado (protótipo)"}</span></div><div class="kv"><span>Onde os dados ficam</span><span id="cloudSt">${u.uid?cloudTxt():"Neste navegador (protótipo)"}</span></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn sec sm" data-act="backup">${I("i-down")}Baixar backup</button><button class="btn sec sm" data-act="import">Restaurar backup</button></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn ${UI.armed==="demo"?"dg":"sec"} sm" data-act="resetDemo">${UI.armed==="demo"?"Toque de novo para carregar":"Dados de exemplo"}</button><button class="btn ${UI.armed==="zero"?"dg":"sec"} sm" data-act="resetZero">${UI.armed==="zero"?"Apaga tudo. Confirmar?":"Começar do zero"}</button><button class="btn sec sm" data-act="sair">${I("i-out")}Sair</button></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${realAuth()?"":`<button class="btn ${UI.armed==="demo"?"dg":"sec"} sm" data-act="resetDemo">${UI.armed==="demo"?"Toque de novo para carregar":"Dados de exemplo"}</button>`}<button class="btn ${UI.armed==="zero"?"dg":"sec"} sm" data-act="resetZero">${UI.armed==="zero"?"Apaga tudo. Confirmar?":"Começar do zero"}</button><button class="btn sec sm" data-act="sair">${I("i-out")}Sair</button></div>
     <p class="hlp" style="margin-top:12px">Na versão final, tudo fica na nuvem com backup automático e aparece no computador e no celular.</p></div>
   </div>`;
 }
@@ -2258,8 +2320,10 @@ async function compPut(id,data){CIMG.set(id,data);const db=await idb();if(!db)re
 async function compGet(id){
   if(CIMG.has(id))return CIMG.get(id);const m=S.comps[id];
   if(m&&m.exemplo){const d=drawExample(m.exemplo);CIMG.set(id,d);return d}
-  const db=await idb();if(!db)return null;
-  return new Promise(r=>{try{const q=db.transaction("comp").objectStore("comp").get(id);q.onsuccess=()=>{if(q.result)CIMG.set(id,q.result);r(q.result||null)};q.onerror=()=>r(null)}catch(e){r(null)}});
+  const db=await idb();
+  const local=db?await new Promise(r=>{try{const q=db.transaction("comp").objectStore("comp").get(id);q.onsuccess=()=>r(q.result||null);q.onerror=()=>r(null)}catch(e){r(null)}}):null;
+  if(local){CIMG.set(id,local);return local}
+  const c=await cloudCompGet(id);if(c){CIMG.set(id,c);compPut(id,c)}return c||null;
 }
 function loadComps(ids){return Promise.all([...new Set(ids)].filter(id=>id&&!CIMG.has(id)).map(compGet))}
 function hashBytes(u8){let h=2166136261;for(let i=0;i<u8.length;i++){h^=u8[i];h=Math.imul(h,16777619)}return (h>>>0).toString(36)+"-"+u8.length.toString(36)}
@@ -2396,7 +2460,7 @@ function saveCompMeta(c,ref){
   const id=uid(),meta={id,hash:c.hash,name:c.name||"",created:TODAY,ref,lido:c.lido||null};
   if(c.exemplo)meta.exemplo=c.exemplo;
   S.comps[id]=meta;CIMG.set(id,c.data);
-  if(!c.exemplo)compPut(id,c.data).then(ok=>{if(!ok)toast("O navegador não deixou guardar a imagem. Ela fica só até fechar o app.",{err:true})});
+  if(!c.exemplo){compPut(id,c.data).then(ok=>{if(!ok&&!cloudOn())toast("O navegador não deixou guardar a imagem. Ela fica só até fechar o app.",{err:true})});cloudCompPut(id,c.data)}
   return id;
 }
 function compRefTxt(m){
@@ -2410,7 +2474,7 @@ function compUnlink(id){
   if(m.ref&&m.ref.k){const x=paysOf(m.ref.k).find(y=>y.id===m.ref.pay);if(x&&x.comp===id)x.comp=null}
   if(m.ref&&m.ref.vale){const v=S.vales.find(y=>y.id===m.ref.vale);if(v&&v.comp===id)v.comp=null}
   if(m.ref&&m.ref.rep){const x=(S.repasses[m.ref.rep.k]||[]).find(y=>y.id===m.ref.rep.id);if(x&&x.comp===id)x.comp=null}
-  delete S.comps[id];
+  delete S.comps[id];cloudCompDel(id);
 }
 function lightbox(src){if(!src)return;const d=document.createElement("div");d.className="lbx";d.setAttribute("data-act","lbxClose");d.innerHTML=`<img src="${src}" alt="Comprovante"><button class="xb" data-act="lbxClose" aria-label="Fechar">${I("i-x")}</button>`;document.body.appendChild(d)}
 /* ---------- janelas ---------- */
@@ -2513,7 +2577,7 @@ function openModal(html,ctx){const was=!!$("#modalRoot .mw");mctx=ctx||{};{const
   if(md&&!was&&!reduced()&&!isMob()&&LASTTAP&&Date.now()-LASTTAP.t<1200){const r=md.getBoundingClientRect();md.style.setProperty("--dx",Math.round(LASTTAP.x-(r.left+r.width/2))*0.55+"px");md.style.setProperty("--dy",Math.round(LASTTAP.y-(r.top+r.height/2))*0.55+"px");md.classList.add("grow")}setTimeout(()=>{const f=$(".md [data-autofocus]");if(f)try{f.focus({preventScroll:true})}catch(e){}},60)}
 function closeModal(){const root=$("#modalRoot"),mw=root.querySelector(".mw");
   if(mw&&!reduced()){root.removeChild(mw);mw.querySelectorAll("[id]").forEach(e=>e.removeAttribute("id"));mw.querySelectorAll("[data-act]").forEach(e=>e.removeAttribute("data-act"));mw.classList.add("out");document.body.appendChild(mw);setTimeout(()=>mw.remove(),260)}
-  root.innerHTML="";mctx={}}
+  root.innerHTML="";mctx={};if(REMOTE){const d=REMOTE;REMOTE=null;if((d.mod||0)>(S.mod||0))setTimeout(()=>{applyRemote(d);toast("Atualizado com o que foi lançado no outro aparelho.")},60)}}
 const mHead=(t,s)=>`<div class="mh"><div style="min-width:0"><h3>${t}</h3>${s?`<p>${s}</p>`:""}</div><button type="button" class="xb" data-act="closeModal" aria-label="Fechar">${I("i-x")}</button></div>`;
 function pChips(sel,geral){return `<div class="chips">${geral?`<button type="button" class="plain" data-act="mPick" data-id="" aria-pressed="${!sel}">Geral</button>`:""}${S.people.filter(p=>p.ativo||p.id===sel).map(p=>`<button type="button" data-act="mPick" data-id="${p.id}" aria-pressed="${sel===p.id}"><span class="av" style="background:${p.cor}">${esc(ini(p.nome))}</span>${esc(first(p.nome))}</button>`).join("")}</div>`}
 function mVale(pid,date,id){
