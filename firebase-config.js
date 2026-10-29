@@ -6,5 +6,6 @@ window.JJ_FIREBASE={
   projectId:"jj-gestao-ab56d",
   storageBucket:"jj-gestao-ab56d.firebasestorage.app",
   messagingSenderId:"760458668758",
-  appId:"1:760458668758:web:4415bef886ece77a323777"
+  appId:"1:760458668758:web:4415bef886ece77a323777",
+  appCheckKey:"6Lez2AUuAAAAAI8dKan4X6rmz9qpQng-cUXRmW2Q"   // reCAPTCHA v3 (chave do site, pública)
 };
