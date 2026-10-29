@@ -732,6 +732,56 @@ body:has(.mw) .toast{bottom:auto;top:22px}
 .a4 .d-anx .cap{font-size:9.5px;color:var(--dmu);margin-top:6px;text-align:center}
 
 /* ===== celular ===== */
+/* ===== entrada (tela do "Continuar com o Google") ===== */
+.login.entry{display:flex;justify-content:center;min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;background:var(--bg)}
+.e-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.e-bg .g1,.e-bg .g2{position:absolute;width:120vmax;height:120vmax;border-radius:50%;filter:blur(10px)}
+.e-bg .g1{left:-70vmax;top:-75vmax;background:radial-gradient(circle,rgba(63,201,214,.16),transparent 60%);animation:drift1 18s ease-in-out infinite alternate}
+.e-bg .g2{right:-75vmax;bottom:-80vmax;background:radial-gradient(circle,rgba(245,137,58,.13),transparent 60%);animation:drift2 22s ease-in-out infinite alternate}
+:root[data-ui="light"] .e-bg .g1{background:radial-gradient(circle,rgba(14,127,140,.12),transparent 60%)}
+:root[data-ui="light"] .e-bg .g2{background:radial-gradient(circle,rgba(212,105,27,.10),transparent 60%)}
+@keyframes drift1{to{transform:translate(14vmax,10vmax)}}
+@keyframes drift2{to{transform:translate(-12vmax,-14vmax)}}
+.e-sl i{position:absolute;left:0;height:2px;width:var(--w);border-radius:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:0;animation:streak 7s cubic-bezier(.5,0,.2,1) infinite;animation-delay:calc(1.4s + var(--d))}
+@keyframes streak{0%{transform:translateX(-60vw);opacity:0}6%{opacity:.5}16%{transform:translateX(120vw);opacity:0}100%{transform:translateX(120vw);opacity:0}}
+.e-in{position:relative;z-index:1;width:min(440px,100%);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:calc(26px + var(--sat)) 22px calc(22px + var(--sab))}
+.e-top{margin-top:max(6vh,24px);text-align:center;display:flex;flex-direction:column;align-items:center}
+.e-logo{position:relative;width:104px;height:70px;animation:arrive .9s cubic-bezier(.2,.9,.25,1) both}
+.e-logo svg{position:relative;display:block}
+.e-trail{position:absolute;right:92%;top:20px;display:flex;flex-direction:column;gap:9px;align-items:flex-end}
+.e-trail i{display:block;height:4px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--or));animation:trail 1.2s .15s ease-out both}
+.e-trail i:nth-child(1){width:90px}.e-trail i:nth-child(2){width:64px;opacity:.8}.e-trail i:nth-child(3){width:40px;opacity:.6}
+@keyframes arrive{0%{transform:translateX(-58vw) skewX(-16deg);opacity:0}55%{opacity:1}78%{transform:translateX(8px) skewX(4deg)}100%{transform:none}}
+@keyframes trail{0%{transform:scaleX(1.6);transform-origin:right;opacity:1}60%{opacity:.9}100%{transform:scaleX(0);transform-origin:right;opacity:0}}
+.e-top h1{font-size:2.7rem;font-weight:800;letter-spacing:-.025em;line-height:1;margin:22px 0 10px;animation:vin .6s .55s both}
+.e-top p{font-size:1.06rem;line-height:1.45;color:var(--mu);max-width:320px;animation:vin .6s .7s both}
+.e-show{position:relative;height:84px;margin:auto 0;animation:vin .6s .9s both}
+.e-show:before,.e-show:after{content:"";position:absolute;left:14px;right:14px;top:10px;height:66px;border-radius:18px;background:var(--s1);border:1px solid var(--bd);opacity:.55;transform:translateY(8px) scale(.96)}
+.e-show:after{left:28px;right:28px;opacity:.3;transform:translateY(16px) scale(.92)}
+.e-card{position:absolute;inset:0 0 18px;opacity:0;animation:cyc 9s ease-in-out infinite;animation-delay:calc(1.2s + var(--k) * 3s)}
+@keyframes cyc{0%{opacity:0;transform:translateY(16px) scale(.98)}5%,30%{opacity:1;transform:none}36%,100%{opacity:0;transform:translateY(-12px) scale(.98)}}
+.ec{display:flex;align-items:center;gap:13px;height:66px;padding:0 16px;border-radius:18px;background:color-mix(in srgb,var(--s1) 88%,transparent);border:1px solid var(--bd2);box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+.ec .av{width:40px;height:40px;border-radius:12px;font-size:1rem}
+.ec .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none}
+.ec .ic svg{width:1.3rem;height:1.3rem}
+.ec .ic.cy{background:var(--cy-soft);color:var(--cy)}.ec .ic.gr{background:rgba(30,158,82,.14);color:#2DBE6C}
+.ec .tx{flex:1;min-width:0}.ec .tx b{display:block;font-weight:700;font-size:1rem}.ec .tx span{display:block;font-size:.85rem;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ec .v{font-family:var(--n);font-size:1.15rem;font-weight:700;color:var(--cy)}
+.ec .ok{width:30px;height:30px;border-radius:50%;background:var(--ok);display:grid;place-items:center;flex:none}
+.ec .ok svg{width:17px;height:17px;fill:none;stroke:#03221A;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;animation:drawc 9s ease-out infinite;animation-delay:inherit}
+.e-card .ok svg{animation-delay:calc(1.45s + var(--k) * 3s)}
+@keyframes drawc{0%{stroke-dashoffset:24}6%,100%{stroke-dashoffset:0}}
+.e-dots{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px}
+.e-dots i{width:18px;height:3px;border-radius:2px;background:var(--bd2);overflow:hidden;position:relative}
+.e-dots i:after{content:"";position:absolute;inset:0;background:var(--cy);transform:scaleX(0);transform-origin:left;animation:dotp 9s linear infinite;animation-delay:calc(1.2s + var(--k) * 3s)}
+@keyframes dotp{0%{transform:scaleX(0)}33%{transform:scaleX(1);opacity:1}34%,100%{transform:scaleX(1);opacity:0}}
+.e-act{animation:vin .6s 1.05s both}
+.e-act .gbtn{min-height:60px;font-size:1.08rem;border-radius:16px;box-shadow:0 14px 30px -14px rgba(0,0,0,.55)}
+.e-note{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px;font-size:.86rem;color:var(--mu2)}
+.e-note svg{width:1rem;height:1rem}
+.e-act .lg-demo{margin-top:6px}
+@media (min-width:861px){.e-in{justify-content:center;gap:34px}.e-top{margin-top:0}.e-show{margin:0}}
+@media (prefers-reduced-motion:reduce){.e-card{animation:none!important;opacity:0}.e-card:first-child{opacity:1;transform:none}.e-dots{display:none}.e-sl{display:none}.ec .ok svg{stroke-dashoffset:0}}
 /* ===== movimento ===== */
 .view.vr{animation:vinr .3s cubic-bezier(.2,.9,.3,1)}
 .view.vl{animation:vinl .3s cubic-bezier(.2,.9,.3,1)}
@@ -1239,28 +1289,27 @@ const closeBanner=q=>{const l=daysLeft(q);return S.settings.lembrete&&q.key===qO
 
 /* ================= ENTRADA ================= */
 function vLogin(){
-  const facts=cls=>`<div class="lg-facts ${cls}"><div><b>Marca a equipe em 2 toques</b>Ou fala: "hoje foram o João e o Pedro".</div><div><b>Um Pix só pro seu filho</b>Com o total e a lista de quem pagar, com a chave Pix de cada um.</div><div><b>Recibo em PDF no WhatsApp</b>No fim da quinzena, o relatório sai pronto para o seu filho.</div></div>`;
-  const prev=`<div class="lg-prev" aria-hidden="true">
-    <div class="pv-doc"><div class="hd">${LOGO_INLINE(36,24)}<i></i></div><div class="st"><i></i><i></i></div><div class="bd"><div class="bx"><i></i><i></i></div><div class="cl">${Array.from({length:16},(_,i)=>`<i class="${[2,8,9,15].includes(i)?"o":""}"></i>`).join("")}</div><div class="ln"></div><div class="ln s"></div><div class="ln"></div><div class="ln s"></div><div class="ln"></div></div><div class="stp">PAGO</div></div>
-    <div class="pv-card"><span class="pk">Quinzena de 16 a 31 de outubro</span><div class="pt"><b>R$ 1.880,00</b><span>a pagar</span></div>
-     <div class="pv-row"><span class="av" style="background:${COLORS[0]}">J</span><b>João Silva</b><span class="v">R$ 400</span><span class="tg2 ok">Pago</span></div>
-     <div class="pv-row"><span class="av" style="background:${COLORS[1]}">P</span><b>Pedro Santos</b><span class="v">R$ 450</span><span class="tg2 cy">Pagar com Pix</span></div>
-     <div class="pv-row"><span class="av" style="background:${COLORS[4]}">R</span><b>Rafael Costa</b><span class="v">R$ 570</span><span class="tg2 or">R$ 300 de 570</span></div></div></div>`;
-  return `<div class="login">
-  <div class="lg-l"><div class="brand" style="padding:0"><div class="mark">${LOGO(30,20)}</div><div><b>JJ Gestão</b><span>JJ Transporte</span></div></div>
-   <span class="lg-eb"><i></i>Controle da equipe da JJ Transporte</span>
-   <h1>Quem trabalhou, quanto pagar e o recibo <em>pronto</em>.</h1>
-   <p>Marque quem veio no dia. O app desconta vales e cartão sozinho, monta o Pix do total da quinzena e deixa o recibo de cada um pronto.</p>
-   ${prev}${facts("")}</div>
-  <div class="lg-r"><form class="lcard" data-form="login">
-   <div class="mark" style="width:54px;height:54px;border-radius:14px">${LOGO(36,24)}</div>
-   <h2>Entrar</h2><p>Use a sua conta Google. É só tocar no botão e escolher a conta.</p>
-   <button type="button" class="gbtn" data-act="loginGoogle"><svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continuar com o Google</button>
-   <p class="lg-st" id="lgSt" role="status">${UI.authMsg||""}</p>
-   ${realAuth()?"":`<button type="button" class="lg-demo" data-act="demo"><span><b>Ver com dados de exemplo</b><span>Uma equipe de mentira para testar tudo</span></span>${I("i-r")}</button>`}
-   <div class="note">${I("i-shield")}<span>${realAuth()?"Entra com a sua conta Google. Nenhuma senha nova e nenhum e-mail de confirmação: é só escolher a conta.":"Protótipo: aqui o login é simulado. No site publicado, o “Continuar com o Google” abre as suas contas Google de verdade."}</span></div>
-   ${facts("m")}
-  </form></div></div>`;
+  const G=`<svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>`;
+  const cards=[
+    `<div class="ec"><span class="av" style="background:${COLORS[0]}">J</span><div class="tx"><b>João Silva</b><span>Trabalhou hoje · R$ 90,00</span></div><i class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>`,
+    `<div class="ec"><span class="ic cy">${I("i-pix")}</span><div class="tx"><b>Pix pronto pro filho</b><span>O total da quinzena</span></div><b class="v">R$ 1.380</b></div>`,
+    `<div class="ec"><span class="ic gr">${I("i-wa")}</span><div class="tx"><b>Recibos no WhatsApp</b><span>PDF de cada um, já assinado</span></div><i class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>`];
+  return `<div class="login entry">
+   <div class="e-bg" aria-hidden="true"><i class="g1"></i><i class="g2"></i><div class="e-sl">${["#3FC9D6","#F5893A","#3FC9D6","#9BE3EA"].map((c,k)=>`<i style="--c:${c};top:${22+k*9}%;--d:${k*1.7}s;--w:${38+k*9}vw"></i>`).join("")}</div></div>
+   <main class="e-in">
+    <div class="e-top">
+     <div class="e-logo"><span class="e-trail" aria-hidden="true"><i></i><i></i><i></i></span>${LOGO(104,70)}</div>
+     <h1>JJ Gestão</h1>
+     <p>Diárias, vales e pagamentos da equipe, sem caderno e sem conta de cabeça.</p>
+    </div>
+    <div class="e-show" aria-hidden="true">${cards.map((c,k)=>`<div class="e-card" style="--k:${k}">${c}</div>`).join("")}<div class="e-dots">${cards.map((_,k)=>`<i style="--k:${k}"></i>`).join("")}</div></div>
+    <form class="e-act" data-form="login">
+     <button type="button" class="gbtn" data-act="loginGoogle">${G}Continuar com o Google</button>
+     <p class="lg-st" id="lgSt" role="status">${UI.authMsg||""}</p>
+     ${realAuth()?`<p class="e-note">${I("i-shield")}Só escolher a conta. Sem senha nova.</p>`:`<button type="button" class="lg-demo" data-act="demo"><span><b>Ver com dados de exemplo</b><span>Uma equipe de mentira para testar tudo</span></span>${I("i-r")}</button><p class="e-note">${I("i-shield")}Protótipo: aqui o login é simulado.</p>`}
+    </form>
+   </main>
+  </div>`;
 }
 /* ================= dentro do app Android (Capacitor) ================= */
 const CAP=()=>{try{const c=window.Capacitor;return c&&typeof c.isNativePlatform==="function"&&c.isNativePlatform()?c:null}catch(e){return null}};
