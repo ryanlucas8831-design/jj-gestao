@@ -488,12 +488,17 @@ select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50
 .sugs{display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none}
 .sugs::-webkit-scrollbar{display:none}
 .sug{position:relative;overflow:hidden;flex:none;min-height:38px;padding:0 14px;border-radius:20px;border:1px solid var(--bd2);background:var(--s2);font-size:.9rem;font-weight:600}
-.ain{display:flex;align-items:center;gap:10px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd)}
-.ain input{flex:1;min-width:0;min-height:52px;border-radius:14px;background:var(--s2);border:1px solid var(--bd2);padding:0 16px;font-size:1rem;outline:0}
-.ain input:focus{border-color:var(--cy)}
+.ain{display:flex;align-items:flex-end;gap:10px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd)}
+.ain input,.ain textarea{flex:1;min-width:0;min-height:52px;max-height:150px;border-radius:14px;background:var(--s2);border:1px solid var(--bd2);padding:14px 16px;font-size:1rem;line-height:1.35;outline:0;resize:none;font-family:inherit;color:var(--tx);overflow-y:auto}
+.ain input:focus,.ain textarea:focus{border-color:var(--cy)}
 .micb{position:relative;width:56px;height:56px;border-radius:50%;background:var(--cy);color:var(--cy-ink);display:grid;place-items:center;flex:none;transition:transform .12s}
 .micb:active{transform:scale(.92)}
 .micb svg{width:1.5rem;height:1.5rem;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round}
+.mhint{display:none;align-items:center;gap:8px;padding:8px 16px 0;font-size:.9rem;color:var(--tx2)}
+.mhint.on{display:flex}.mhint svg{width:1.05rem;height:1.05rem;color:var(--ok)}
+.mhint .rdot{width:9px;height:9px;border-radius:50%;background:var(--rd);animation:blink 1s infinite;flex:none}
+.sendb.ready{background:var(--cy);border-color:var(--cy);color:var(--cy-ink);animation:sendp 1.6s ease-in-out infinite}
+@keyframes sendp{0%,100%{box-shadow:0 0 0 0 var(--cy-line)}50%{box-shadow:0 0 0 8px transparent}}
 .micb.rec{background:var(--rd);color:#fff;animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 6px var(--rd-soft)}50%{box-shadow:0 0 0 14px transparent}}
 .sendb{width:52px;height:52px;border-radius:13px;background:var(--s2);border:1px solid var(--bd2);display:grid;place-items:center;flex:none}
@@ -1989,7 +1994,7 @@ function renderAsst(){
    <div class="ah"><div class="mark">${LOGO(28,19)}</div><div style="flex:1;min-width:0"><h2>Assistente JJ</h2><p id="asstSt"><span class="dot"></span>${AI_ON?"IA ligada: fale do seu jeito":"Fale ou escreva do seu jeito"}</p></div><button class="sec btn sm" data-act="limparChat" aria-label="Limpar conversa">${I("i-trash")}<span class="lb">Limpar</span></button><button class="xb" data-act="asstClose" aria-label="Fechar">${I("i-x")}</button></div>
    <div class="msgs" id="msgs" aria-live="polite">${S.chat.map(msgHTML).join("")}</div>
    <div class="sugs">${sug.map(s=>`<button class="sug" data-act="sug" data-t="${esc(s)}">${s}</button>`).join("")}</div>
-   <form class="ain" data-form="chat"><input id="chatIn" placeholder="${phIdle()}" autocomplete="off" aria-label="Mensagem"><button class="sendb" type="submit" aria-label="Enviar">${I("i-send")}</button><button type="button" class="micb ${UI.rec?"rec":""}" data-act="mic" aria-label="Falar">${I("i-mic")}</button></form>
+   <div class="mhint" id="micHint" aria-live="polite"></div><form class="ain" data-form="chat"><textarea id="chatIn" rows="1" placeholder="${phIdle()}" autocomplete="off" aria-label="Mensagem" enterkeyhint="send"></textarea><button class="sendb" type="submit" aria-label="Enviar">${I("i-send")}</button><button type="button" class="micb ${UI.rec?"rec":""}" data-act="mic" aria-label="Falar">${I("i-mic")}</button></form>
   </section></div>`;
   const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;
 }
@@ -2285,22 +2290,47 @@ let recog=null,MIC_BLOCKED=false,MIC_HINT=false;
 const phIdle=()=>MIC_BLOCKED?(isTouch()?"Toque aqui e use o microfone do teclado":"Escreva aqui a frase"):"Escreva aqui ou toque no microfone";
 function kbHint(){const i=$("#chatIn");if(i){i.placeholder=phIdle();try{i.focus()}catch(e){}}
   if(!MIC_HINT){MIC_HINT=true;toast(isTouch()?"O microfone não abre aqui dentro. Toque no campo e use o microfone do teclado do celular.":"O microfone não está disponível aqui. Escreva a frase e aperte Enter.",{err:true})}}
+/* Microfone: toque para começar e toque de novo para parar, ou segure enquanto fala e solte.
+   O texto fica na caixa para conferir; só vai quando tocar na seta. */
+let MIC={want:false,base:"",heard:"",voice:"",restarts:0,downAt:0,hold:false,ptr:false};
 function startMic(){
   if(!UI.asst){UI.asst=true;renderAsst()}
   if(!S.settings.voz){toast("A voz está desligada nos Ajustes. Escreva a frase.",{err:true});const i=$("#chatIn");if(i)i.focus();return}
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR||MIC_BLOCKED){MIC_BLOCKED=true;kbHint();return}
-  if(UI.rec&&recog){try{recog.stop()}catch(e){}return}
-  try{
-    recog=new SR();recog.lang="pt-BR";recog.interimResults=true;recog.maxAlternatives=1;let finalT="";
-    recog.onresult=e=>{let s="";for(let i=e.resultIndex;i<e.results.length;i++){s+=e.results[i][0].transcript;if(e.results[i].isFinal)finalT+=e.results[i][0].transcript}const inp=$("#chatIn");if(inp)inp.value=finalT||s};
-    recog.onerror=e=>{UI.rec=false;const er=e&&e.error;if(er==="not-allowed"||er==="service-not-allowed"||er==="audio-capture"){MIC_BLOCKED=true;micState();kbHint()}else{micState();if(er==="no-speech")toast("Não ouvi nada. Toque no microfone e fale.");else if(er!=="aborted")toast("Não consegui ouvir. Tente de novo.",{err:true})}};
-    recog.onend=()=>{UI.rec=false;micState();const inp=$("#chatIn");const v=(finalT||(inp&&inp.value)||"").trim();if(v&&!MIC_BLOCKED){if(inp)inp.value="";sendChat(v,true)}};
-    recog.start();UI.rec=true;micState();buzz(15);
-  }catch(e){UI.rec=false;MIC_BLOCKED=true;micState();kbHint()}
+  if(UI.rec){stopMic();return}
+  const inp=$("#chatIn");MIC.base=inp&&inp.value.trim()?inp.value.trim()+" ":"";MIC.heard="";MIC.want=true;MIC.restarts=0;MIC.t0=Date.now();
+  UI.rec=true;micState();buzz(15);listen(SR);
 }
-function micState(){$$(".ain .micb").forEach(m=>m.classList.toggle("rec",UI.rec));const i=$("#chatIn");if(i)i.placeholder=UI.rec?"Ouvindo… pode falar":phIdle()}
+function listen(SR){
+  try{
+    let finals="";
+    recog=new SR();recog.lang="pt-BR";recog.interimResults=true;recog.continuous=true;recog.maxAlternatives=1;
+    recog.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finals+=(finals&&!/\s$/.test(finals)?" ":"")+t.trim();else interim+=t}
+      MIC.heard=(MIC.base+finals+(interim?" "+interim:"")).replace(/\s+/g," ").trim();const el=$("#chatIn");if(el){el.value=MIC.heard;growChat()}};
+    recog.onerror=e=>{const er=e&&e.error;
+      if(er==="not-allowed"||er==="service-not-allowed"||er==="audio-capture"){MIC.want=false;UI.rec=false;MIC_BLOCKED=true;micState();kbHint();return}
+      if(er==="no-speech"&&MIC.want&&Date.now()-MIC.t0<12000)return;   // ainda esperando a pessoa falar
+      if(er&&er!=="aborted"&&er!=="no-speech")toast("Não consegui ouvir direito. Tente de novo.",{err:true})};
+    recog.onend=()=>{const el=$("#chatIn");MIC.base=(el&&el.value.trim()?el.value.trim()+" ":"");
+      // o celular para sozinho quando a pessoa pausa: se ainda está gravando, continua ouvindo
+      if(MIC.want&&MIC.restarts<40&&Date.now()-MIC.t0<120000){MIC.restarts++;setTimeout(()=>{if(MIC.want)listen(SR)},120);return}
+      MIC.want=false;UI.rec=false;micDone()};
+    recog.start();
+  }catch(e){MIC.want=false;UI.rec=false;MIC_BLOCKED=true;micState();kbHint()}
+}
+function stopMic(){MIC.want=false;try{recog&&recog.stop()}catch(e){}setTimeout(()=>{if(UI.rec&&!MIC.want){UI.rec=false;micDone()}},900)}
+function micDone(){const el=$("#chatIn"),v=el?el.value.trim():"";MIC.voice=v;micState();
+  if(!v){toast("Não ouvi nada. Toque no microfone e fale.");return}
+  buzz(10);const b=$(".ain .sendb");if(b)b.classList.add("ready")}
+function micState(){$$(".ain .micb").forEach(m=>{m.classList.toggle("rec",UI.rec);m.setAttribute("aria-label",UI.rec?"Parar de gravar":"Falar")});const i=$("#chatIn");if(i)i.placeholder=UI.rec?"Ouvindo… fale com calma":phIdle();
+  const h=$("#micHint");if(h){const v=i&&i.value.trim();h.innerHTML=UI.rec?`<span class="rdot"></span>Gravando. ${MIC.hold?"Solte o botão":"Toque no microfone"} quando terminar.`:v&&MIC.voice===v?`${I("i-check")}Confira o texto e toque na seta para enviar.`:"";h.classList.toggle("on",!!h.innerHTML)}
+  if(UI.rec){const b=$(".ain .sendb");if(b)b.classList.remove("ready")}}
 
+document.addEventListener("pointerdown",e=>{const m=e.target.closest&&e.target.closest(".ain .micb");if(!m)return;MIC.ptr=true;MIC.downAt=Date.now();MIC.hold=false;
+  if(UI.rec){stopMic();return}startMic();MIC.holdT=setTimeout(()=>{if(UI.rec){MIC.hold=true;micState()}},450)});
+document.addEventListener("pointerup",e=>{if(!MIC.ptr)return;clearTimeout(MIC.holdT);if(MIC.hold&&UI.rec){MIC.hold=false;stopMic()}});
+document.addEventListener("pointercancel",()=>{clearTimeout(MIC.holdT);if(MIC.hold&&UI.rec){MIC.hold=false;stopMic()}});
 /* ================= PAGAMENTOS: Pix pronto e comprovante ================= */
 const CDN={qr:"https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js",pdf:"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",pdfw:"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"};
 let QRP=null;
@@ -2724,7 +2754,7 @@ const ACT={
   go:d=>{if(UI.asst){UI.asst=false;renderAsst()}go(d.v)},
   falar:()=>{UI.asst=true;renderAsst();startMic()},
   asstClose:()=>{UI.asst=false;if(recog&&UI.rec){try{recog.stop()}catch(e){}}renderAsst()},
-  mic:()=>startMic(),
+  mic:(d,el,e)=>{if(MIC.ptr){MIC.ptr=false;return}startMic()},
   loginGoogle:()=>loginGoogle(),
   demo:()=>{const sess=S.session;S=seed();S.session=sess||{modo:"google",email:"jjtransporte@gmail.com",nome:"Conta da JJ"};CIMG.clear();seedComps();changed();UI.view="hoje";UI.q=qOf(TODAY).key;UI.diaDate=TODAY;initSel();render();toast("Dados de exemplo carregados. Pode mexer à vontade.")},
   obNext:()=>{obCollect();
@@ -2856,11 +2886,13 @@ document.addEventListener("keydown",e=>{
 });
 document.addEventListener("submit",e=>{e.preventDefault();const f=e.target.dataset.form;
   if(f==="login"){loginGoogle();return}
-  if(f==="chat"){const i=$("#chatIn");const v=i.value;i.value="";sendChat(v)}
+  if(f==="chat"){if(UI.rec)stopMic();const i=$("#chatIn");const v=i.value;const voz=!!MIC.voice&&v.trim()===MIC.voice;i.value="";growChat();MIC.voice="";const b=$(".ain .sendb");if(b)b.classList.remove("ready");sendChat(v,voz);micState()}
   if(f==="modal")saveModal();
 });
 let PIXT;
-document.addEventListener("input",e=>{const id=e.target.id;
+function growChat(){const i=$("#chatIn");if(!i)return;i.style.height="auto";i.style.height=Math.min(i.scrollHeight+2,150)+"px"}
+document.addEventListener("keydown",e=>{if(e.target&&e.target.id==="chatIn"&&e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();const f=e.target.form;if(f){if(f.requestSubmit)f.requestSubmit();else f.dispatchEvent(new Event("submit",{cancelable:true,bubbles:true}))}}},true);
+document.addEventListener("input",e=>{const id=e.target.id;if(id==="chatIn")growChat();
   if(id==="mVal"&&(mctx.kind==="pagar"||mctx.kind==="vale"||mctx.kind==="repasse")){mctx.valor=parseMoney(e.target.value);clearTimeout(PIXT);PIXT=setTimeout(renderPix,180)}
   if(id==="mVal"||id==="mDate")mLive();
   if(id==="pesBusca"){UI.pesQ=e.target.value;const pos=e.target.selectionStart;renderView();const b=$("#pesBusca");if(b){b.focus();try{b.setSelectionRange(pos,pos)}catch(_){}}}
