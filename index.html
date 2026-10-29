@@ -1072,7 +1072,7 @@ function refreshEarliest(){EARLIEST=TODAY;[S.dias,S.vales,S.cartao].forEach(a=>a
   const i=S.settings&&/^\d{4}-\d{2}-\d{2}$/.test(S.settings.inicio||"")?S.settings.inicio:null;INI=i&&i<EARLIEST?i:EARLIEST}
 const beforeStart=q=>!!INI&&q.end<INI;
 const memo=new Map();
-function changed(){memo.clear();refreshEarliest();S.mod=Math.max(Date.now(),(S.mod||0)+1);save();cloudPush()}
+function changed(){memo.clear();refreshEarliest();S.mod=Math.max(Date.now(),(S.mod||0)+1);save();cloudPush();notifSync(true)}
 
 /* ================= cálculo ================= */
 function calc(pid,q,depth){
@@ -1259,6 +1259,50 @@ function vLogin(){
    ${facts("m")}
   </form></div></div>`;
 }
+/* ================= dentro do app Android (Capacitor) ================= */
+const CAP=()=>{try{const c=window.Capacitor;return c&&typeof c.isNativePlatform==="function"&&c.isNativePlatform()?c:null}catch(e){return null}};
+const NATIVE=()=>!!CAP();
+const PL=n=>{const c=CAP();return c&&c.Plugins&&c.Plugins[n]||null};
+/* arquivos (PDF, planilha, backup): no app, salva e abre o "Compartilhar" do Android */
+async function nativeShare(blob,name,title){const FS=PL("Filesystem"),SH=PL("Share");if(!FS||!SH)throw new Error("sem plugin");
+  const data=await blobB64(blob);const w=await FS.writeFile({path:name,data,directory:"CACHE",recursive:true});
+  try{await SH.share({title:title||name,files:[w.uri],dialogTitle:title||"Enviar ou salvar"});return "saved"}catch(e){return /cancel/i.test(String(e&&e.message))?"declined":"saved"}}
+function initNative(){
+  if(!NATIVE())return;document.documentElement.classList.add("native");
+  const A=PL("App");
+  if(A&&!initNative.done){initNative.done=true;
+    A.addListener("backButton",()=>{if($(".lbx")){ACT.lbxClose();return}if($("#modalRoot .mw")){closeModal();return}if(UI.asst){ACT.asstClose();return}
+      if(S.session&&S.settings.onboarded&&UI.view!=="hoje"){go("hoje");return}try{A.exitApp()}catch(e){}});
+    A.addListener("resume",()=>{TODAY=toISO(new Date());notifSync()});
+    const L=PL("LocalNotifications");if(L)L.addListener("localNotificationActionPerformed",ev=>{const g=ev&&ev.notification&&ev.notification.extra&&ev.notification.extra.go;if(g&&S.session&&S.settings.onboarded){if(UI.asst){UI.asst=false;renderAsst()}go(g)}});
+  }
+}
+/* ---------- notificações (só no app) ---------- */
+const NOTIF_DEF={fecha:true,dia:true,filho:true,hora:"18:00"};
+const notifCfg=()=>Object.assign({},NOTIF_DEF,S.settings.notif||{});
+let NOTIFT=null;
+function notifSync(later){if(!NATIVE())return;clearTimeout(NOTIFT);NOTIFT=setTimeout(notifRun,later?1500:200)}
+function notifPlan(){
+  const out=[],cfg=notifCfg(),now=Date.now(),at=(iso,hm)=>{const [h,m]=hm.split(":").map(Number);const d=fromISO(iso);d.setHours(h,m||0,0,0);return d};
+  const add=(id,iso,hm,title,body,go)=>{const d=at(iso,hm);if(d.getTime()>now+60000)out.push({id,title,body,schedule:{at:d,allowWhileIdle:true},smallIcon:"ic_stat_jj",iconColor:"#3FC9D6",extra:{go}})};
+  const q=qOf(TODAY),T=qTotals(q),falta=r2(T.aPagar-T.pago);
+  if(cfg.fecha&&T.pend>0){
+    add(7001,addDays(q.end,-1),"09:00","A quinzena fecha amanhã",`Faltam ${plural(T.pend,"pessoa","pessoas")} para pagar · ${brl(falta)}`,"devo");
+    add(7002,q.end,"09:00","A quinzena fecha hoje",`Faltam ${plural(T.pend,"pessoa","pessoas")} para pagar · ${brl(falta)}`,"devo")}
+  if(cfg.dia){for(let k=0;k<7;k++){const d=addDays(TODAY,k);if(fromISO(d).getDay()===0)continue;if(k===0&&S.dias.some(x=>x.date===d))continue;
+    add(7100+k,d,cfg.hora||"18:00","Marcou quem trabalhou hoje?","Toque para lançar as diárias do dia.","hoje")}}
+  if(cfg.filho&&viaFilho()){const R_=repQ(q);if(R_.sent>0&&R_.nPaid<R_.nTot){const base=addDays(R_.last.date,2),d=base>TODAY?base:addDays(TODAY,1),n=R_.nTot-R_.nPaid;
+    add(7200,d,"10:00",`Faltam ${n===1?"1 pessoa":n+" pessoas"} para marcar como paga${n>1?"s":""}`,`Quando ${filhoGen()?"o filho":first(S.settings.filhoNome)} avisar que pagou, marque no app para sair o recibo.`,"devo")}}
+  return out;
+}
+async function notifRun(){const L=PL("LocalNotifications");if(!L||!S.session||!S.settings.onboarded)return;
+  try{const p=await L.checkPermissions();if(p.display!=="granted")return;
+    const pend=await L.getPending();const mine=(pend&&pend.notifications||[]).filter(n=>n.id>=7000&&n.id<8000).map(n=>({id:n.id}));if(mine.length)await L.cancel({notifications:mine});
+    const list=notifPlan();if(list.length)await L.schedule({notifications:list});UI.notifN=list.length}catch(e){console.warn("notificações:",e)}}
+async function notifAsk(force){const L=PL("LocalNotifications");if(!L)return false;
+  try{let p=await L.checkPermissions();if(p.display!=="granted"&&(force||!S.settings.notifAsked)){S.settings.notifAsked=true;save();p=await L.requestPermissions()}
+    UI.notifOK=p.display==="granted";if(UI.notifOK)notifSync();return UI.notifOK}catch(e){return false}}
+
 /* ================= login de verdade (Firebase) =================
    O site publicado traz firebase-config.js (window.JJ_FIREBASE). Sem ele, o login fica simulado. */
 const FB_CFG=(()=>{try{const c=window.JJ_FIREBASE;return c&&c.apiKey&&c.authDomain?c:null}catch(e){return null}})();
@@ -1294,14 +1338,23 @@ function initAuth(){
   fbLoad().then(fb=>{
     fb.Au.getRedirectResult(fb.auth).catch(authErr);
     fb.Au.onAuthStateChanged(fb.auth,u=>{AUTH_BUSY=false;
-      if(u){const was=S.session&&S.session.uid===u.uid;useAccount(u);cloudStart();if(!was){UI.view="hoje";UI.diaDate=TODAY;initSel();render();if(S.settings.onboarded)toast(`Bem-vindo de volta, ${esc(first(S.session.nome))}`)}else if($("#side"))chrome()}
+      if(u){const was=S.session&&S.session.uid===u.uid;useAccount(u);cloudStart();if(NATIVE())setTimeout(()=>{if(S.settings.onboarded)notifAsk();notifSync()},1500);if(!was){UI.view="hoje";UI.diaDate=TODAY;initSel();render();if(S.settings.onboarded)toast(`Bem-vindo de volta, ${esc(first(S.session.nome))}`)}else if($("#side"))chrome()}
       else if(S.session){cloudStop();S.session=null;save();render()}
       else setAuthMsg("")});
   }).catch(()=>{setAuthMsg(S.session?"":"Sem internet para entrar agora. Quando a conexão voltar, toque em Continuar com o Google.",true)});
 }
+async function nativeLogin(){const FA=PL("FirebaseAuthentication");AUTH_BUSY=true;setAuthMsg("Abrindo as suas contas Google…");
+  try{const r=await FA.signInWithGoogle();const tok=r&&r.credential&&r.credential.idToken;if(!tok)throw {message:"sem idToken"};
+    setAuthMsg("Entrando…");const fb=await fbLoad();await fb.Au.signInWithCredential(fb.auth,fb.Au.GoogleAuthProvider.credential(tok))}
+  catch(e){AUTH_BUSY=false;const m=String(e&&(e.message||e.code)||"");console.warn("login nativo:",m);
+    if(/cancel/i.test(m)){setAuthMsg("");return}
+    if(/developer|DEVELOPER_ERROR|\b10\b|No credential|NoCredential|credential/i.test(m)){setAuthMsg("O Google não liberou o login neste app ainda. No Firebase, confira se o SHA-1 do app Android está cadastrado.",true);return}
+    if(/network|internet|offline/i.test(m)){setAuthMsg("Sem internet agora. Confira a conexão e tente de novo.",true);return}
+    authErr(e)}}
 function loginGoogle(){
   if(!realAuth()){doLogin("google");return}
   if(AUTH_BUSY)return;
+  if(NATIVE()&&PL("FirebaseAuthentication")){nativeLogin();return}
   const go=fb=>{const p=new fb.Au.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});AUTH_BUSY=true;setAuthMsg("Abrindo as suas contas Google…");
     return fb.Au.signInWithPopup(fb.auth,p).then(()=>{setAuthMsg("Entrando…")}).catch(e=>{AUTH_BUSY=false;
       if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment")){setAuthMsg("Abrindo o Google…");return fb.Au.signInWithRedirect(fb.auth,p).catch(authErr)}
@@ -1369,7 +1422,7 @@ function shrinkData(data,maxLen){return new Promise(res=>{if(!data||data.length<
 async function cloudCompPut(id,data){if(!cloudOn())return;try{await dbLoad();const img=await shrinkData(data,900000);if(img)await DB.F.setDoc(compRef(id),{img,em:new Date().toISOString()})}catch(e){console.error(e)}}
 async function cloudCompGet(id){if(!cloudOn())return null;try{await dbLoad();const d=await DB.F.getDoc(compRef(id));return d.exists()?d.data().img:null}catch(e){return null}}
 function cloudCompDel(id){if(!cloudOn()||!DB)return;try{DB.F.deleteDoc(compRef(id)).catch(()=>{})}catch(e){}}
-function sair(){cloudStop();UI.asst=false;if(realAuth()&&FB){FB.Au.signOut(FB.auth).catch(()=>{});S.session=null;save();render();return}S.session=null;save();render()}
+function sair(){cloudStop();if(NATIVE()){const FA=PL("FirebaseAuthentication");if(FA)FA.signOut().catch(()=>{});const L=PL("LocalNotifications");if(L)L.getPending().then(p=>{const m=(p.notifications||[]).filter(n=>n.id>=7000&&n.id<8000).map(n=>({id:n.id}));if(m.length)L.cancel({notifications:m})}).catch(()=>{})}UI.asst=false;if(realAuth()&&FB){FB.Au.signOut(FB.auth).catch(()=>{});S.session=null;save();render();return}S.session=null;save();render()}
 function doLogin(modo,email){S.session={modo,email:email||"jjtransporte@gmail.com",nome:modo==="google"?"Conta da JJ":first(String(email).split("@")[0])};save();render();toast(S.settings.onboarded?"Bem-vindo de volta":"Conta conectada. Vamos configurar em 1 minuto.")}
 
 /* ================= PRIMEIRO ACESSO ================= */
@@ -1837,6 +1890,7 @@ function showLoader(t){hideLoader();const l=document.createElement("div");l.clas
 const hideLoader=()=>{const l=$("#loader");if(l)l.remove()};
 let DLNS=null;
 async function triggerDownload(blob,name){
+  if(NATIVE()){try{return await nativeShare(blob,name,"Salvar ou enviar")}catch(e){console.warn(e)}}
   if(window.claude&&typeof window.claude.use==="function"){
     try{const d=DLNS||(DLNS=await window.claude.use("downloads"));if(d){await d.save({filename:name,data:blob});return "saved"}}
     catch(e){if(e&&e.code==="declined")return "declined";if(e&&e.code==="rate_limited")return "busy"}
@@ -1868,7 +1922,7 @@ async function savePDF(){
     toast(r==="declined"?"Download cancelado.":r==="busy"?"Já tem um download esperando confirmação.":`PDF pronto: ${esc(B.name)}`,{bolt:r==="saved"})}
   catch(e){console.error(e);hideLoader();toast("Não consegui gerar o PDF. Confira a internet e tente de novo.",{err:true})}
 }
-async function doPrint(){const sp=curSpec();try{await prepDocs(sp)}catch(e){}const B=build(sp);if(!B.pages.length)return;const pa=$("#printArea");pa.innerHTML=B.pages.map(p=>`<div class="a4">${p}</div>`).join("");setTimeout(()=>{try{window.print()}catch(e){}setTimeout(()=>{pa.innerHTML=""},1000)},120);toast("Abrindo a impressão. Se não abrir, baixe o PDF e imprima o arquivo.")}
+async function doPrint(){if(NATIVE()){toast("No celular, use Baixar o PDF e mande para imprimir.");return}const sp=curSpec();try{await prepDocs(sp)}catch(e){}const B=build(sp);if(!B.pages.length)return;const pa=$("#printArea");pa.innerHTML=B.pages.map(p=>`<div class="a4">${p}</div>`).join("");setTimeout(()=>{try{window.print()}catch(e){}setTimeout(()=>{pa.innerHTML=""},1000)},120);toast("Abrindo a impressão. Se não abrir, baixe o PDF e imprima o arquivo.")}
 async function makeExcel(){
   const q=qFromKey(UI.q);showLoader("Gerando a planilha");
   try{
@@ -1891,7 +1945,7 @@ let SHARE=null;
 const shareAllowed=()=>{try{const fp=document.permissionsPolicy||document.featurePolicy;if(fp&&typeof fp.allowsFeature==="function"&&!fp.allowsFeature("web-share"))return false}catch(e){}return true};
 const canShareFiles=f=>{try{return shareAllowed()&&!!(navigator.canShare&&navigator.share&&navigator.canShare({files:[f]}))}catch(e){return false}};
 async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){try{const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:-9999px;top:0";document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();return !!ok}catch(_){return false}}}
-function openWa(url,text){let w=null;try{w=window.open(url,"_blank")}catch(e){}
+function openWa(url,text){if(NATIVE()){location.href=url;return}let w=null;try{w=window.open(url,"_blank")}catch(e){}
   if(w){try{w.opener=null}catch(e){}return}
   copyText(text).then(ok=>toast(ok?"O WhatsApp não abriu aqui. Copiei o texto: abra a conversa e cole.":"O WhatsApp não abriu aqui. Baixe o PDF e mande pelo WhatsApp.",{err:true}));
 }
@@ -1907,7 +1961,7 @@ async function openShare(spec){
   try{
     const blob=await makePDFBlob(B.pages);
     if(SHARE!==tok||!$("#shSt"))return;
-    const file=new File([blob],B.name,{type:"application/pdf"});Object.assign(tok,{blob,file,name:B.name,title:B.title});const can=canShareFiles(file);
+    const file=new File([blob],B.name,{type:"application/pdf"});Object.assign(tok,{blob,file,name:B.name,title:B.title});const can=NATIVE()||canShareFiles(file);
     $("#shSt").innerHTML=`<span class="pdfi">PDF</span><div style="min-width:0"><b>${esc(B.name)}</b><span>${B.pages.length} ${B.pages.length===1?"página":"páginas"}, ${Math.max(1,Math.round(blob.size/1024))} KB</span></div><span class="pill ok" style="margin-left:auto">${I("i-check")}Pronto</span>`;
     $("#shActs").insertAdjacentHTML("afterbegin",`${can?`<button type="button" class="btn pri wide xl" data-act="shareFile">${I("i-share")}Enviar o PDF</button>`:""}<button type="button" class="btn ${can?"sec":"pri"} wide" data-act="shareDl">${I("i-down")}Baixar o PDF</button>`);
     $("#shHint").innerHTML=can?`Toque em <b>Enviar o PDF</b> e escolha o WhatsApp e a conversa.`:`Baixe o PDF e anexe na conversa do WhatsApp (clipe, depois Documento). O resumo escrito abre o WhatsApp direto.`;
@@ -1944,6 +1998,13 @@ function vAjustes(){
     <p class="hlp">Os dias e as quinzenas começam a contar a partir daqui. Precisa lançar algo de antes? Escolha uma data mais antiga.</p></div>
    <div class="card box"><h3>Relatórios</h3>
     <p class="hlp" style="margin-top:0">O relatório da quinzena vai para ${esc(filhoGen()?"o contato acima":S.settings.filhoNome)}.</p>${tg("lembrete","Avisar no dia do fechamento","Mostra um aviso para conferir antes de mandar")}${tg("cpfRecibo","CPF nos recibos","Aparece só com os números do meio")}${tg("compPdf","Comprovante junto no recibo","Anexa a imagem do comprovante no PDF do recibo")}</div>
+   <div class="card box"><h3>Notificações</h3>${NATIVE()?(()=>{const c=notifCfg(),nt=(k,t,d)=>`<button class="tg" role="switch" aria-checked="${!!c[k]}" data-act="notifTg" data-k="${k}"><span><b>${t}</b><span>${d}</span></span><i class="sw"></i></button>`;
+      return `${UI.notifOK===false?`<div class="warn" style="margin-bottom:10px">${I("i-alert")}<span>As notificações estão bloqueadas no celular. <button class="linkb" data-act="notifAsk">Liberar agora</button></span></div>`:""}
+      ${nt("fecha","Fechamento da quinzena","Na véspera e no dia, de manhã, só se faltar pagar alguém")}
+      ${nt("dia","Lembrete do dia","Se o dia ainda não foi salvo. Não avisa no domingo")}
+      <div class="two" style="margin:4px 0 8px"><div><label class="fl" for="nHora">Horário do lembrete do dia</label><input class="inp" type="time" id="nHora" value="${esc(c.hora||"18:00")}"></div><div></div></div>
+      ${viaFilho()?nt("filho","Pagamento pelo filho","Se, 2 dias depois do Pix, ainda tiver gente sem marcar como paga"):""}
+      <button class="btn sec sm" data-act="notifTeste" style="margin-top:6px">${I("i-check")}Mandar uma notificação de teste</button>`})():`<p class="hlp" style="margin-top:0">Os avisos de fechamento da quinzena e o lembrete do dia funcionam no <b>app do celular</b> (APK).</p>`}</div>
    <div class="card box"><h3>Assistente</h3>${tg("voz","Anotar por voz","Entende áudio e texto em português")}<p class="hlp">${AI_ON?`IA ligada: entende frases soltas e ${AI_IMG?"lê os comprovantes":"conversa como gente"}. Nada é salvo sem você confirmar.`:"Neste modo, entende frases simples. Com a IA (no app final, o Gemini do Google), entende frases soltas e lê os comprovantes sozinho."}</p></div>
    <div class="card box"><h3>Instalar no celular</h3>${installHTML()}</div>
    <div class="card box"><h3>Conta e dados</h3>
@@ -2296,9 +2357,11 @@ let MIC={want:false,base:"",heard:"",voice:"",restarts:0,downAt:0,hold:false,ptr
 function startMic(){
   if(!UI.asst){UI.asst=true;renderAsst()}
   if(!S.settings.voz){toast("A voz está desligada nos Ajustes. Escreva a frase.",{err:true});const i=$("#chatIn");if(i)i.focus();return}
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR||MIC_BLOCKED){MIC_BLOCKED=true;kbHint();return}
   if(UI.rec){stopMic();return}
+  const NSR=NATIVE()&&PL("SpeechRecognition");
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!NSR&&(!SR||MIC_BLOCKED)){MIC_BLOCKED=true;kbHint();return}
+  if(NSR){const inp0=$("#chatIn");MIC.base=inp0&&inp0.value.trim()?inp0.value.trim()+" ":"";MIC.heard="";MIC.want=true;MIC.restarts=0;MIC.t0=Date.now();UI.rec=true;micState();buzz(15);listenNative(NSR);return}
   const inp=$("#chatIn");MIC.base=inp&&inp.value.trim()?inp.value.trim()+" ":"";MIC.heard="";MIC.want=true;MIC.restarts=0;MIC.t0=Date.now();
   UI.rec=true;micState();buzz(15);listen(SR);
 }
@@ -2319,7 +2382,17 @@ function listen(SR){
     recog.start();
   }catch(e){MIC.want=false;UI.rec=false;MIC_BLOCKED=true;micState();kbHint()}
 }
-function stopMic(){MIC.want=false;try{recog&&recog.stop()}catch(e){}setTimeout(()=>{if(UI.rec&&!MIC.want){UI.rec=false;micDone()}},900)}
+async function listenNative(SR){
+  try{let p=await SR.checkPermissions();if(p.speechRecognition!=="granted")p=await SR.requestPermissions();
+    if(p.speechRecognition!=="granted"){MIC.want=false;UI.rec=false;micState();toast("Sem permissão do microfone. Libere nas configurações do celular.",{err:true});return}}catch(e){}
+  if(!MIC.nl){MIC.nl=true;
+    SR.addListener("partialResults",d=>{const t=(d&&d.matches&&d.matches[0])||"";MIC.heard=(MIC.base+t).replace(/\s+/g," ").trim();const el=$("#chatIn");if(el){el.value=MIC.heard;growChat()}});
+    SR.addListener("listeningState",d=>{if(!d||d.status!=="stopped")return;const el=$("#chatIn");MIC.base=el&&el.value.trim()?el.value.trim()+" ":"";
+      if(MIC.want&&MIC.restarts<40&&Date.now()-MIC.t0<120000){MIC.restarts++;setTimeout(()=>{if(MIC.want)SR.start({language:"pt-BR",partialResults:true,popup:false,maxResults:1}).catch(()=>{})},150)}
+      else if(UI.rec){MIC.want=false;UI.rec=false;micDone()}})}
+  SR.start({language:"pt-BR",partialResults:true,popup:false,maxResults:1}).catch(e=>{console.warn(e);MIC.want=false;UI.rec=false;micState();toast("Não consegui abrir o microfone. Tente de novo.",{err:true})});
+}
+function stopMic(){MIC.want=false;try{const N=NATIVE()&&PL("SpeechRecognition");if(N)N.stop().catch(()=>{});else recog&&recog.stop()}catch(e){}setTimeout(()=>{if(UI.rec&&!MIC.want){UI.rec=false;micDone()}},900)}
 function micDone(){const el=$("#chatIn"),v=el?el.value.trim():"";MIC.voice=v;micState();
   if(!v){toast("Não ouvi nada. Toque no microfone e fale.");return}
   buzz(10);const b=$(".ain .sendb");if(b)b.classList.add("ready")}
@@ -2759,7 +2832,7 @@ const ACT={
   demo:()=>{const sess=S.session;S=seed();S.session=sess||{modo:"google",email:"jjtransporte@gmail.com",nome:"Conta da JJ"};CIMG.clear();seedComps();changed();UI.view="hoje";UI.q=qOf(TODAY).key;UI.diaDate=TODAY;initSel();render();toast("Dados de exemplo carregados. Pode mexer à vontade.")},
   obNext:()=>{obCollect();
     if(UI.ob.step===1){UI.ob.people.filter(p=>String(p.nome).trim()).forEach(p=>S.people.push({id:uid(),nome:p.nome.trim(),funcao:p.funcao||"Ajudante",diaria:p.diaria||S.settings.diaria,pix:"",cpf:"",tel:"",ativo:true,cor:COLORS[S.people.length%COLORS.length],desde:TODAY}));UI.ob.people=[]}
-    if(UI.ob.step===3){S.settings.onboarded=true;if(!S.settings.inicio)S.settings.inicio=TODAY;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();toast("Tudo pronto. Bom trabalho!",{bolt:true});return}
+    if(UI.ob.step===3){S.settings.onboarded=true;if(NATIVE())setTimeout(()=>notifAsk(),1200);if(!S.settings.inicio)S.settings.inicio=TODAY;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();toast("Tudo pronto. Bom trabalho!",{bolt:true});return}
     UI.ob.step++;changed();render()},
   obBack:()=>{obCollect();UI.ob.step=Math.max(0,UI.ob.step-1);render()},
   obAdd:()=>{obCollect();UI.ob.people.push({nome:"",funcao:"Ajudante",diaria:S.settings.diaria});render();const ins=$$('[data-ob="nome"]');if(ins.length)ins[ins.length-1].focus()},
@@ -2845,7 +2918,7 @@ const ACT={
   excel:()=>makeExcel(),
   shareCur:()=>openShare(curSpec()),
   share:d=>{const q=d.q?qFromKey(d.q):qFromKey(UI.q||qOf(TODAY).key);if(d.t==="recibo")openShare({t:"recibo",q:d.q?q:qOf(TODAY),pid:d.id});else openShare({t:d.t,q:d.q?q:qOf(TODAY)})},
-  shareFile:()=>{if(!SHARE||!SHARE.file)return;markSent();navigator.share({files:[SHARE.file],title:SHARE.title,text:SHARE.text}).then(()=>{closeModal();toast("Enviado",{bolt:true})}).catch(e=>{if(e&&e.name!=="AbortError")toast("Não deu para compartilhar aqui. Use Baixar o PDF.",{err:true})})},
+  shareFile:()=>{if(!SHARE||!SHARE.file)return;markSent();if(NATIVE()){nativeShare(SHARE.blob,SHARE.name,"Enviar o PDF").then(r=>{if(r==="saved")closeModal()});return}navigator.share({files:[SHARE.file],title:SHARE.title,text:SHARE.text}).then(()=>{closeModal();toast("Enviado",{bolt:true})}).catch(e=>{if(e&&e.name!=="AbortError")toast("Não deu para compartilhar aqui. Use Baixar o PDF.",{err:true})})},
   waOpen:()=>{if(SHARE){markSent();openWa(SHARE.url,SHARE.text)}},
   shareDl:async()=>{if(!SHARE||!SHARE.blob)return;markSent();const r=await triggerDownload(SHARE.blob,SHARE.name);toast(r==="saved"?"PDF baixado. Agora é só anexar na conversa.":"Download cancelado.")},
   docComp:()=>{UI.docComp=!docAnexo();renderView()},
@@ -2856,6 +2929,10 @@ const ACT={
   logo:()=>$("#fileLogo").click(),
   logoReset:()=>{S.settings.logo="";changed();renderView();toast("Logo padrão de volta")},
   // ajustes
+  notifTg:d=>{S.settings.notif=Object.assign(notifCfg(),{[d.k]:!notifCfg()[d.k]});changed();renderView();toast("Ajuste salvo")},
+  notifAsk:()=>{notifAsk(true).then(ok=>{renderView();toast(ok?"Notificações liberadas":"O celular não liberou. Abra Configurações › Apps › JJ Gestão › Notificações.",{err:!ok})})},
+  notifTeste:async()=>{const L=PL("LocalNotifications");if(!L)return;const ok=await notifAsk(true);if(!ok){renderView();toast("Libere as notificações do JJ Gestão no celular.",{err:true});return}
+    try{await L.schedule({notifications:[{id:7999,title:"JJ Gestão",body:"Pronto: as notificações estão funcionando.",schedule:{at:new Date(Date.now()+4000),allowWhileIdle:true},smallIcon:"ic_stat_jj",iconColor:"#3FC9D6",extra:{go:"hoje"}}]});toast("Em 4 segundos chega uma notificação de teste.")}catch(e){toast("Não deu para agendar a notificação.",{err:true})}},
   tgSet:d=>{S.settings[d.k]=!S.settings[d.k];changed();renderView();toast("Ajuste salvo")},
   setOpt:d=>{S.settings[d.k]=d.v;changed();applyTheme();renderView();if(UI.view==="relatorios")fitPages()},
   sharedTo:d=>{const f=SHARED;SHARED=null;mPagar(d.id,d.q,{file:f})},
@@ -2892,6 +2969,7 @@ document.addEventListener("submit",e=>{e.preventDefault();const f=e.target.datas
 let PIXT;
 function growChat(){const i=$("#chatIn");if(!i)return;i.style.height="auto";i.style.height=Math.min(i.scrollHeight+2,150)+"px"}
 document.addEventListener("keydown",e=>{if(e.target&&e.target.id==="chatIn"&&e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();const f=e.target.form;if(f){if(f.requestSubmit)f.requestSubmit();else f.dispatchEvent(new Event("submit",{cancelable:true,bubbles:true}))}}},true);
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="nHora"&&/^\d{2}:\d{2}$/.test(e.target.value)){S.settings.notif=Object.assign(notifCfg(),{hora:e.target.value});changed();toast("Horário salvo")}});
 document.addEventListener("input",e=>{const id=e.target.id;if(id==="chatIn")growChat();
   if(id==="mVal"&&(mctx.kind==="pagar"||mctx.kind==="vale"||mctx.kind==="repasse")){mctx.valor=parseMoney(e.target.value);clearTimeout(PIXT);PIXT=setTimeout(renderPix,180)}
   if(id==="mVal"||id==="mDate")mLive();
@@ -2914,7 +2992,7 @@ setInterval(()=>{const t=toISO(new Date());if(t!==TODAY){TODAY=t;if(S.session&&S
 /* ================= início ================= */
 load();applyTheme();
 const h=(location.hash||"").slice(1);if(VIEWS.includes(h))UI.view=h;
-initSel();initAuthPre();render();splash();initAuth();initAI();initPWA();ensureQR();
+initSel();initAuthPre();initNative();render();splash();initAuth();initAI();initPWA();ensureQR();
 })();
 
 </script>
