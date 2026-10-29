@@ -988,7 +988,9 @@ function extenso(v){
 }
 
 /* ================= quinzenas ================= */
-function qMake(y,m,h){const last=new Date(y,m+1,0).getDate(),a=h===1?1:16,b=h===1?15:last;
+let INI=null;   // primeiro dia de uso do app: antes disso não aparecem dias nem quinzenas
+function qMake(y,m,h){const last=new Date(y,m+1,0).getDate(),b=h===1?15:last;let a=h===1?1:16;
+  if(INI){const st=toISO(new Date(y,m,a)),en=toISO(new Date(y,m,b));if(INI>st&&INI<=en)a=fromISO(INI).getDate()}
   return {key:`${y}-${pad(m+1)}-${h}`,y,m,h,start:toISO(new Date(y,m,a)),end:toISO(new Date(y,m,b)),label:`${a} a ${b} de ${MES[m]}`,full:`${a} a ${b} de ${MES[m]} de ${y}`,short:`${pad(a)}/${pad(m+1)} a ${pad(b)}/${pad(m+1)}/${y}`}}
 function qOf(iso){const d=fromISO(iso);return qMake(d.getFullYear(),d.getMonth(),d.getDate()<=15?1:2)}
 function qShift(q,n){const idx=q.y*24+q.m*2+(q.h-1)+n;const y=Math.floor(idx/24),r=((idx%24)+24)%24;return qMake(y,Math.floor(r/2),r%2+1)}
@@ -1004,6 +1006,7 @@ let S;
 function blank(){return {v:2,session:null,settings:{empresa:"JJ Transporte",cnpj:"",cidade:"São Paulo",uf:"SP",foneEmpresa:"",diaria:90,limite:50,cpfRecibo:true,compPdf:true,lembrete:true,voz:true,pagador:"filho",filhoNome:"Filho (pagamentos)",filhoTel:"",filhoPix:"",logo:"",tema:"escuro",letra:"normal",forma:"PIX",onboarded:false},people:[],dias:[],vales:[],cartao:[],pagos:{},repasses:{},enviada:{},comps:{},conf:{},chat:[]}}
 function hello(){return {id:uid(),from:"ai",text:"Oi! Eu sou o assistente da JJ. Fale ou escreva do seu jeito, por exemplo: <b>\"hoje foram o João e o Pedro\"</b>, <b>\"o Marcos pegou 50 de vale\"</b> ou <b>\"quanto eu devo pro Pedro?\"</b>. Eu sempre mostro antes de salvar.",time:hhmm()}}
 function seed(){
+  INI=null;
   const o=blank();o.settings.onboarded=true;o.settings.filhoNome="Lucas";o.settings.filhoTel="11990002081";o.settings.filhoPix="(11) 99000-2081";
   let x=20261024;const rnd=()=>{x=(x*16807)%2147483647;return x/2147483647};
   o.people=[
@@ -1060,7 +1063,9 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S,(k,v)=>k==="chat"&
 const P=id=>S.people.find(p=>p.id===id);
 const paysOf=k=>{const v=S.pagos[k];return Array.isArray(v)?v:v?[v]:[]};
 let EARLIEST=TODAY;
-function refreshEarliest(){EARLIEST=TODAY;[S.dias,S.vales,S.cartao].forEach(a=>a.forEach(o=>{if(o.date<EARLIEST)EARLIEST=o.date}))}
+function refreshEarliest(){EARLIEST=TODAY;[S.dias,S.vales,S.cartao].forEach(a=>a.forEach(o=>{if(o.date<EARLIEST)EARLIEST=o.date}));
+  const i=S.settings&&/^\d{4}-\d{2}-\d{2}$/.test(S.settings.inicio||"")?S.settings.inicio:null;INI=i&&i<EARLIEST?i:EARLIEST}
+const beforeStart=q=>!!INI&&q.end<INI;
 const memo=new Map();
 function changed(){memo.clear();refreshEarliest();S.mod=Math.max(Date.now(),(S.mod||0)+1);save();cloudPush()}
 
@@ -1419,7 +1424,8 @@ function vHoje(){
   const people=S.people.filter(p=>p.ativo||ex.has(p.id));
   const vd=S.vales.filter(v=>v.date===date),cd=S.cartao.filter(c=>c.date===date);
   const Tq=qTotals(qOf(TODAY));
-  const strip=`<div class="strip"><button class="iconb" data-act="diaQ" data-d="-1" aria-label="Quinzena anterior">${I("i-l")}</button><div class="days" id="days" role="group" aria-label="Escolher o dia">${qDays(q).map(d=>{const w=fromISO(d).getDay(),has=S.dias.some(x=>x.date===d);return `<button class="dc ${w===0?"sun":""} ${d===TODAY?"today":""}" data-act="diaDate" data-date="${d}" aria-pressed="${d===date}" ${d>TODAY?"disabled":""} aria-label="${longDate(d)}"><span>${d===TODAY?"hoje":DS[w]}</span><b>${fromISO(d).getDate()}</b>${has?"<i></i>":""}</button>`}).join("")}</div><button class="iconb" data-act="diaQ" data-d="1" ${q.end>=TODAY?"disabled":""} aria-label="Próxima quinzena">${I("i-r")}</button></div>`;
+  const prevOff=beforeStart(qShift(q,-1)),nextOff=qShift(q,1).start>TODAY;
+  const strip=`<div class="strip"><button class="iconb" data-act="diaQ" data-d="-1" aria-label="Quinzena anterior" ${prevOff?"disabled":""}>${I("i-l")}</button><div class="days" id="days" role="group" aria-label="Escolher o dia">${qDays(q).filter(d=>d<=TODAY).map(d=>{const w=fromISO(d).getDay(),has=S.dias.some(x=>x.date===d);return `<button class="dc ${w===0?"sun":""} ${d===TODAY?"today":""}" data-act="diaDate" data-date="${d}" aria-pressed="${d===date}" ${d>TODAY?"disabled":""} aria-label="${longDate(d)}"><span>${d===TODAY?"hoje":DS[w]}</span><b>${fromISO(d).getDate()}</b>${has?"<i></i>":""}</button>`}).join("")}</div><button class="iconb" data-act="diaQ" data-d="1" ${nextOff?"disabled":""} ${q.end>=TODAY?"disabled":""} aria-label="Próxima quinzena">${I("i-r")}</button></div>`;
   const ents=[...vd.map(v=>({k:"vale",o:v})),...cd.map(c=>({k:"cartao",o:c}))];
   return `
   <div class="vh"><div><p class="eb">${date===TODAY?greet()+", hoje é":"Lançando outro dia"}</p><h1>${longDate(date)}</h1></div><div class="sp"></div>
@@ -1475,7 +1481,7 @@ function flowHTML(q){
   </div>`;
 }
 function qNav(act){const q=qFromKey(UI.q),isCur=q.key===qOf(TODAY).key;
-  return `<div class="qnav"><button data-act="${act}" data-d="-1" aria-label="Quinzena anterior">${I("i-l")}</button><span>${q.label}${isCur?"":" de "+q.y}</span><button data-act="${act}" data-d="1" ${q.end>=TODAY?"disabled":""} aria-label="Próxima quinzena">${I("i-r")}</button></div>`}
+  return `<div class="qnav"><button data-act="${act}" data-d="-1" aria-label="Quinzena anterior" ${beforeStart(qShift(q,-1))?"disabled":""}>${I("i-l")}</button><span>${q.label}${isCur?"":" de "+q.y}</span><button data-act="${act}" data-d="1" ${q.end>=TODAY?"disabled":""} aria-label="Próxima quinzena">${I("i-r")}</button></div>`}
 function vDevo(){
   const q=qFromKey(UI.q),T=qTotals(q),isCur=q.key===qOf(TODAY).key,left=daysLeft(q);
   const L=T.L.slice().sort((a,b)=>a.p.nome.localeCompare(b.p.nome));
@@ -1613,7 +1619,7 @@ function vRelatorios(){
 function vDoc(){
   const t=UI.doc,q=qFromKey(UI.q),isQ=["quinzena","recibos","vales","excel"].includes(t);
   const [y,m]=UI.docMes.split("-").map(Number);
-  const nav=isQ?qNav("relQ"):(t==="cartao"||t==="mensal")?`<div class="qnav"><button data-act="docMes" data-d="-1" aria-label="Mês anterior">${I("i-l")}</button><span>${cap(MES[m-1])} de ${y}</span><button data-act="docMes" data-d="1" ${UI.docMes>=TODAY.slice(0,7)?"disabled":""} aria-label="Próximo mês">${I("i-r")}</button></div>`:"";
+  const nav=isQ?qNav("relQ"):(t==="cartao"||t==="mensal")?`<div class="qnav"><button data-act="docMes" data-d="-1" aria-label="Mês anterior" ${INI&&monthRange(y,m-2)[1]<INI?"disabled":""}>${I("i-l")}</button><span>${cap(MES[m-1])} de ${y}</span><button data-act="docMes" data-d="1" ${UI.docMes>=TODAY.slice(0,7)?"disabled":""} aria-label="Próximo mês">${I("i-r")}</button></div>`:"";
   const title=(DOCS.find(d=>d[0]===t)||[])[1];
   const head=`<button class="btn sec sm" data-act="docClose" style="margin-bottom:14px">${I("i-l")}Relatórios</button><div class="vh"><div><p class="eb">${t==="excel"?"Planilha":"Documento A4"}</p><h1>${title}</h1></div><div class="sp"></div>${nav}</div>`;
   if(t==="excel"){const T=qTotals(q);
@@ -1924,7 +1930,9 @@ function vAjustes(){
    <div class="card box"><h3>Regras de pagamento</h3>
     <label class="fl" for="sDia">Diária padrão para pessoa nova</label><input class="inp" id="sDia" data-set="diaria" data-money="1" value="${num(s.diaria)}" inputmode="decimal">
     <label class="fl" for="sLim">Quanto libera no cartão, por pessoa e por dia</label><input class="inp" id="sLim" data-set="limite" data-money="1" value="${num(s.limite)}" inputmode="decimal"><p class="hlp">O que passar disso vira vale da pessoa.</p>
-    <label class="fl">Quinzenas</label><div class="seg"><button aria-pressed="true">Dia 1 a 15 e 16 ao fim do mês</button></div></div>
+    <label class="fl">Quinzenas</label><div class="seg"><button aria-pressed="true">Dia 1 a 15 e 16 ao fim do mês</button></div>
+    <label class="fl" for="sIni">Começou a usar o app em</label><input class="inp" type="date" id="sIni" data-set="inicio" value="${esc(INI||TODAY)}" max="${TODAY}">
+    <p class="hlp">Os dias e as quinzenas começam a contar a partir daqui. Precisa lançar algo de antes? Escolha uma data mais antiga.</p></div>
    <div class="card box"><h3>Relatórios</h3>
     <p class="hlp" style="margin-top:0">O relatório da quinzena vai para ${esc(filhoGen()?"o contato acima":S.settings.filhoNome)}.</p>${tg("lembrete","Avisar no dia do fechamento","Mostra um aviso para conferir antes de mandar")}${tg("cpfRecibo","CPF nos recibos","Aparece só com os números do meio")}${tg("compPdf","Comprovante junto no recibo","Anexa a imagem do comprovante no PDF do recibo")}</div>
    <div class="card box"><h3>Assistente</h3>${tg("voz","Anotar por voz","Entende áudio e texto em português")}<p class="hlp">${AI_ON?`IA ligada: entende frases soltas e ${AI_IMG?"lê os comprovantes":"conversa como gente"}. Nada é salvo sem você confirmar.`:"Neste modo, entende frases simples. Com a IA (no app final, o Gemini do Google), entende frases soltas e lê os comprovantes sozinho."}</p></div>
@@ -2702,14 +2710,14 @@ const ACT={
   demo:()=>{const sess=S.session;S=seed();S.session=sess||{modo:"google",email:"jjtransporte@gmail.com",nome:"Conta da JJ"};CIMG.clear();seedComps();changed();UI.view="hoje";UI.q=qOf(TODAY).key;UI.diaDate=TODAY;initSel();render();toast("Dados de exemplo carregados. Pode mexer à vontade.")},
   obNext:()=>{obCollect();
     if(UI.ob.step===1){UI.ob.people.filter(p=>String(p.nome).trim()).forEach(p=>S.people.push({id:uid(),nome:p.nome.trim(),funcao:p.funcao||"Ajudante",diaria:p.diaria||S.settings.diaria,pix:"",cpf:"",tel:"",ativo:true,cor:COLORS[S.people.length%COLORS.length],desde:TODAY}));UI.ob.people=[]}
-    if(UI.ob.step===3){S.settings.onboarded=true;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();toast("Tudo pronto. Bom trabalho!",{bolt:true});return}
+    if(UI.ob.step===3){S.settings.onboarded=true;if(!S.settings.inicio)S.settings.inicio=TODAY;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();toast("Tudo pronto. Bom trabalho!",{bolt:true});return}
     UI.ob.step++;changed();render()},
   obBack:()=>{obCollect();UI.ob.step=Math.max(0,UI.ob.step-1);render()},
   obAdd:()=>{obCollect();UI.ob.people.push({nome:"",funcao:"Ajudante",diaria:S.settings.diaria});render();const ins=$$('[data-ob="nome"]');if(ins.length)ins[ins.length-1].focus()},
   obDel:d=>{obCollect();UI.ob.people.splice(+d.i,1);render()},
   // hoje
   diaDate:d=>{UI.diaDate=d.date;initSel();renderView()},
-  diaQ:d=>{const q=qShift(qOf(UI.diaDate),+d.d);let nd=+d.d<0?q.end:q.start;if(nd>TODAY)nd=TODAY;UI.diaDate=nd;initSel();renderView()},
+  diaQ:d=>{const q=qShift(qOf(UI.diaDate),+d.d);if(beforeStart(q))return;let nd=+d.d<0?q.end:q.start;if(nd>TODAY)nd=TODAY;UI.diaDate=nd;initSel();renderView()},
   abrirDia:d=>{UI.diaDate=d.date||TODAY;UI.view="hoje";initSel();renderView(true)},
   tgl:(d,el)=>{const id=d.id;buzz(8);if(UI.sel.has(id))UI.sel.delete(id);else UI.sel.add(id);const on=UI.sel.has(id);el.classList.remove("static");el.classList.toggle("on",on);el.setAttribute("aria-checked",on);const sb=$("#savebar");if(sb)sb.outerHTML=saveBarHTML()},
   selAll:()=>{const before=new Set(UI.sel);const ex=exMap(UI.diaDate);S.people.filter(p=>p.ativo||ex.has(p.id)).forEach(p=>UI.sel.add(p.id));renderView();$$("#pgrid .pc[data-id]").forEach(el=>{if(!before.has(el.dataset.id)&&UI.sel.has(el.dataset.id))el.classList.remove("static")});buzz(10)},
@@ -2732,7 +2740,7 @@ const ACT={
   novaPessoa:d=>mPessoa(null,d.nome),
   editPessoa:d=>mPessoa(d.id),
   // devo
-  devoQ:d=>{UI.q=qShift(qFromKey(UI.q),+d.d).key;UI.open.clear();renderView()},
+  devoQ:d=>{const nq=qShift(qFromKey(UI.q),+d.d);if(beforeStart(nq))return;UI.q=nq.key;UI.open.clear();renderView()},
   drTog:d=>{UI.open.has(d.id)?UI.open.delete(d.id):UI.open.add(d.id);renderView()},
   detTog:()=>{UI.det=!UI.det;if(UI.det)UI.once.add("det");renderView()},
   cdayTog:d=>{UI.cday.has(d.date)?UI.cday.delete(d.date):UI.cday.add(d.date);renderView()},
@@ -2777,7 +2785,7 @@ const ACT={
     const s=snap();UI.armed=null;if(d.k==="vale")S.vales=S.vales.filter(v=>v.id!==d.id);else S.cartao=S.cartao.filter(c=>c.id!==d.id);changed();renderView();toast("Lançamento apagado",{undo:()=>restore(s)})},
   copy:(d,el)=>{const t=d.t;copyText(t).then(ok=>{if(ok)copiedFx(el);toast(ok?"Chave Pix copiada":"Chave Pix: "+esc(t))})},
   // relatórios
-  relQ:d=>{UI.q=qShift(qFromKey(UI.q),+d.d).key;UI.zoom=0;renderView()},
+  relQ:d=>{const nq=qShift(qFromKey(UI.q),+d.d);if(beforeStart(nq))return;UI.q=nq.key;UI.zoom=0;renderView()},
   openDoc:d=>{UI.doc=d.t;UI.zoom=0;if(d.q)UI.q=d.q;if(d.id){UI.docPid=d.id;UI.docAll=false}else if(d.t==="recibos"){UI.docAll=false}
     if(UI.asst){UI.asst=false;renderAsst()}UI.view="relatorios";renderView(true)},
   docClose:()=>{UI.doc=null;renderView(true)},
