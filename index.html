@@ -1262,8 +1262,8 @@ const realAuth=()=>!!FB_CFG;
 let FB=null,FBP=null,AUTH_BUSY=false;
 function fbLoad(){if(FBP)return FBP;
   FBP=Promise.all([import(FB_URL("app")),import(FB_URL("auth"))]).then(async([A,Au])=>{const fresh=!A.getApps().length,app=fresh?A.initializeApp(FB_CFG):A.getApp();
-    /* App Check: prova pro Google que as perguntas pra IA vêm do site da JJ (chave pública do reCAPTCHA v3) */
-    if(fresh&&FB_CFG.appCheckKey){try{const AC=await import(FB_URL("app-check"));AC.initializeAppCheck(app,{provider:new AC.ReCaptchaV3Provider(FB_CFG.appCheckKey),isTokenAutoRefreshEnabled:true})}catch(e){console.warn("App Check:",e)}}
+    /* App Check: prova pro Google que as perguntas pra IA vêm do site da JJ (Fraud Defense / reCAPTCHA Enterprise; "v3" só se configurado assim) */
+    if(fresh&&FB_CFG.appCheckKey){try{const AC=await import(FB_URL("app-check"));AC.initializeAppCheck(app,{provider:FB_CFG.appCheckTipo==="v3"?new AC.ReCaptchaV3Provider(FB_CFG.appCheckKey):new AC.ReCaptchaEnterpriseProvider(FB_CFG.appCheckKey),isTokenAutoRefreshEnabled:true})}catch(e){console.warn("App Check:",e)}}
     const auth=Au.getAuth(app);try{Au.useDeviceLanguage(auth)}catch(e){}FB={A,Au,app,auth};return FB}).catch(e=>{FBP=null;throw e});
   return FBP}
 const AUTH_ERR={"auth/unauthorized-domain":()=>`Este endereço ainda não foi liberado no Firebase. Em Authentication › Configurações › Domínios autorizados, adicione <b>${esc(location.hostname)}</b>.`,
