@@ -1,5 +1,5 @@
 /* JJ Gestão: funciona sem internet e recebe comprovantes do app do banco */
-const V="jj-gestao-v3-1",SHARE="jj-share";
+const V="jj-gestao-v3-2",SHARE="jj-share";
 const SHELL=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./firebase-config.js"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!==SHARE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
@@ -16,7 +16,7 @@ self.addEventListener("fetch",e=>{
   if(req.mode==="navigate"){
     e.respondWith(fetch(req).then(r=>{const cp=r.clone();caches.open(V).then(c=>c.put("./index.html",cp));return r}).catch(()=>caches.match("./index.html")));return;
   }
-  if(u.origin===location.origin||/(^|\.)cdnjs\.cloudflare\.com$|^cdn\.jsdelivr\.net$|fonts\.googleapis\.com$|fonts\.gstatic\.com$/.test(u.hostname)){
+  if(u.origin===location.origin||/(^|\.)cdnjs\.cloudflare\.com$|^cdn\.jsdelivr\.net$|^www\.gstatic\.com$|fonts\.googleapis\.com$|fonts\.gstatic\.com$/.test(u.hostname)){
     e.respondWith(caches.match(req).then(m=>{const net=fetch(req).then(r=>{if(r&&(r.ok||r.type==="opaque")){const cp=r.clone();caches.open(V).then(c=>c.put(req,cp))}return r}).catch(()=>m);return m||net}));
   }
 });

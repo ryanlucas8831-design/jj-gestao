@@ -1257,12 +1257,12 @@ function vLogin(){
 /* ================= login de verdade (Firebase) =================
    O site publicado traz firebase-config.js (window.JJ_FIREBASE). Sem ele, o login fica simulado. */
 const FB_CFG=(()=>{try{const c=window.JJ_FIREBASE;return c&&c.apiKey&&c.authDomain?c:null}catch(e){return null}})();
-const FBV="10.14.1",FB_CDN=n=>`https://cdn.jsdelivr.net/npm/firebase@${FBV}/firebase-${n}-compat.js`;
+const FBV="12.19.0",FB_URL=n=>`https://www.gstatic.com/firebasejs/${FBV}/firebase-${n}.js`;
 const realAuth=()=>!!FB_CFG;
 let FB=null,FBP=null,AUTH_BUSY=false;
 function fbLoad(){if(FBP)return FBP;
-  FBP=loadScript(FB_CDN("app")).then(()=>loadScript(FB_CDN("auth"))).then(()=>{const fb=window.firebase;const app=fb.apps&&fb.apps.length?fb.app():fb.initializeApp(FB_CFG);
-    const auth=fb.auth();try{auth.useDeviceLanguage()}catch(e){}FB={fb,app,auth};return FB}).catch(e=>{FBP=null;throw e});
+  FBP=Promise.all([import(FB_URL("app")),import(FB_URL("auth"))]).then(([A,Au])=>{const app=A.getApps().length?A.getApp():A.initializeApp(FB_CFG);
+    const auth=Au.getAuth(app);try{Au.useDeviceLanguage(auth)}catch(e){}FB={A,Au,app,auth};return FB}).catch(e=>{FBP=null;throw e});
   return FBP}
 const AUTH_ERR={"auth/unauthorized-domain":()=>`Este endereço ainda não foi liberado no Firebase. Em Authentication › Configurações › Domínios autorizados, adicione <b>${esc(location.hostname)}</b>.`,
   "auth/operation-not-allowed":()=>"O login do Google ainda não foi ligado no Firebase (Authentication › Método de login › Google).",
@@ -1285,8 +1285,8 @@ function initAuth(){
   if(!realAuth())return;
   if(S.session&&!S.session.uid){S.session=null;save()}   // sessão do protótipo não vale no site real
   fbLoad().then(fb=>{
-    fb.auth.getRedirectResult().catch(authErr);
-    fb.auth.onAuthStateChanged(u=>{AUTH_BUSY=false;
+    fb.Au.getRedirectResult(fb.auth).catch(authErr);
+    fb.Au.onAuthStateChanged(fb.auth,u=>{AUTH_BUSY=false;
       if(u){const was=S.session&&S.session.uid===u.uid;useAccount(u);cloudStart();if(!was){UI.view="hoje";UI.diaDate=TODAY;initSel();render();if(S.settings.onboarded)toast(`Bem-vindo de volta, ${esc(first(S.session.nome))}`)}else if($("#side"))chrome()}
       else if(S.session){cloudStop();S.session=null;save();render()}
       else setAuthMsg("")});
@@ -1295,9 +1295,9 @@ function initAuth(){
 function loginGoogle(){
   if(!realAuth()){doLogin("google");return}
   if(AUTH_BUSY)return;
-  const go=fb=>{const p=new fb.fb.auth.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});AUTH_BUSY=true;setAuthMsg("Abrindo as suas contas Google…");
-    return fb.auth.signInWithPopup(p).then(()=>{setAuthMsg("Entrando…")}).catch(e=>{AUTH_BUSY=false;
-      if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment")){setAuthMsg("Abrindo o Google…");return fb.auth.signInWithRedirect(p).catch(authErr)}
+  const go=fb=>{const p=new fb.Au.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});AUTH_BUSY=true;setAuthMsg("Abrindo as suas contas Google…");
+    return fb.Au.signInWithPopup(fb.auth,p).then(()=>{setAuthMsg("Entrando…")}).catch(e=>{AUTH_BUSY=false;
+      if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment")){setAuthMsg("Abrindo o Google…");return fb.Au.signInWithRedirect(fb.auth,p).catch(authErr)}
       authErr(e)})};
   if(FB)go(FB);   // já carregado: abre na hora, sem o navegador bloquear a janela
   else{setAuthMsg("Carregando o Google…");fbLoad().then(go).catch(()=>setAuthMsg("Sem internet para entrar agora. Confira a conexão e tente de novo.",true))}
@@ -1307,9 +1307,11 @@ function loginGoogle(){
    O Firestore guarda uma cópia no aparelho: funciona sem internet e manda quando a conexão volta. */
 let DB=null,DBP=null,CLOUD={st:"off",at:0,unsub:null},PUSHT=null,REMOTE=null;
 const cloudOn=()=>realAuth()&&!!(S&&S.session&&S.session.uid);
-function dbLoad(){if(DBP)return DBP;DBP=fbLoad().then(fb=>loadScript(FB_CDN("firestore")).then(()=>{const db=fb.fb.firestore();
-    return db.enablePersistence({synchronizeTabs:true}).catch(()=>{}).then(()=>{DB=db;return db})})).catch(e=>{DBP=null;throw e});return DBP}
-const docRef=()=>DB.collection("contas").doc(S.session.uid);
+function dbLoad(){if(DBP)return DBP;DBP=fbLoad().then(fb=>import(FB_URL("firestore")).then(F=>{let db;
+    try{db=F.initializeFirestore(fb.app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})})}catch(e){db=F.getFirestore(fb.app)}
+    DB={F,db};return DB})).catch(e=>{DBP=null;throw e});return DBP}
+const docRef=()=>DB.F.doc(DB.db,"contas",S.session.uid);
+const compRef=id=>DB.F.doc(DB.db,"contas",S.session.uid,"comps",id);
 function cloudPayload(){const o=Object.assign({},S);delete o.session;delete o.owner;delete o.chat;delete o.cloud;return o}
 function cloudState(st){CLOUD.st=st;if(st==="ok")CLOUD.at=Date.now();const el=$("#cloudSt");if(el)el.innerHTML=cloudTxt();$$(".cst").forEach(m=>{m.outerHTML=cloudDot()})}
 function cloudTxt(){return {off:"Neste aparelho",load:"Conectando à nuvem…",push:"Salvando na nuvem…",ok:`Na nuvem · salvo ${CLOUD.at?"às "+hhmmOf(CLOUD.at):""}`,offline:"Sem internet: salva na nuvem quando a conexão voltar",err:"Não consegui salvar na nuvem. Os dados estão no aparelho e eu tento de novo."}[CLOUD.st]||""}
@@ -1320,7 +1322,7 @@ async function doPush(){if(!cloudOn())return;
   try{await dbLoad();if(!cloudOn())return;const data=JSON.stringify(cloudPayload());
     if(data.length>950000){cloudState("err");toast("Os dados ficaram grandes demais para a nuvem. Fale com o Ryan.",{err:true});return}
     cloudState(navigator.onLine===false?"offline":"push");const mod=S.mod||Date.now();
-    await docRef().set({dados:data,mod,v:3,app:"jj-gestao",em:new Date().toISOString()});S.cloudMod=mod;save();cloudState("ok")}
+    await DB.F.setDoc(docRef(),{dados:data,mod,v:3,app:"jj-gestao",em:new Date().toISOString()});S.cloudMod=mod;save();cloudState("ok")}
   catch(e){console.error(e);cloudState(navigator.onLine===false?"offline":"err");if(e&&e.code==="permission-denied")toast("A nuvem recusou: confira as regras do Firestore.",{err:true})}}
 function applyRemote(d){
   let o=null;try{o=migrate(JSON.parse(d.dados))}catch(e){}if(!o)return;
@@ -1332,12 +1334,12 @@ function applyRemote(d){
 }
 function cloudStart(){
   if(!cloudOn())return;const uid=S.session.uid;cloudState("load");
-  dbLoad().then(db=>{if(!cloudOn()||S.session.uid!==uid)return;
+  dbLoad().then(()=>{if(!cloudOn()||S.session.uid!==uid)return;
     if(CLOUD.unsub){CLOUD.unsub();CLOUD.unsub=null}
     let first=true;
-    CLOUD.unsub=docRef().onSnapshot({includeMetadataChanges:false},snap=>{
+    CLOUD.unsub=DB.F.onSnapshot(docRef(),{includeMetadataChanges:false},snap=>{
       if(snap.metadata.hasPendingWrites)return;
-      const d=snap.exists?snap.data():null;
+      const d=snap.exists()?snap.data():null;
       if(first){first=false;
         if(!d){ // nuvem vazia: sobe o que já tem no aparelho
           if(S.settings.onboarded||S.people.length){S.mod=S.mod||Date.now();cloudPush(true);toast("Pronto: seus dados agora ficam guardados na nuvem.",{bolt:true})}else cloudState("ok");return}
@@ -1357,10 +1359,10 @@ window.addEventListener("offline",()=>{if(cloudOn())cloudState("offline")});
 /* comprovantes: imagem menor vai para a nuvem (cada uma em um documento) */
 function shrinkData(data,maxLen){return new Promise(res=>{if(!data||data.length<=maxLen){res(data);return}const im=new Image();im.onload=()=>{let w=im.width,h=im.height,q=.78,k=Math.min(1,1200/Math.max(w,h)),out=data;
   for(let i=0;i<6;i++){const cv=document.createElement("canvas");cv.width=Math.round(w*k);cv.height=Math.round(h*k);const g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.drawImage(im,0,0,cv.width,cv.height);out=cv.toDataURL("image/jpeg",q);if(out.length<=maxLen)break;k*=.8;q=Math.max(.55,q-.06)}res(out)};im.onerror=()=>res(null);im.src=data})}
-async function cloudCompPut(id,data){if(!cloudOn())return;try{await dbLoad();const img=await shrinkData(data,900000);if(img)await docRef().collection("comps").doc(id).set({img,em:new Date().toISOString()})}catch(e){console.error(e)}}
-async function cloudCompGet(id){if(!cloudOn())return null;try{await dbLoad();const d=await docRef().collection("comps").doc(id).get();return d.exists?d.data().img:null}catch(e){return null}}
-function cloudCompDel(id){if(!cloudOn()||!DB)return;try{docRef().collection("comps").doc(id).delete().catch(()=>{})}catch(e){}}
-function sair(){cloudStop();UI.asst=false;if(realAuth()&&FB){FB.auth.signOut().catch(()=>{});S.session=null;save();render();return}S.session=null;save();render()}
+async function cloudCompPut(id,data){if(!cloudOn())return;try{await dbLoad();const img=await shrinkData(data,900000);if(img)await DB.F.setDoc(compRef(id),{img,em:new Date().toISOString()})}catch(e){console.error(e)}}
+async function cloudCompGet(id){if(!cloudOn())return null;try{await dbLoad();const d=await DB.F.getDoc(compRef(id));return d.exists()?d.data().img:null}catch(e){return null}}
+function cloudCompDel(id){if(!cloudOn()||!DB)return;try{DB.F.deleteDoc(compRef(id)).catch(()=>{})}catch(e){}}
+function sair(){cloudStop();UI.asst=false;if(realAuth()&&FB){FB.Au.signOut(FB.auth).catch(()=>{});S.session=null;save();render();return}S.session=null;save();render()}
 function doLogin(modo,email){S.session={modo,email:email||"jjtransporte@gmail.com",nome:modo==="google"?"Conta da JJ":first(String(email).split("@")[0])};save();render();toast(S.settings.onboarded?"Bem-vindo de volta":"Conta conectada. Vamos configurar em 1 minuto.")}
 
 /* ================= PRIMEIRO ACESSO ================= */
@@ -2142,14 +2144,29 @@ function sendChat(text,voice){
   const finish=r=>{S.chat=S.chat.filter(m=>m!==typing);S.chat.push(Object.assign({id:uid(),from:"ai",time:hhmm()},r));if(S.chat.length>80)S.chat=S.chat.slice(-80);save();renderMsgs()};
   const local=()=>{try{return understand(text)}catch(e){console.error(e);return {text:"Tive um problema para entender essa frase. Pode tentar de outro jeito?"}}};
   if(AI_ON&&AI){
-    aiUnderstand(text).then(finish,e=>{const c=e&&e.code;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed","session_expired"].includes(c)){AI_ON=false;AI_IMG=false;renderAsstHead()}else if(c!=="invalid_json")console.warn("IA indisponível agora:",c||e);finish(local())});
+    aiUnderstand(text).then(finish,e=>{const c=e&&e.code;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed","session_expired"].includes(c)){AI_ON=false;AI_IMG=false;renderAsstHead();if(realAuth())toast("A IA (Gemini) ainda não está ligada no Firebase. Usei o modo simples.",{err:true})}else if(c==="quota")toast("A IA chegou no limite grátis de agora. Usei o modo simples; daqui a pouco volta.",{err:true});else if(c!=="invalid_json")console.warn("IA indisponível agora:",c||e);finish(local())});
     return;
   }
   setTimeout(()=>finish(local()),reduced()?40:620);
 }
 /* ---------- IA de verdade (no Claude: capacidade "sample"; no app final: Gemini) ---------- */
 let AI=null,AI_ON=false,AI_IMG=false;
+/* Gemini pelo Firebase AI Logic: mesma "cara" da IA do protótipo (json(prompt,{images})) */
+const GEM_MODELS=["gemini-3.5-flash","gemini-3.1-flash-lite"];
+let GEMP=null,GEM_I=0;
+function gemLoad(){if(GEMP)return GEMP;GEMP=fbLoad().then(fb=>import(FB_URL("ai")).then(X=>({X,ai:X.getAI(fb.app,{backend:new X.GoogleAIBackend()})}))).catch(e=>{GEMP=null;throw e});return GEMP}
+const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(b)});
+function gemCode(e){const m=String(e&&(e.message||e.code)||"");return /quota|429|RESOURCE_EXHAUSTED|rate/i.test(m)?"quota":/not.?found|404|is not supported|unsupported model/i.test(m)?"model":/api-not-enabled|has not been used|PERMISSION_DENIED|403|disabled/i.test(m)?"not_enabled":/network|fetch|offline/i.test(m)?"offline":"error"}
+const GEM={json:async(prompt,opt)=>{opt=opt||{};const {X,ai}=await gemLoad();
+  const parts=[{text:prompt+"\n\nResponda somente com JSON válido."}];for(const b of opt.images||[])parts.push({inlineData:{mimeType:b.type||"image/jpeg",data:await blobB64(b)}});
+  for(let k=GEM_I;k<GEM_MODELS.length;k++){
+    try{const model=X.getGenerativeModel(ai,{model:GEM_MODELS[k],generationConfig:{responseMimeType:"application/json",temperature:.2}});
+      const r=await model.generateContent({contents:[{role:"user",parts}]});const t=r.response.text();GEM_I=k;
+      try{return JSON.parse(t)}catch(e){const m=t.match(/[\[{][\s\S]*[\]}]/);if(m)return JSON.parse(m[0]);throw {code:"invalid_json"}}}
+    catch(e){if(e&&e.code==="invalid_json")throw e;const c=gemCode(e);console.warn("Gemini:",GEM_MODELS[k],c,e);if(c==="model"&&k<GEM_MODELS.length-1)continue;throw {code:c==="not_enabled"?"capability_disabled":c,raw:e}}}
+}};
 function initAI(){
+  if(realAuth()){AI=GEM;AI_ON=true;AI_IMG=true;renderAsstHead();return}
   try{if(!window.claude||typeof window.claude.use!=="function")return;
     window.claude.use("sample").then(sm=>{if(typeof sm==="function"&&typeof sm.json==="function"){AI=sm;AI_ON=true;renderAsstHead();try{sm.limits().then(l=>{AI_IMG=!!(l&&l.images)}).catch(()=>{})}catch(e){}if(UI.view==="ajustes"&&$("#view")&&S.session)renderView()}}).catch(()=>{});
   }catch(e){}
