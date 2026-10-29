@@ -780,7 +780,56 @@ body:has(.mw) .toast{bottom:auto;top:22px}
 .e-note{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px;font-size:.86rem;color:var(--mu2)}
 .e-note svg{width:1rem;height:1rem}
 .e-act .lg-demo{margin-top:6px}
-@media (min-width:861px){.e-in{justify-content:center;gap:34px}.e-top{margin-top:0}.e-show{margin:0}}
+.e-eb{font-family:var(--n);font-weight:700;font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;color:var(--or);margin-bottom:16px;animation:vin .6s .35s both}
+.e-top h1{font-size:2.5rem;margin:18px 0 8px}
+.e-top p{font-size:1.1rem}
+/* mini tela do app */
+.e-demo{position:relative;flex:none;height:300px;margin:22px 0 20px;border-radius:24px;background:color-mix(in srgb,var(--s1) 86%,transparent);border:1px solid var(--bd2);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.03);backdrop-filter:blur(10px);overflow:hidden;animation:vin .7s .9s both}
+.e-demo:before{content:"";position:absolute;left:50%;top:9px;width:44px;height:4px;margin-left:-22px;border-radius:3px;background:var(--bd2)}
+.zsc{position:absolute;inset:24px 16px 28px;display:flex;flex-direction:column;justify-content:center;gap:7px;opacity:0;transform:translateY(12px);transition:opacity .45s,transform .45s;pointer-events:none}
+.zsc.on{opacity:1;transform:none}
+.zsh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.zsh b{font-size:1.06rem;font-weight:700}.zsh span{font-size:.8rem;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.zrw{display:flex;align-items:center;gap:11px;padding:7px 12px;border-radius:14px;background:var(--s2);border:1px solid var(--bd);transition:border-color .3s,background .3s}
+.zrw .av{width:30px;height:30px;border-radius:9px;font-size:.8rem}
+.zrw b{flex:1;font-weight:600;font-size:.95rem}.zrw em{font-style:normal;font-family:var(--n);font-weight:700;color:var(--tx2)}
+.e-demo .ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--bd2);display:grid;place-items:center;flex:none;transition:all .25s}
+.e-demo .ck svg{width:14px;height:14px;fill:none;stroke:#03221A;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24}
+.e-demo .ck.on,.zsc.on .zrw .ck{}
+@keyframes ckin{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:none;background:var(--ok);border-color:var(--ok)}}
+@keyframes ckd{to{stroke-dashoffset:0}}
+@keyframes rwon{to{border-color:color-mix(in srgb,var(--ok) 45%,transparent);background:var(--ok-soft)}}
+.zsc.on .r1 .ck{animation:ckin .35s .45s both}.zsc.on .r1 .ck svg{animation:ckd .3s .65s both}.zsc.on .r1{animation:rwon .3s .45s both}
+.zsc.on .r2 .ck{animation:ckin .35s .85s both}.zsc.on .r2 .ck svg{animation:ckd .3s 1.05s both}.zsc.on .r2{animation:rwon .3s .85s both}
+.zsc.on .r3 .ck{animation:ckin .35s 1.25s both}.zsc.on .r3 .ck svg{animation:ckd .3s 1.45s both}.zsc.on .r3{animation:rwon .3s 1.25s both}
+.zsv{position:relative;height:40px;border-radius:12px;background:var(--cy);color:var(--cy-ink);font-weight:700;display:grid;place-items:center;margin-top:4px;overflow:hidden}
+.zsv span{grid-area:1/1;display:flex;align-items:center;gap:6px}.zsv .b{opacity:0}.zsv svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+@keyframes svon{to{background:var(--ok)}}@keyframes fout{to{opacity:0;transform:translateY(-8px)}}@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.zsc.on .zsv{animation:svon .3s 2s both}.zsc.on .zsv .a{animation:fout .25s 2s both}.zsc.on .zsv .b{animation:fin .3s 2.1s both}
+:root[data-ui="light"] .zsv .b,:root[data-ui="light"] .e-demo .ck svg{color:#fff;stroke:#fff}
+.zamt{font-family:var(--n);font-weight:700;font-size:2.4rem;letter-spacing:-.01em;line-height:1}.zamt small{font-size:1.1rem;color:var(--mu);margin:0 3px}
+.zbar{height:7px;border-radius:5px;background:var(--s3);overflow:hidden}.zbar i{display:block;height:100%;width:0;border-radius:5px;background:var(--ok)}
+@keyframes barf{to{width:100%}}.zsc.on .zbar i{animation:barf 1.2s .4s cubic-bezier(.3,.7,.3,1) both}
+.zlns{display:flex;justify-content:space-between;font-size:.82rem;color:var(--mu)}
+.zpx{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;background:var(--s2);border:1px solid var(--cy-line);margin-top:6px;opacity:0}
+.zpx .ic{width:34px;height:34px;border-radius:10px;background:var(--cy-soft);color:var(--cy);display:grid;place-items:center;flex:none}.zpx .ic svg{width:1.15rem;height:1.15rem}
+.zpx div{flex:1;min-width:0}.zpx b{display:block;font-size:.95rem}.zpx div span{display:block;font-size:.78rem;color:var(--mu)}
+.zcp{position:relative;display:grid;place-items:center;min-width:84px;height:34px;border-radius:10px;background:var(--cy);color:var(--cy-ink);font-weight:700;font-size:.85rem}
+.zcp span{grid-area:1/1;display:flex;align-items:center;gap:4px}.zcp .b{opacity:0}.zcp svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.zsc.on .zpx{animation:fin .4s 1.5s both}.zsc.on .zcp{animation:svon .3s 2.5s both}.zsc.on .zcp .a{animation:fout .2s 2.5s both}.zsc.on .zcp .b{animation:fin .25s 2.55s both}
+.zdc{display:flex;align-items:center;gap:11px;padding:6px 12px;border-radius:14px;background:var(--s2);border:1px solid var(--bd);opacity:0}
+.zdc .zpdf{width:30px;height:34px;border-radius:6px;background:#fff;color:#C2394A;font-size:.62rem;font-weight:800;display:grid;place-items:center;flex:none;box-shadow:inset 0 0 0 1px #E3E7ED}
+.zdc b{flex:1;font-weight:600;font-size:.92rem}.zdc .ck{background:var(--ok);border-color:var(--ok)}.zdc .ck svg{stroke-dashoffset:0}
+.zsc.on .d1{animation:fin .35s .35s both}.zsc.on .d2{animation:fin .35s .7s both}.zsc.on .d3{animation:fin .35s 1.05s both}
+.zwa{display:flex;align-items:center;justify-content:center;gap:8px;height:38px;border-radius:12px;background:#1E9E52;color:#fff;font-weight:700;margin-top:4px;opacity:0}.zwa svg{width:1.1rem;height:1.1rem}
+.zsc.on .zwa{animation:fin .4s 1.8s both}
+.e-demo .e-dots{bottom:12px}
+.e-demo .e-dots i:after{animation:none;transform:scaleX(0);opacity:1}
+.e-demo .e-dots i.on:after{animation:dotf 4.2s linear both}
+@keyframes dotf{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (max-height:700px){.e-demo{height:268px;margin:14px 0}.zsc{gap:5px}.zrw,.zdc{padding:5px 10px}.e-top{margin-top:8px}.e-logo{transform:scale(.85)}}
+@media (min-width:861px){.e-in{justify-content:center}.e-top{margin-top:0}.e-demo{flex:0 0 300px}}
+@media (prefers-reduced-motion:reduce){.zsc.s1{opacity:1;transform:none}.e-demo .e-dots{display:none}}
 @media (prefers-reduced-motion:reduce){.e-card{animation:none!important;opacity:0}.e-card:first-child{opacity:1;transform:none}.e-dots{display:none}.e-sl{display:none}.ec .ok svg{stroke-dashoffset:0}}
 /* ===== movimento ===== */
 .view.vr{animation:vinr .3s cubic-bezier(.2,.9,.3,1)}
@@ -1256,7 +1305,7 @@ function render(){
   if(!UI.q)UI.q=qOf(TODAY).key;if(!UI.docMes)UI.docMes=TODAY.slice(0,7);
   memo.clear();refreshEarliest();
   const root=$("#root");
-  if(!S.session){root.innerHTML=vLogin();$("#asstRoot").innerHTML="";return}
+  if(!S.session){root.innerHTML=vLogin();$("#asstRoot").innerHTML="";setTimeout(entryDemo,reduced()?0:1300);return}
   if(!S.settings.onboarded){root.innerHTML=vOnboarding();return}
   root.innerHTML=`<div class="app"><aside class="side" id="side"></aside><div style="min-width:0"><header class="mtop" id="mtop"></header><main class="main" id="view"></main></div></div><nav class="tabbar" id="tabbar" aria-label="Menu"></nav>`;
   renderView(true);renderAsst();
@@ -1290,19 +1339,30 @@ const closeBanner=q=>{const l=daysLeft(q);return S.settings.lembrete&&q.key===qO
 /* ================= ENTRADA ================= */
 function vLogin(){
   const G=`<svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>`;
-  const cards=[
-    `<div class="ec"><span class="av" style="background:${COLORS[0]}">J</span><div class="tx"><b>João Silva</b><span>Trabalhou hoje · R$ 90,00</span></div><i class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>`,
-    `<div class="ec"><span class="ic cy">${I("i-pix")}</span><div class="tx"><b>Pix pronto pro filho</b><span>O total da quinzena</span></div><b class="v">R$ 1.380</b></div>`,
-    `<div class="ec"><span class="ic gr">${I("i-wa")}</span><div class="tx"><b>Recibos no WhatsApp</b><span>PDF de cada um, já assinado</span></div><i class="ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i></div>`];
+  const ck=`<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+  const pe=[["Marcos Dias","#3B82F6","R$ 90"],["Bruno Reis","#F97316","R$ 100"],["Diego Alves","#22C55E","R$ 90"]];
+  const demo=`<div class="e-demo" aria-hidden="true">
+    <div class="zsc s1"><div class="zsh"><b>Quem trabalhou hoje?</b><span>qui, 29</span></div>
+      ${pe.map((p,k)=>`<div class="zrw r${k+1}"><i class="ck">${ck}</i><span class="av" style="background:${p[1]}">${p[0][0]}</span><b>${p[0]}</b><em>${p[2]}</em></div>`).join("")}
+      <div class="zsv"><span class="a">Salvar o dia</span><span class="b">${ck}Dia salvo</span></div></div>
+    <div class="zsc s2"><div class="zsh"><b>Quanto eu devo</b><span>quinzena</span></div>
+      <div class="zamt"><small>R$</small>1.380<small>,00</small></div><div class="zbar"><i></i></div><div class="zlns"><span>3 pessoas</span><span>vales já descontados</span></div>
+      <div class="zpx"><span class="ic">${I("i-pix")}</span><div><b>Pix pronto pro filho</b><span>Chave e valor certos</span></div><span class="zcp"><span class="a">Copiar</span><span class="b">${ck}Copiado</span></span></div></div>
+    <div class="zsc s3"><div class="zsh"><b>Recibos da quinzena</b><span>PDF</span></div>
+      ${pe.map((p,k)=>`<div class="zdc d${k+1}"><span class="zpdf">PDF</span><b>Recibo · ${p[0]}</b><i class="ck on">${ck}</i></div>`).join("")}
+      <div class="zwa">${I("i-wa")}Enviado no WhatsApp</div></div>
+    <div class="e-dots"><i></i><i></i><i></i></div>
+  </div>`;
   return `<div class="login entry">
    <div class="e-bg" aria-hidden="true"><i class="g1"></i><i class="g2"></i><div class="e-sl">${["#3FC9D6","#F5893A","#3FC9D6","#9BE3EA"].map((c,k)=>`<i style="--c:${c};top:${22+k*9}%;--d:${k*1.7}s;--w:${38+k*9}vw"></i>`).join("")}</div></div>
    <main class="e-in">
     <div class="e-top">
-     <div class="e-logo"><span class="e-trail" aria-hidden="true"><i></i><i></i><i></i></span>${LOGO(104,70)}</div>
+     <span class="e-eb">JJ Transporte</span>
+     <div class="e-logo"><span class="e-trail" aria-hidden="true"><i></i><i></i><i></i></span>${LOGO(92,62)}</div>
      <h1>JJ Gestão</h1>
-     <p>Diárias, vales e pagamentos da equipe, sem caderno e sem conta de cabeça.</p>
+     <p>Sua equipe, sem caderno.</p>
     </div>
-    <div class="e-show" aria-hidden="true">${cards.map((c,k)=>`<div class="e-card" style="--k:${k}">${c}</div>`).join("")}<div class="e-dots">${cards.map((_,k)=>`<i style="--k:${k}"></i>`).join("")}</div></div>
+    ${demo}
     <form class="e-act" data-form="login">
      <button type="button" class="gbtn" data-act="loginGoogle">${G}Continuar com o Google</button>
      <p class="lg-st" id="lgSt" role="status">${UI.authMsg||""}</p>
@@ -1311,6 +1371,11 @@ function vLogin(){
    </main>
   </div>`;
 }
+/* mini tela da entrada: troca de cena a cada 4 segundos (e para quando sai da tela) */
+let ED=null;
+function entryDemo(){clearInterval(ED);const d0=$(".e-demo");if(!d0)return;let k=0;
+  const show=()=>{const d=$(".e-demo");if(!d){clearInterval(ED);return}d.querySelectorAll(".zsc").forEach((s,i)=>s.classList.toggle("on",i===k));d.querySelectorAll(".e-dots i").forEach((s,i)=>{s.classList.toggle("on",i===k)});k=(k+1)%3};
+  show();if(!reduced())ED=setInterval(show,4200)}
 /* ================= dentro do app Android (Capacitor) ================= */
 const CAP=()=>{try{const c=window.Capacitor;return c&&typeof c.isNativePlatform==="function"&&c.isNativePlatform()?c:null}catch(e){return null}};
 const NATIVE=()=>!!CAP();
