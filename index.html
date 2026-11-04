@@ -2216,7 +2216,7 @@ function vAjustes(){
       <button class="btn sec sm" data-act="notifTeste" style="margin-top:6px">${I("i-check")}Mandar uma notificação de teste</button>`})():`<p class="hlp" style="margin-top:0">Os avisos de fechamento da quinzena e o lembrete do dia funcionam no <b>app do celular</b> (APK).</p>`}</div>
    <div class="card box"><h3>Assistente</h3>${tg("voz","Anotar por voz","Entende áudio e texto em português")}<p class="hlp">${AI_ON?`IA ligada: entende frases soltas e ${AI_IMG?"lê os comprovantes":"conversa como gente"}. Nada é salvo sem você confirmar.`:"Neste modo, entende frases simples. Com a IA (no app final, o Gemini do Google), entende frases soltas e lê os comprovantes sozinho."}</p></div>
    <div class="card box"><h3>Instalar no celular</h3>${installHTML()}</div>
-   <div class="card box"><h3>Ajuda</h3><p class="hlp" style="margin-top:0">Esqueceu onde fica alguma coisa? O tour mostra os botões principais de novo.</p><button class="btn sec sm" data-act="tourAgain" style="margin-top:10px">Ver o tour de novo</button></div>
+   <div class="card box"><h3>Ajuda</h3><p class="hlp" style="margin-top:0">Esqueceu onde fica alguma coisa? O tour mostra os botões principais de novo.</p><button class="btn sec sm" data-act="tourAgain" style="margin-top:10px">Ver o tour de novo</button>${(()=>{const x=aiErrGet();return x?`<p class="hlp" id="aiErr" style="margin-top:14px">Último erro da IA (${esc(new Date(x.em).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))}): <b>${esc(x.c)}</b>${x.st?" · "+esc(String(x.st)):""} · ${esc(x.model)}<br><span style="font-size:.85em;word-break:break-word">${esc(x.msg)}</span></p>`:""})()}</div>
    <div class="card box"><h3>Conta e dados</h3>
     <div class="kv"><span>Conta</span><b>${esc(u.email||"")}</b></div><div class="kv"><span>Login</span><span>${u.uid?"Google (de verdade)":"Simulado (protótipo)"}</span></div><div class="kv"><span>Onde os dados ficam</span><span id="cloudSt">${u.uid?cloudTxt():"Neste navegador (protótipo)"}</span></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn sec sm" data-act="backup">${I("i-down")}Baixar backup</button><button class="btn sec sm" data-act="import">Restaurar backup</button></div>
@@ -2422,7 +2422,10 @@ function sendChat(text,voice){
   const finish=r=>{S.chat=S.chat.filter(m=>m!==typing);S.chat.push(Object.assign({id:uid(),from:"ai",time:hhmm()},r));if(S.chat.length>80)S.chat=S.chat.slice(-80);save();renderMsgs()};
   const local=()=>{try{return understand(text)}catch(e){console.error(e);return {text:"Tive um problema para entender essa frase. Pode tentar de outro jeito?"}}};
   if(AI_ON&&AI){
-    aiUnderstand(text).then(finish,e=>{const c=e&&e.code;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed","session_expired"].includes(c)){AI_ON=false;AI_IMG=false;renderAsstHead();if(realAuth())toast("A IA (Gemini) ainda não está ligada no Firebase. Usei o modo simples.",{err:true})}else if(c==="quota")toast("A IA chegou no limite grátis de agora. Usei o modo simples; daqui a pouco volta.",{err:true});else if(c!=="invalid_json")console.warn("IA indisponível agora:",c||e);finish(local())});
+    aiUnderstand(text).then(finish,e=>{const c=e&&e.code;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed","session_expired"].includes(c)){AI_ON=false;AI_IMG=false;renderAsstHead();if(realAuth())toast("A IA (Gemini) ainda não está ligada no Firebase. Usei o modo simples.",{err:true})}else if(c==="quota")toast("A IA chegou no limite grátis de agora. Usei o modo simples; daqui a pouco volta.",{err:true});
+    else if(c==="appcheck")toast("A IA não conseguiu confirmar o app no Google (App Check). Usei o modo simples.",{err:true});
+    else if(c==="offline")toast("Sem internet pra IA agora. Usei o modo simples.",{err:true});
+    else if(c&&c!=="invalid_json")toast("A IA deu um erro agora ("+c+"). Usei o modo simples. O detalhe fica em Ajustes › Ajuda.",{err:true});else if(c!=="invalid_json")console.warn("IA indisponível agora:",c||e);finish(local())});
     return;
   }
   setTimeout(()=>finish(local()),reduced()?40:620);
@@ -2432,16 +2435,27 @@ let AI=null,AI_ON=false,AI_IMG=false;
 /* Gemini pelo Firebase AI Logic: mesma "cara" da IA do protótipo (json(prompt,{images})) */
 const GEM_MODELS=["gemini-3.5-flash","gemini-3.1-flash-lite"];
 let GEMP=null,GEM_I=0;
+/* guarda o último erro da IA (sem dados da conta) pra aparecer em Ajustes › Ajuda */
+function aiErrSave(c,model,e){try{const cd=e&&e.customErrorData,msg=String((e&&e.message)||"").replace(/https?:\/\/\S+/g,"").replace(/AIza[\w-]+/g,"").replace(/\s+/g," ").trim().slice(0,180);
+  localStorage.setItem("jj-ai-err",JSON.stringify({c,model,st:cd&&cd.status||"",msg,em:new Date().toISOString()}))}catch(x){}}
+function aiErrGet(){try{return JSON.parse(localStorage.getItem("jj-ai-err")||"null")}catch(e){return null}}
 function gemLoad(){if(GEMP)return GEMP;GEMP=fbLoad().then(fb=>import(FB_URL("ai")).then(X=>({X,ai:X.getAI(fb.app,{backend:new X.GoogleAIBackend()})}))).catch(e=>{GEMP=null;throw e});return GEMP}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(b)});
-function gemCode(e){const m=String(e&&(e.message||e.code)||"");return /quota|429|RESOURCE_EXHAUSTED|rate/i.test(m)?"quota":/not.?found|404|is not supported|unsupported model/i.test(m)?"model":/api-not-enabled|has not been used|PERMISSION_DENIED|403|disabled/i.test(m)?"not_enabled":/network|fetch|offline/i.test(m)?"offline":"error"}
+function gemCode(e){const m=String((e&&e.message)||"")+" "+String((e&&e.code)||""),cd=e&&e.customErrorData;
+  const st=String((cd&&cd.status)||(m.match(/\[\s*(\d{3})\b/)||[])[1]||"");
+  if(/app.?check/i.test(m)||st==="401")return "appcheck";
+  if(st==="429"||/quota|RESOURCE_EXHAUSTED|rate.?limit|too many requests/i.test(m))return "quota";
+  if(st==="404"||/not.?found|is not supported|unsupported model/i.test(m))return "model";
+  if(st==="403"||/api-not-enabled|has not been used|PERMISSION_DENIED|SERVICE_DISABLED/i.test(m))return "not_enabled";
+  if(!st&&/network|failed to fetch|offline|load failed/i.test(m))return "offline";
+  return "error"}
 const GEM={json:async(prompt,opt)=>{opt=opt||{};const {X,ai}=await gemLoad();
   const parts=[{text:prompt+"\n\nResponda somente com JSON válido."}];for(const b of opt.images||[])parts.push({inlineData:{mimeType:b.type||"image/jpeg",data:await blobB64(b)}});
   for(let k=GEM_I;k<GEM_MODELS.length;k++){
     try{const model=X.getGenerativeModel(ai,{model:GEM_MODELS[k],generationConfig:{responseMimeType:"application/json",temperature:.2}});
       const r=await model.generateContent({contents:[{role:"user",parts}]});const t=r.response.text();GEM_I=k;
       try{return JSON.parse(t)}catch(e){const m=t.match(/[\[{][\s\S]*[\]}]/);if(m)return JSON.parse(m[0]);throw {code:"invalid_json"}}}
-    catch(e){if(e&&e.code==="invalid_json")throw e;const c=gemCode(e);console.warn("Gemini:",GEM_MODELS[k],c,e);if(c==="model"&&k<GEM_MODELS.length-1)continue;throw {code:c==="not_enabled"?"capability_disabled":c,raw:e}}}
+    catch(e){if(e&&e.code==="invalid_json")throw e;const c=gemCode(e);console.warn("Gemini:",GEM_MODELS[k],c,e);aiErrSave(c,GEM_MODELS[k],e);if((c==="model"||c==="quota")&&k<GEM_MODELS.length-1)continue;throw {code:c==="not_enabled"?"capability_disabled":c,raw:e}}}
 }};
 function initAI(){
   if(realAuth()){AI=GEM;AI_ON=true;AI_IMG=true;renderAsstHead();return}
