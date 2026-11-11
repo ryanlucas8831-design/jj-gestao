@@ -90,6 +90,15 @@ svg.i{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:2;
 .dtb .dti{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;margin-left:.3em;vertical-align:.12em;border-radius:9px;background:var(--cy-soft);color:var(--cy);font-size:.5em;border:1px solid var(--cy-line)}
 .dtb .dti svg{width:1.05em;height:1.05em}
 .dtb:active .dti{transform:scale(.94)}
+.pkc{margin-top:16px;padding:16px}
+.pkh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.pkh>i{width:36px;height:36px;flex:none;border-radius:10px;display:grid;place-items:center;background:var(--or-soft);color:var(--or)}
+.pkh>i svg{width:19px;height:19px}
+.pkh b{font-size:1.12rem;flex:1}
+.pkh .k{font-size:.85rem;color:var(--mu)}
+.pkf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pkf .fl{margin-top:6px}
+.pkc .hlp{margin-top:8px}
 .news{display:grid;gap:14px;margin:4px 0 6px}
 .nw{display:flex;gap:14px;align-items:flex-start}
 .nw>i{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--cy-soft);color:var(--cy);border:1px solid var(--cy-line)}
@@ -703,6 +712,7 @@ body:has(.mw) .toast{bottom:auto;top:22px}
 .a4 td b{display:block;font-size:10.8px;color:var(--dtx);font-weight:600}
 .a4 td small{display:block;font-size:9.4px;color:var(--dmu);margin-top:1px;white-space:normal}
 .a4 td.r{font-family:"Barlow Semi Condensed",Arial,sans-serif;font-weight:600;font-size:11.5px;color:var(--dtx)}
+.a4 table.tight td{padding-top:3.5px;padding-bottom:3.5px}
 .a4 .r{text-align:right}
 .a4 .neg,.a4 td.neg{color:var(--drd)}
 .a4 tr.neg td,.a4 tr.neg td b{color:var(--drd)}
@@ -1071,6 +1081,7 @@ body:has(.mw) .toast{bottom:auto;top:22px}
  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></symbol>
  <symbol id="i-money" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></symbol>
  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 0 1 0 8M22 21c0-3-2-5-4-5.5"/></symbol>
+ <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></symbol>
  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h5"/></symbol>
  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
@@ -1201,7 +1212,7 @@ const daysLeft=q=>Math.round((fromISO(q.end)-fromISO(TODAY))/864e5);
 /* ================= dados ================= */
 const KEY="jj-gestao-v2",OLDKEY="jj-gestao-final-v1";
 let S;
-function blank(){return {v:2,session:null,settings:{empresa:"JJ Transporte",cnpj:"",cidade:"São Paulo",uf:"SP",foneEmpresa:"",diaria:90,limite:50,cpfRecibo:true,compPdf:true,lembrete:true,bkLembrete:true,voz:true,pagador:"filho",filhoNome:"Filho (pagamentos)",filhoTel:"",filhoPix:"",logo:"",tema:"escuro",letra:"normal",forma:"PIX",onboarded:false},people:[],dias:[],vales:[],cartao:[],pagos:{},repasses:{},enviada:{},comps:{},conf:{},chat:[]}}
+function blank(){return {v:2,session:null,settings:{empresa:"JJ Transporte",cnpj:"",cidade:"São Paulo",uf:"SP",foneEmpresa:"",diaria:90,limite:50,cpfRecibo:true,compPdf:true,lembrete:true,bkLembrete:true,voz:true,pagador:"filho",filhoNome:"Filho (pagamentos)",filhoTel:"",filhoPix:"",logo:"",tema:"escuro",letra:"normal",forma:"PIX",onboarded:false},people:[],dias:[],vales:[],cartao:[],pacotes:[],pagos:{},repasses:{},enviada:{},comps:{},conf:{},chat:[]}}
 function hello(){return {id:uid(),from:"ai",text:"Oi! Eu sou o assistente da JJ. Fale ou escreva do seu jeito, por exemplo: <b>\"hoje foram o João e o Pedro\"</b>, <b>\"o Marcos pegou 50 de vale\"</b> ou <b>\"quanto eu devo pro Pedro?\"</b>. Eu sempre mostro antes de salvar.",time:hhmm()}}
 function seed(){
   INI=null;
@@ -1238,7 +1249,7 @@ function seed(){
 }
 function migrate(o){
   if(!o||!Array.isArray(o.people))return null;
-  o.settings=Object.assign(blank().settings,o.settings||{});o.comps=o.comps||{};o.pagos=o.pagos||{};o.repasses=o.repasses||{};o.enviada=o.enviada||{};o.conf=o.conf||{};o.chat=o.chat||[];
+  o.settings=Object.assign(blank().settings,o.settings||{});o.comps=o.comps||{};o.pagos=o.pagos||{};o.repasses=o.repasses||{};o.enviada=o.enviada||{};o.conf=o.conf||{};o.chat=o.chat||[];o.pacotes=Array.isArray(o.pacotes)?o.pacotes:[];
   Object.keys(o.pagos).forEach(k=>{const v=o.pagos[k];if(!v){delete o.pagos[k];return}if(!Array.isArray(v))o.pagos[k]=[{id:uid(),date:v.date,hora:v.hora||null,forma:v.forma||"PIX",valor:v.valor==null?null:v.valor,comp:v.comp||null,e2e:v.e2e||null}]});
   (o.vales||[]).forEach(v=>{if(!v.forma)v.forma=v.origem==="cartao"?"Cartão":"Dinheiro"});
   o.v=2;return o;
@@ -1261,7 +1272,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S,(k,v)=>k==="chat"&
 const P=id=>S.people.find(p=>p.id===id);
 const paysOf=k=>{const v=S.pagos[k];return Array.isArray(v)?v:v?[v]:[]};
 let EARLIEST=TODAY;
-function refreshEarliest(){EARLIEST=TODAY;[S.dias,S.vales,S.cartao].forEach(a=>a.forEach(o=>{if(o.date<EARLIEST)EARLIEST=o.date}));
+function refreshEarliest(){EARLIEST=TODAY;[S.dias,S.vales,S.cartao,S.pacotes||[]].forEach(a=>a.forEach(o=>{if(o.date<EARLIEST)EARLIEST=o.date}));
   const i=S.settings&&/^\d{4}-\d{2}-\d{2}$/.test(S.settings.inicio||"")?S.settings.inicio:null;INI=i&&i<EARLIEST?i:EARLIEST}
 const beforeStart=q=>!!INI&&q.end<INI;
 const memo=new Map();
@@ -1311,7 +1322,15 @@ function cartaoSplit(pid,date,valor,ignoreId){
 /* ================= estado da tela ================= */
 let ANIM=false;
 const UI={once:new Set(),cday:new Set(),view:"hoje",q:null,diaDate:TODAY,sel:null,selVal:{},open:new Set(),det:false,pid:null,pesOpen:false,pesQ:"",inat:false,doc:null,docPid:null,docAll:false,docMes:null,histYear:null,zoom:0,armed:null,ob:{step:0,people:[]},asst:false,rec:false,justPaid:null};
-function initSel(){UI.sel=new Set(S.dias.filter(d=>d.date===UI.diaDate).map(d=>d.pid));UI.selVal={}}
+function initSel(){UI.sel=new Set(S.dias.filter(d=>d.date===UI.diaDate).map(d=>d.pid));UI.selVal={};const k=pkOf(UI.diaDate);UI.pk={q:k&&k.qtd?String(k.qtd):"",v:k&&k.valor?num(k.valor):""}}
+/* pacotes do dia: quantidade e quanto rendeu, salvos junto com o dia */
+const dayCost=date=>({eq:S.dias.filter(d=>d.date===date).reduce((s,d)=>s+(+d.valor||0),0),ca:S.cartao.filter(c=>c.date===date).reduce((s,c)=>s+(+c.valor||0),0)});
+const pkOf=date=>(S.pacotes||[]).find(x=>x.date===date);
+const intOf=s=>{const d=String(s||"").replace(/\D/g,"");return d?Math.min(999999,parseInt(d,10)):0};
+const fmtN=n=>Math.round(n).toLocaleString("pt-BR");
+function pkCur(){const u=UI.pk||{q:"",v:""};return {q:intOf(u.q),v:parseMoney(u.v)}}
+function pkDirty(){const k=pkOf(UI.diaDate),c=pkCur();return (k?k.qtd:0)!==c.q||Math.abs((k?k.valor:0)-c.v)>.004}
+function pkHint(){const c=pkCur();return c.q&&c.v?`Deu ${brl(c.v/c.q)} por pacote.`:c.q&&!c.v?"Falta o quanto rendeu.":!c.q&&c.v?"Falta a quantidade de pacotes.":"Preencha e aperte Salvar o dia."}
 
 /* ================= tema ================= */
 function applyTheme(){
@@ -1387,7 +1406,7 @@ function countUp(){
     el.textContent=num(0);requestAnimationFrame(st);
   });
 }
-const snap=()=>JSON.stringify({dias:S.dias,vales:S.vales,cartao:S.cartao,pagos:S.pagos,repasses:S.repasses,enviada:S.enviada,comps:S.comps,people:S.people,conf:S.conf});
+const snap=()=>JSON.stringify({dias:S.dias,vales:S.vales,cartao:S.cartao,pacotes:S.pacotes,pagos:S.pagos,repasses:S.repasses,enviada:S.enviada,comps:S.comps,people:S.people,conf:S.conf});
 function restore(s){Object.assign(S,JSON.parse(s));changed();if(UI.view==="hoje")initSel();renderView();if(UI.asst)renderMsgs()}
 
 /* ================= estrutura ================= */
@@ -1685,7 +1704,7 @@ function vOnboarding(){
 }
 function obCollect(){
   if(UI.ob.step===0){S.settings.empresa=($("#obEmp").value.trim()||"JJ Transporte");S.settings.cnpj=$("#obCnpj").value.trim()}
-  if(UI.ob.step===1){$$("[data-ob]").forEach(el=>{const p=UI.ob.people[+el.dataset.i];if(!p)return;const k=el.dataset.ob;p[k]=k==="diaria"?parseMoney(el.value):el.value})}
+  if(UI.ob.step===1){$$("[data-ob]").forEach(el=>{const p=UI.ob.people[+el.dataset.i];if(!p)return;const k=el.dataset.ob;p[k]=k==="diaria"?(/\d/.test(el.value)?parseMoney(el.value):null):el.value})}
   if(UI.ob.step===2){const s=S.settings;s.pagador=UI.ob.pag||s.pagador||"filho";if(UI.ob.sexo)s.pagadorSexo=UI.ob.sexo;
     if($("#obFn")){const n=$("#obFn").value.trim();s.filhoNome=n||(s.pagador==="outro"?"":"Filho (pagamentos)");s.filhoPix=$("#obFp").value.trim();s.filhoTel=$("#obFt").value.trim()}}
   if(UI.ob.step===3){const d=parseMoney($("#obDia").value),l=parseMoney($("#obLim").value);if(d)S.settings.diaria=d;if(l)S.settings.limite=l}
@@ -1735,16 +1754,22 @@ function pcHTML(p,ex,q){
    <span class="nm"><b>${esc(p.nome)}</b><span>${saved?'<span class="sv">Salvo</span> · ':""}${plural(c.n,"dia","dias")} na quinzena</span></span>
    <button class="vchip ${custom?"ch":""}" data-act="valorDia" data-id="${p.id}" aria-label="Diária de ${esc(first(p.nome))} neste dia: ${brl(v)}. Toque para mudar">${brl(v)}${custom?"<small>só neste dia</small>":""}</button></div>`;
 }
+function pkCardHTML(){const k=pkOf(UI.diaDate),u=UI.pk||{q:"",v:""};
+  return `<div class="card pkc" id="pkc"><div class="pkh"><i>${I("i-box")}</i><b>Pacotes do dia</b><span class="k">${k&&!pkDirty()?'<span class="sv">Salvo</span>':"Salva junto com o dia"}</span></div>
+   <div class="pkf"><div><label class="fl" for="pkQ">Quantos pacotes</label><input class="inp" id="pkQ" inputmode="numeric" value="${esc(u.q)}" placeholder="Ex.: 1000" autocomplete="off"></div>
+   <div><label class="fl" for="pkV">Quanto rendeu (R$)</label><input class="inp" id="pkV" inputmode="decimal" value="${esc(u.v)}" placeholder="Ex.: 300,00" autocomplete="off"></div></div>
+   <p class="hlp" id="pkH">${pkHint()}</p></div>`}
 function saveBarHTML(){
   const date=UI.diaDate,ex=exMap(date);
   const adds=[...UI.sel].filter(id=>!ex.has(id)),rems=[...ex.keys()].filter(id=>!UI.sel.has(id));
   const changedVal=[...UI.sel].some(id=>!ex.has(id)&&UI.selVal[id]!==undefined);
   const sum=[...UI.sel].reduce((s,id)=>{const p=P(id);return s+(p?dayVal(p,ex):0)},0);
-  const n=UI.sel.size;
-  if(!adds.length&&!rems.length&&!changedVal){
-    return `<div class="savebar done" id="savebar"><div class="t"><b>${ex.size?plural(ex.size,"diária salva","diárias salvas")+" neste dia":"Toque em quem trabalhou"}</b><span>${ex.size?brl(sum)+" no total":"Depois aperte Salvar o dia"}</span></div><button class="btn xl" disabled>${ex.size?I("i-check")+"Salvo":"Salvar o dia"}</button></div>`;
+  const n=UI.sel.size,pkd=pkDirty(),pc=pkCur(),pks=pc.q?plural(pc.q,"pacote","pacotes").replace(String(pc.q),fmtN(pc.q)):"";
+  if(!adds.length&&!rems.length&&!changedVal&&!pkd){const k=pkOf(date);
+    return `<div class="savebar done" id="savebar"><div class="t"><b>${ex.size?plural(ex.size,"diária salva","diárias salvas")+" neste dia":k?"Pacotes salvos neste dia":"Toque em quem trabalhou"}</b><span>${ex.size?brl(sum)+" no total"+(k?" · pacotes salvos":""):k?brl(k.valor)+" de rendimento":"Depois aperte Salvar o dia"}</span></div><button class="btn xl" disabled>${ex.size||k?I("i-check")+"Salvo":"Salvar o dia"}</button></div>`;
   }
-  return `<div class="savebar" id="savebar"><div class="t"><b>${plural(n,"diária","diárias")}, ${brl(sum)}</b><span>${adds.length?`${plural(adds.length,"nova","novas")}`:""}${adds.length&&rems.length?", ":""}${rems.length?`${plural(rems.length,"para tirar","para tirar")}`:""}</span></div><button class="btn pri xl" data-act="salvarDia">${I("i-check")}${rems.length&&!adds.length?"Salvar alteração":"Salvar o dia"}</button></div>`;
+  const pd=adds.length||rems.length||changedVal;
+  return `<div class="savebar" id="savebar"><div class="t"><b>${pd||n?`${plural(n,"diária","diárias")}, ${brl(sum)}`:"Pacotes do dia"}</b><span>${adds.length?`${plural(adds.length,"nova","novas")}`:""}${adds.length&&rems.length?", ":""}${rems.length?`${plural(rems.length,"para tirar","para tirar")}`:""}${pkd?`${pd?" · ":""}${pc.q||pc.v?`${pks||"pacotes"}${pc.v?", "+brl(pc.v):""}`:"tirar os pacotes"}`:""}</span></div><button class="btn pri xl" data-act="salvarDia">${I("i-check")}${rems.length&&!adds.length&&!pkd?"Salvar alteração":"Salvar o dia"}</button></div>`;
 }
 function vHoje(){
   if(!UI.sel)initSel();
@@ -1765,6 +1790,7 @@ function vHoje(){
   <div class="sec" style="margin-top:0"><h2>Quem trabalhou?</h2><div class="selrow">${people.length?`<button class="btn sec sm" data-act="selAll">Todos</button><button class="btn sec sm" data-act="selNone">Ninguém</button>`:""}</div></div>
   ${people.length?`<div class="pgrid ${ANIM?"stag":""}" id="pgrid">${people.map(p=>pcHTML(p,ex,q)).join("")}<button class="pc add" data-act="novaPessoa">${I("i-plus")}Adicionar pessoa</button></div>`
    :`<div class="card empty"><b>Ninguém cadastrado ainda</b>Cadastre quem você chama para trabalhar.<br><button class="btn pri" data-act="novaPessoa">${I("i-plus")}Adicionar pessoa</button></div>`}
+  ${S.people.length?pkCardHTML():""}
   <div class="acts3">
    <button class="tile talk" data-act="falar"><i>${'<svg><use href="#i-mic"/></svg>'}</i><div><b>Falar</b><span>Anote por voz</span></div></button>
    <button class="tile vale" data-act="mVale"><i>${'<svg><use href="#i-minus"/></svg>'}</i><div><b>Vale</b><span>Adiantamento</span></div></button>
@@ -1778,7 +1804,7 @@ const CAL_MIN=()=>{const d=fromISO(TODAY);return new Date(d.getFullYear(),d.getM
 function calHTML(){
   const [y,m]=UI.calYM,last=new Date(y,m+1,0).getDate(),w0=new Date(y,m,1).getDay(),t=fromISO(TODAY);
   const curM=y===t.getFullYear()&&m===t.getMonth(),minD=CAL_MIN(),atMin=y===minD.getFullYear()&&m===minD.getMonth();
-  const has=new Set(S.dias.map(x=>x.date)),hasX=new Set([...S.vales,...S.cartao].map(x=>x.date));
+  const has=new Set(S.dias.map(x=>x.date)),hasX=new Set([...S.vales,...S.cartao,...(S.pacotes||[])].map(x=>x.date));
   let cells="";for(let i=0;i<w0;i++)cells+=`<span class="kd e"></span>`;
   for(let d=1;d<=last;d++){const iso=toISO(new Date(y,m,d)),fut=iso>TODAY,n=S.dias.filter(x=>x.date===iso).length;
     cells+=`<button type="button" class="kd ${d>15?"q2":"q1"} ${iso===TODAY?"td":""} ${has.has(iso)||hasX.has(iso)?"has":""}" data-act="calDia" data-date="${iso}" aria-pressed="${iso===UI.diaDate}" ${fut?"disabled":""} aria-label="${esc(longDate(iso))}${n?`, ${n} ${n===1?"pessoa":"pessoas"}`:""}"><b>${d}</b>${has.has(iso)||hasX.has(iso)?"<i></i>":""}</button>`}
@@ -1795,14 +1821,18 @@ function calHTML(){
   <div class="cqs">${qs}</div>
   ${UI.diaDate!==TODAY?`<button type="button" class="btn sec" style="width:100%;margin-top:12px" data-act="calDia" data-date="${TODAY}">Voltar para hoje</button>`:""}</div>`}
 /* "O que há de novo": aparece uma vez por conta depois de cada atualização */
-const NEWS_VER="2026-11-11",NEWS_DATA="11/11/2026";
-const NEWS=[["i-cal","Calendário do mês","Toque na data, no topo da tela Hoje, para abrir o mês inteiro. Escolha qualquer dia, até de antes de instalar o app, e lance quem trabalhou."],
- ["i-user","Outra pessoa pode pagar a equipe","Em Ajustes › Quem paga a equipe, agora tem também “Outra pessoa”, além de “Meu filho” e “Eu mesmo”."],
- ["i-down","Lembrete de backup todo mês","No dia 1º de cada mês, o app lembra de guardar uma cópia de tudo no celular. Dá pra desligar em Ajustes."]];
-function whatsNew(force){
-  if(!force){if(!S.session||!S.settings.onboarded||(S.settings.newsSeen||"")>=NEWS_VER)return;if($(".tour")||$("#modalRoot .mw")){setTimeout(()=>whatsNew(),2500);return}
+const NEWS_VER="2026-11-11b",NEWS_DATA="11/11/2026";
+const NEWS=[["2026-11-11b","i-box","Pacotes do dia","Na tela Hoje, embaixo de quem trabalhou, coloque quantos pacotes e quanto rendeu. Salva junto quando apertar “Salvar o dia”."],
+ ["2026-11-11b","i-doc","Relatório “Pacotes do mês”","Em Relatórios: pacotes, quanto rendeu e quanto sobrou, dia a dia, com as quinzenas, o melhor dia e os meses do ano."],
+ ["2026-11-11b","i-people","Diária de R$ 0","Dá pra cadastrar quem ajuda sem receber diária (coloque 0). A pessoa aparece nos dias, mas não entra no pagamento."],
+ ["2026-11-11","i-cal","Calendário do mês","Toque na data, no topo da tela Hoje, para abrir o mês inteiro. Escolha qualquer dia, até de antes de instalar o app, e lance quem trabalhou."],
+ ["2026-11-11","i-user","Outra pessoa pode pagar a equipe","Em Ajustes › Quem paga a equipe, agora tem também “Outra pessoa”, além de “Meu filho” e “Eu mesmo”."],
+ ["2026-11-11","i-down","Lembrete de backup todo mês","No dia 1º de cada mês, o app lembra de guardar uma cópia de tudo no celular. Dá pra desligar em Ajustes."]];
+function whatsNew(force){const seen=S.settings.newsSeen||"";
+  if(!force){if(!S.session||!S.settings.onboarded||seen>=NEWS_VER)return;if($(".tour")||$("#modalRoot .mw")){setTimeout(()=>whatsNew(),2500);return}
     S.settings.newsSeen=NEWS_VER;changed()}
-  openModal(mHead("O que há de novo",`Atualização de ${NEWS_DATA}`)+`<div class="news">${NEWS.map(([ic,t,d])=>`<div class="nw"><i>${I(ic)}</i><div><b>${t}</b><span>${d}</span></div></div>`).join("")}</div>
+  const L=force?NEWS:NEWS.filter(n=>n[0]>seen);
+  openModal(mHead("O que há de novo",`Atualização de ${NEWS_DATA}`)+`<div class="news">${L.map(([,ic,t,d])=>`<div class="nw"><i>${I(ic)}</i><div><b>${t}</b><span>${d}</span></div></div>`).join("")}</div>
    <div class="mf"><button type="button" class="btn pri" style="width:100%" data-act="closeModal">Entendi</button></div>`)}
 function openCal(){const d=fromISO(UI.diaDate||TODAY);UI.calYM=[d.getFullYear(),d.getMonth()];openModal(calHTML())}
 function entHTML(k,o,withDate,noName){
@@ -1947,12 +1977,13 @@ const DOCS=[
  ["recibos","Recibos","i-people","Um recibo por pessoa, com dias, vales e assinatura."],
  ["cartao","Cartão do mês","i-card","Gastos com refeição por dia e por pessoa."],
  ["mensal","Fechamento do mês","i-cal","As duas quinzenas juntas: diárias, cartão e custo total."],
+ ["pacotes","Pacotes do mês","i-box","Pacotes, quanto rendeu e quanto sobrou, dia a dia."],
  ["historico","Histórico de uma pessoa","i-hist","Todas as quinzenas do ano de uma pessoa."],
  ["vales","Extrato de vales","i-minus","Adiantamentos e o que passou de uma quinzena para outra."],
  ["excel","Planilha Excel","i-xls","Todos os lançamentos, para o contador."]];
 function curSpec(){const t=UI.doc,q=qFromKey(UI.q),[y,m]=UI.docMes.split("-").map(Number);
   if(t==="recibos"){const L=qTotals(q).L.map(o=>o.p).sort((a,b)=>a.nome.localeCompare(b.nome));if(!UI.docPid||!L.some(p=>p.id===UI.docPid))UI.docPid=(L[0]||{}).id||null;return UI.docAll?{t:"recibos",q}:{t:"recibo",q,pid:UI.docPid}}
-  if(t==="cartao"||t==="mensal")return {t,y,m:m-1};
+  if(t==="cartao"||t==="mensal"||t==="pacotes")return {t,y,m:m-1};
   if(t==="historico"){if(!UI.docPid||!P(UI.docPid))UI.docPid=(S.people[0]||{}).id||null;return {t,pid:UI.docPid,y:UI.histYear||fromISO(TODAY).getFullYear()}}
   return {t,q};
 }
@@ -1966,6 +1997,7 @@ function build(sp){
   if(sp.t==="recibos"){const L=qTotals(sp.q).L.slice().sort((a,b)=>a.p.nome.localeCompare(b.p.nome));if(!L.length)return {title:"Recibos",pages:[],empty:`Ninguém trabalhou na quinzena de ${sp.q.label} ainda.`};return {title:`${L.length} recibos`,pages:L.flatMap(o=>docRecibo(o.p.id,sp.q,ax)),comps:specComps(sp).length,name:`Recibos-${sp.q.start}-a-${sp.q.end}.pdf`,tipo:"Recibos individuais",periodo:sp.q.short,total:qTotals(sp.q).aPagar,wa:waQuinzena(sp.q),tel:S2.filhoTel,to:S2.filhoNome}}
   if(sp.t==="cartao"){const mc=monthCartao(sp.y,sp.m);if(!mc.length)return {title:"Cartão do mês",pages:[],empty:`Nenhum gasto no cartão em ${MES[sp.m]} de ${sp.y}.`};return {title:"Cartão do mês",pages:[docCartao(sp.y,sp.m)],name:`Cartao-${sp.y}-${pad(sp.m+1)}.pdf`,tipo:"Cartão do mês",periodo:`${MES[sp.m]} de ${sp.y}`,total:mc.reduce((s,c)=>s+c.valor,0),wa:waCartao(sp.y,sp.m),tel:S2.filhoTel,to:S2.filhoNome}}
   if(sp.t==="mensal"){const T1=qTotals(qMake(sp.y,sp.m,1)),T2=qTotals(qMake(sp.y,sp.m,2));if(!T1.L.length&&!T2.L.length)return {title:"Fechamento do mês",pages:[],empty:`Nada lançado em ${MES[sp.m]} de ${sp.y}.`};return {title:"Fechamento do mês",pages:[docMensal(sp.y,sp.m)],name:`Fechamento-${sp.y}-${pad(sp.m+1)}.pdf`,tipo:"Fechamento mensal",periodo:`${MES[sp.m]} de ${sp.y}`,total:T1.bruto+T2.bruto+T1.cartao+T2.cartao,wa:waMensal(sp.y,sp.m),tel:S2.filhoTel,to:S2.filhoNome}}
+  if(sp.t==="pacotes"){const M=pkMonth(sp.y,sp.m);if(!M.pk.length)return {title:"Pacotes do mês",pages:[],empty:`Nenhum pacote lançado em ${MES[sp.m]} de ${sp.y}. Lance na tela Hoje, em "Pacotes do dia", e aperte Salvar o dia.`};return {title:"Pacotes do mês",pages:docPacotes(sp.y,sp.m),name:`Pacotes-${sp.y}-${pad(sp.m+1)}.pdf`,tipo:"Pacotes e rendimento",periodo:`${MES[sp.m]} de ${sp.y}`,total:M.t.r,wa:waPacotes(sp.y,sp.m),tel:S2.filhoTel,to:S2.filhoNome}}
   if(sp.t==="historico"){const p=P(sp.pid);if(!p)return {title:"Histórico",pages:[],empty:"Nenhuma pessoa cadastrada."};return {title:"Histórico de "+first(p.nome),pages:[docHistorico(p.id,sp.y)],name:`Historico-${slug(p.nome)}-${sp.y}.pdf`,tipo:"Histórico por pessoa",periodo:String(sp.y),total:null,wa:`*${S2.empresa} – Histórico de ${p.nome} (${sp.y})*`,tel:p.tel,to:p.nome}}
   if(sp.t==="vales"){const T=qTotals(sp.q);if(!S.vales.some(v=>inQ(v.date,sp.q))&&!T.L.some(o=>o.c.carry||o.c.liquido<0))return {title:"Extrato de vales",pages:[],empty:`Nenhum vale na quinzena de ${sp.q.label}.`};return {title:"Extrato de vales",pages:[docVales(sp.q)],name:`Vales-${sp.q.start}-a-${sp.q.end}.pdf`,tipo:"Extrato de vales",periodo:sp.q.short,total:T.vales,wa:waVales(sp.q),tel:S2.filhoTel,to:S2.filhoNome}}
   return {title:"",pages:[]};
@@ -1973,14 +2005,14 @@ function build(sp){
 function vRelatorios(){
   if(UI.doc)return vDoc();
   const q=qFromKey(UI.q),T=qTotals(q),[y,m]=UI.docMes.split("-").map(Number);
-  const per={quinzena:q.label,recibos:plural(T.L.length,"pessoa","pessoas"),cartao:`${cap(MES[m-1])} de ${y}`,mensal:`${cap(MES[m-1])} de ${y}`,historico:"Escolha a pessoa",vales:q.label,excel:q.label};
+  const per={quinzena:q.label,recibos:plural(T.L.length,"pessoa","pessoas"),cartao:`${cap(MES[m-1])} de ${y}`,mensal:`${cap(MES[m-1])} de ${y}`,pacotes:`${cap(MES[m-1])} de ${y}`,historico:"Escolha a pessoa",vales:q.label,excel:q.label};
   return `<div class="vh"><div><p class="eb">Documentos em PDF</p><h1>Relatórios</h1></div><div class="sp"></div>${qNav("relQ")}</div>
    <div class="tiles ${ANIM?"stag":""}">${DOCS.map(([k,t,ic,d],i)=>`<button class="dtile ${i===0?"hl":""}" data-act="openDoc" data-t="${k}"><i>${'<svg><use href="#'+ic+'"/></svg>'}</i><div><b>${t}</b><span>${d}</span><em>${per[k]}</em></div></button>`).join("")}</div>`;
 }
 function vDoc(){
   const t=UI.doc,q=qFromKey(UI.q),isQ=["quinzena","recibos","vales","excel"].includes(t);
   const [y,m]=UI.docMes.split("-").map(Number);
-  const nav=isQ?qNav("relQ"):(t==="cartao"||t==="mensal")?`<div class="qnav"><button data-act="docMes" data-d="-1" aria-label="Mês anterior" ${INI&&monthRange(y,m-2)[1]<INI?"disabled":""}>${I("i-l")}</button><span>${cap(MES[m-1])} de ${y}</span><button data-act="docMes" data-d="1" ${UI.docMes>=TODAY.slice(0,7)?"disabled":""} aria-label="Próximo mês">${I("i-r")}</button></div>`:"";
+  const nav=isQ?qNav("relQ"):(t==="cartao"||t==="mensal"||t==="pacotes")?`<div class="qnav"><button data-act="docMes" data-d="-1" aria-label="Mês anterior" ${INI&&monthRange(y,m-2)[1]<INI?"disabled":""}>${I("i-l")}</button><span>${cap(MES[m-1])} de ${y}</span><button data-act="docMes" data-d="1" ${UI.docMes>=TODAY.slice(0,7)?"disabled":""} aria-label="Próximo mês">${I("i-r")}</button></div>`:"";
   const title=(DOCS.find(d=>d[0]===t)||[])[1];
   const head=`<button class="btn sec sm" data-act="docClose" style="margin-bottom:14px">${I("i-l")}Relatórios</button><div class="vh"><div><p class="eb">${t==="excel"?"Planilha":"Documento A4"}</p><h1>${title}</h1></div><div class="sp"></div>${nav}</div>`;
   if(t==="excel"){const T=qTotals(q);
@@ -2126,6 +2158,38 @@ function docCartao(y,m){
    <p class="d-note">Os gastos do cartão são custo da empresa. O excedente acima do liberado foi lançado como vale da pessoa e descontado no pagamento.</p>
   </div>${dFoot("c"+y+m+tot,1,1)}`;
 }
+/* pacotes do mês: dia a dia, quinzenas, destaques e o ano */
+function pkMonth(y,m){const[a,b]=monthRange(y,m),inM=d=>d>=a&&d<=b;
+  const pk=(S.pacotes||[]).filter(x=>inM(x.date));
+  const dates=[...new Set([...pk.map(x=>x.date),...S.dias.filter(d=>inM(d.date)).map(d=>d.date)])].sort();
+  const rows=dates.map(d=>{const k=pkOf(d),c=dayCost(d),q=k?k.qtd:0,r=k?k.valor:0;return {d,q,r,eq:c.eq,ca:c.ca,s:r-c.eq-c.ca,has:!!k}});
+  const sum=L=>L.reduce((t,o)=>({q:t.q+o.q,r:t.r+o.r,eq:t.eq+o.eq,ca:t.ca+o.ca,s:t.s+o.s,n:t.n+(o.has?1:0)}),{q:0,r:0,eq:0,ca:0,s:0,n:0});
+  return {pk,rows,t:sum(rows),q1:sum(rows.filter(o=>+o.d.slice(8)<=15)),q2:sum(rows.filter(o=>+o.d.slice(8)>15))}}
+function docPacotes(y,m){
+  const M=pkMonth(y,m),T=M.t,last=new Date(y,m+1,0).getDate(),wp=M.rows.filter(o=>o.has);
+  const best=wp.slice().sort((a,b)=>b.s-a.s)[0],most=wp.slice().sort((a,b)=>b.q-a.q)[0],worst=wp.length>1?wp.slice().sort((a,b)=>a.s-b.s)[0]:null;
+  const pp=v=>v?brl(v):"—",sv=v=>`<span style="color:${v<0?"#C0392B":"#1E8A57"};font-weight:700">${v<0?"− ":""}${brl(Math.abs(v))}</span>`;
+  const head=`${dBand("Pacotes do mês",`<b>${cap(MES[m])} de ${y}</b> · emitido em ${dmy(TODAY)}`)}`;
+  const kpis=`<div class="d-kpis"><div class="hl"><span>Sobrou no mês</span><b>${T.s<0?"− ":""}${brl(Math.abs(T.s))}</b></div><div><span>Pacotes</span><b>${fmtN(T.q)}</b></div><div><span>Rendimento</span><b>${brl(T.r)}</b></div><div><span>Equipe + cartão</span><b>${brl(T.eq+T.ca)}</b></div></div>`;
+  const tab=`<div class="d-sec"><h2>Dia a dia</h2><span>${plural(T.n,"dia com pacotes","dias com pacotes")}</span></div>
+   <table class="${M.rows.length>20?"tight":""}"><thead><tr><th>Data</th><th>Dia</th><th class="r">Pacotes</th><th class="r">Rendeu</th><th class="r">Por pacote</th><th class="r">Equipe</th><th class="r">Cartão</th><th class="r">Sobrou</th></tr></thead><tbody>
+   ${M.rows.map(o=>`<tr><td>${dmy(o.d)}</td><td>${DL[fromISO(o.d).getDay()]}</td><td class="r">${o.has?fmtN(o.q):"—"}</td><td class="r">${o.has?brl(o.r):"—"}</td><td class="r">${o.q&&o.r?brl(o.r/o.q):"—"}</td><td class="r">${pp(o.eq)}</td><td class="r">${pp(o.ca)}</td><td class="r">${sv(o.s)}</td></tr>`).join("")}
+   </tbody><tfoot><tr class="tot"><td>Mês</td><td></td><td class="r">${fmtN(T.q)}</td><td class="r">${brl(T.r)}</td><td class="r">${T.q&&T.r?brl(T.r/T.q):"—"}</td><td class="r">${brl(T.eq)}</td><td class="r">${brl(T.ca)}</td><td class="r">${sv(T.s)}</td></tr></tfoot></table>`;
+  const qrow=(l,o)=>`<tr><td><b>${l}</b></td><td class="r">${o.n}</td><td class="r">${fmtN(o.q)}</td><td class="r">${brl(o.r)}</td><td class="r">${brl(o.eq+o.ca)}</td><td class="r">${sv(o.s)}</td></tr>`;
+  const quinz=`<div class="d-sec d-mt"><h2>Quinzenas do mês</h2></div>
+   <table><thead><tr><th>Quinzena</th><th class="r">Dias</th><th class="r">Pacotes</th><th class="r">Rendimento</th><th class="r">Equipe + cartão</th><th class="r">Sobrou</th></tr></thead><tbody>${qrow(`1 a 15 de ${MES[m]}`,M.q1)}${qrow(`16 a ${last} de ${MES[m]}`,M.q2)}</tbody></table>`;
+  const dest=`<div class="d-sec d-mt"><h2>Destaques</h2></div>
+   <div class="d-meta" style="grid-template-columns:1fr 1fr 1fr 1fr"><div><span>Melhor dia (mais sobrou)</span><b>${best?dm(best.d)+" · "+brl(best.s):"—"}</b></div><div><span>Mais pacotes</span><b>${most?dm(most.d)+" · "+fmtN(most.q):"—"}</b></div><div><span>Média por dia</span><b>${T.n?fmtN(T.q/T.n)+" pacotes":"—"}</b></div><div><span>Dia mais fraco</span><b>${worst?dm(worst.d)+" · "+(worst.s<0?"− ":"")+brl(Math.abs(worst.s)):"—"}</b></div></div>`;
+  const ms=[];for(let i=0;i<12;i++){const mm=pkMonth(y,i);if(mm.pk.length)ms.push({i,t:mm.t})}
+  const ano=`<div class="d-sec d-mt"><h2>Meses de ${y}</h2><span>só meses com pacotes</span></div>
+   <table><thead><tr><th>Mês</th><th class="r">Dias</th><th class="r">Pacotes</th><th class="r">Rendimento</th><th class="r">Por pacote</th><th class="r">Equipe + cartão</th><th class="r">Sobrou</th></tr></thead><tbody>
+   ${ms.map(o=>`<tr${o.i===m?' style="font-weight:700"':""}><td>${cap(MES[o.i])}</td><td class="r">${o.t.n}</td><td class="r">${fmtN(o.t.q)}</td><td class="r">${brl(o.t.r)}</td><td class="r">${o.t.q&&o.t.r?brl(o.t.r/o.t.q):"—"}</td><td class="r">${brl(o.t.eq+o.t.ca)}</td><td class="r">${sv(o.t.s)}</td></tr>`).join("")}</tbody>
+   ${ms.length>1?(()=>{const a=ms.reduce((t,o)=>({n:t.n+o.t.n,q:t.q+o.t.q,r:t.r+o.t.r,c:t.c+o.t.eq+o.t.ca,s:t.s+o.t.s}),{n:0,q:0,r:0,c:0,s:0});return `<tfoot><tr class="tot"><td>Ano</td><td class="r">${a.n}</td><td class="r">${fmtN(a.q)}</td><td class="r">${brl(a.r)}</td><td class="r">${a.q&&a.r?brl(a.r/a.q):"—"}</td><td class="r">${brl(a.c)}</td><td class="r">${sv(a.s)}</td></tr></tfoot>`})():""}</table>`;
+  const note=`<p class="d-note">Sobrou = quanto rendeu − diárias da equipe − gastos no cartão do dia. Os vales não entram aqui, porque já são parte das diárias. Dias sem pacotes lançados aparecem com o custo da equipe.</p>`;
+  const seed="p"+y+m+T.q+T.r;
+  if(M.rows.length<=12)return [`${head}<div class="d-body">${kpis}${tab}${quinz}${dest}${ano}${note}</div>${dFoot(seed,1,1)}`];
+  return [`${head}<div class="d-body">${kpis}${tab}</div>${dFoot(seed,1,2)}`,`${head}<div class="d-body">${quinz}${dest}${ano}${note}</div>${dFoot(seed,2,2)}`]}
+function waPacotes(y,m){const M=pkMonth(y,m),T=M.t;return `*${S.settings.empresa} – Pacotes de ${MES[m]} de ${y}*\nPacotes: ${fmtN(T.q)}\nRendimento: ${brl(T.r)}\nEquipe + cartão: ${brl(T.eq+T.ca)}\n*Sobrou: ${T.s<0?"− ":""}${brl(Math.abs(T.s))}*`}
 function docMensal(y,m){
   const q1=qMake(y,m,1),q2=qMake(y,m,2),T1=qTotals(q1),T2=qTotals(q2);
   const row=(q,T)=>`<tr><td><b>${q.label}</b></td><td class="r">${T.diarias}</td><td class="r">${brl(T.bruto)}</td><td class="r neg">${T.vales?"− "+brl(T.vales):"—"}</td><td class="r">${brl(T.aPagar)}</td><td class="r">${brl(T.cartao)}</td><td class="r">${brl(T.bruto+T.cartao)}</td></tr>`;
@@ -3065,7 +3129,7 @@ function mPessoa(id,nome){
   openModal(`${mHead(p?"Editar pessoa":"Adicionar pessoa",p?"As mudanças valem para as próximas diárias.":"Quem você chama para trabalhar.")}
    <label class="fl" for="fNome">Nome</label><input class="inp" id="fNome" value="${esc(p?p.nome:nome||"")}" placeholder="Ex.: Funcionário 7" data-autofocus autocomplete="off">
    <label class="fl">Função</label><div class="seg" id="fFun">${["Motorista","Ajudante","Outro"].map(f=>`<button type="button" data-act="mFun" data-v="${f}" aria-pressed="${(p?p.funcao:"Ajudante")===f}">${f}</button>`).join("")}</div>
-   <label class="fl" for="fDia">Valor da diária</label><div class="money"><span>R$</span><input id="fDia" inputmode="decimal" value="${num(p?p.diaria:S.settings.diaria)}" autocomplete="off"></div>
+   <label class="fl" for="fDia">Valor da diária</label><div class="money"><span>R$</span><input id="fDia" inputmode="decimal" value="${num(p?p.diaria:S.settings.diaria)}" autocomplete="off"></div><p class="hlp">Se a pessoa ajuda sem receber diária, coloque 0. Ela aparece nos dias, mas não entra no pagamento.</p>
    <div class="two"><div><label class="fl" for="fCpf">CPF (opcional)</label><input class="inp" id="fCpf" value="${esc(p?p.cpf||"":"")}" placeholder="000.000.000-00" inputmode="numeric"></div><div><label class="fl" for="fTel">WhatsApp (opcional)</label><input class="inp" id="fTel" value="${esc(p?p.tel||"":"")}" placeholder="(11) 90000-0000" inputmode="tel"></div></div>
    <label class="fl" for="fPix">Chave PIX (opcional)</label><input class="inp" id="fPix" value="${esc(p?p.pix||"":"")}" placeholder="Telefone, e-mail ou CPF">
    <div id="mErr"></div>
@@ -3075,7 +3139,7 @@ function mValorDia(pid){
   const p=P(pid),date=UI.diaDate,ex=S.dias.find(d=>d.pid===pid&&d.date===date);const cur=ex?ex.valor:(UI.selVal[pid]??p.diaria);
   openModal(`${mHead("Diária deste dia",`${esc(p.nome)}, ${longDate(date).toLowerCase()}. A diária normal é ${brl(p.diaria)}.`)}
    <label class="fl" for="mVal">Valor combinado</label><div class="money"><span>R$</span><input id="mVal" inputmode="decimal" value="${num(cur)}" autocomplete="off" data-autofocus></div>
-   <div class="quick"><button type="button" data-act="mQuick" data-v="${p.diaria}">Normal (${brl0(p.diaria)})</button><button type="button" data-act="mQuick" data-v="${p.diaria+20}">${brl0(p.diaria+20)}</button><button type="button" data-act="mQuick" data-v="${p.diaria*1.5}">${brl0(p.diaria*1.5)}</button></div>
+   <div class="quick"><button type="button" data-act="mQuick" data-v="${p.diaria}">Normal (${brl0(p.diaria)})</button>${p.diaria?`<button type="button" data-act="mQuick" data-v="${p.diaria+20}">${brl0(p.diaria+20)}</button><button type="button" data-act="mQuick" data-v="${p.diaria*1.5}">${brl0(p.diaria*1.5)}</button>`:""}<button type="button" data-act="mQuick" data-v="0">Sem diária (R$ 0)</button></div>
    <div class="mf"><button type="button" class="btn sec" data-act="closeModal">Cancelar</button><button class="btn pri" type="submit">Usar este valor</button></div>`,{kind:"valorDia",pid});
 }
 function mLive(){
@@ -3131,11 +3195,11 @@ function saveModal(){
     toast(T.pend===0?"Quinzena toda paga. Os recibos já estão prontos.":`${plural(L.length,"pessoa marcada","pessoas marcadas")} como paga${L.length>1?"s":""}`,{undo:()=>restore(s),bolt:true});return}
   if(k==="pessoa"){const nome=$("#fNome").value.trim(),diaria=parseMoney($("#fDia").value);
     const err=m=>{$("#mErr").innerHTML=`<div class="warn">${I("i-alert")}<span>${m}</span></div>`};
-    if(!nome){err("Escreva o nome da pessoa.");$("#fNome").focus();return}if(!diaria){err("Coloque o valor da diária.");$("#fDia").focus();return}
+    if(!nome){err("Escreva o nome da pessoa.");$("#fNome").focus();return}if(!/\d/.test($("#fDia").value)){err("Coloque o valor da diária. Se a pessoa não recebe diária, coloque 0.");$("#fDia").focus();return}
     const data={nome,diaria,funcao:mctx.funcao,cpf:$("#fCpf").value.trim(),tel:$("#fTel").value.trim(),pix:$("#fPix").value.trim()};
     if(mctx.id){Object.assign(P(mctx.id),data);changed();closeModal();renderView();toast("Alterações salvas")}
     else{const p=Object.assign({id:uid(),ativo:true,cor:COLORS[S.people.length%COLORS.length],desde:TODAY},data);S.people.push(p);UI.pid=p.id;changed();closeModal();if(UI.view==="hoje")initSel();renderView();if(UI.asst)renderMsgs();toast(`${esc(first(nome))} adicionado`,{bolt:true})}}
-  if(k==="valorDia"){const v=parseMoney($("#mVal").value);if(!v)return;const pid=mctx.pid,ex=S.dias.find(x=>x.pid===pid&&x.date===UI.diaDate);
+  if(k==="valorDia"){if(!/\d/.test($("#mVal").value))return;const v=parseMoney($("#mVal").value);const pid=mctx.pid,ex=S.dias.find(x=>x.pid===pid&&x.date===UI.diaDate);
     if(ex){const s=snap();ex.valor=v;changed();toast(`Diária de ${esc(first(P(pid).nome))} agora é ${brl(v)}`,{undo:()=>restore(s)})}else{UI.selVal[pid]=v;UI.sel.add(pid)}
     closeModal();renderView()}
 }
@@ -3150,7 +3214,7 @@ const ACT={
   demo:()=>{const sess=S.session;S=seed();S.session=sess||{modo:"google",email:"jjtransporte@gmail.com",nome:"Conta da JJ"};CIMG.clear();seedComps();changed();UI.view="hoje";UI.q=qOf(TODAY).key;UI.diaDate=TODAY;initSel();render();toast("Dados de exemplo carregados. Pode mexer à vontade.")},
   obNext:()=>{obCollect();
     if(UI.ob.step===2&&S.settings.pagador==="outro"&&!String(S.settings.filhoNome||"").trim()){toast("Coloque o nome de quem paga a equipe.",{err:true});const i=$("#obFn");if(i)i.focus();return}
-    if(UI.ob.step===1){UI.ob.people.filter(p=>String(p.nome).trim()).forEach(p=>S.people.push({id:uid(),nome:p.nome.trim(),funcao:p.funcao||"Ajudante",diaria:p.diaria||S.settings.diaria,pix:String(p.pix||"").trim(),cpf:"",tel:"",ativo:true,cor:COLORS[S.people.length%COLORS.length],desde:TODAY}));UI.ob.people=[]}
+    if(UI.ob.step===1){UI.ob.people.filter(p=>String(p.nome).trim()).forEach(p=>S.people.push({id:uid(),nome:p.nome.trim(),funcao:p.funcao||"Ajudante",diaria:p.diaria==null||p.diaria===""?S.settings.diaria:p.diaria,pix:String(p.pix||"").trim(),cpf:"",tel:"",ativo:true,cor:COLORS[S.people.length%COLORS.length],desde:TODAY}));UI.ob.people=[]}
     if(UI.ob.step===4){S.settings.onboarded=true;S.settings.newsSeen=NEWS_VER;if(!S.settings.inicio)S.settings.inicio=TODAY;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();
       if(!S.settings.tourDone)setTimeout(()=>tourStart(true),900);else{toast("Tudo pronto. Bom trabalho!",{bolt:true});if(NATIVE())setTimeout(()=>notifAsk(),1200)}return}
     UI.ob.step++;changed();render()},
@@ -3179,9 +3243,12 @@ const ACT={
   selNone:()=>{UI.sel=new Set();renderView()},
   valorDia:d=>mValorDia(d.id),
   salvarDia:()=>{const date=UI.diaDate,ex=exMap(date);const adds=[...UI.sel].filter(id=>!ex.has(id)),rems=[...ex.keys()].filter(id=>!UI.sel.has(id));const s=snap();
+    const pkd=pkDirty(),pc=pkCur();
     adds.forEach(pid=>S.dias.push({id:uid(),pid,date,valor:UI.selVal[pid]??P(pid).diaria}));S.dias=S.dias.filter(d=>!(d.date===date&&rems.includes(d.pid)));
+    if(pkd){S.pacotes=(S.pacotes||[]).filter(x=>x.date!==date);if(pc.q||pc.v)S.pacotes.push({id:uid(),date,qtd:pc.q,valor:pc.v})}
     changed();initSel();renderView();whoosh();buzz([12,30,12]);
-    setTimeout(()=>toast(adds.length&&!rems.length?`Dia salvo: ${plural(adds.length,"diária","diárias")}`:"Dia atualizado",{undo:()=>restore(s),bolt:true}),reduced()?0:420)},
+    const msg=adds.length&&!rems.length?`Dia salvo: ${plural(adds.length,"diária","diárias")}${pkd&&pc.q?" e "+fmtN(pc.q)+" pacotes":""}`:!adds.length&&!rems.length&&pkd?(pc.q||pc.v?"Pacotes do dia salvos":"Pacotes do dia tirados"):"Dia atualizado";
+    setTimeout(()=>toast(msg,{undo:()=>restore(s),bolt:true}),reduced()?0:420)},
   mVale:d=>mVale(d.id,UI.view==="hoje"?UI.diaDate:TODAY),
   mCartao:()=>mCartao(UI.view==="hoje"?UI.diaDate:TODAY),
   editVale:d=>mVale(null,null,d.id),
@@ -3305,6 +3372,8 @@ function growChat(){const i=$("#chatIn");if(!i)return;i.style.height="auto";i.st
 document.addEventListener("keydown",e=>{if(e.target&&e.target.id==="chatIn"&&e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();const f=e.target.form;if(f){if(f.requestSubmit)f.requestSubmit();else f.dispatchEvent(new Event("submit",{cancelable:true,bubbles:true}))}}},true);
 document.addEventListener("change",e=>{if(e.target&&e.target.id==="nHora"&&/^\d{2}:\d{2}$/.test(e.target.value)){S.settings.notif=Object.assign(notifCfg(),{hora:e.target.value});changed();toast("Horário salvo")}});
 document.addEventListener("input",e=>{const id=e.target.id;if(id==="chatIn")growChat();
+  if(id==="pkQ"||id==="pkV"){if(!UI.pk)UI.pk={q:"",v:""};if(id==="pkQ"){const d=e.target.value.replace(/\D/g,"").slice(0,6);if(d!==e.target.value)e.target.value=d;UI.pk.q=d}else UI.pk.v=e.target.value;
+    const h=$("#pkH");if(h)h.textContent=pkHint();const sb=$("#savebar");if(sb)sb.outerHTML=saveBarHTML()}
   if(id==="mVal"&&(mctx.kind==="pagar"||mctx.kind==="vale"||mctx.kind==="repasse")){mctx.valor=parseMoney(e.target.value);clearTimeout(PIXT);PIXT=setTimeout(renderPix,180)}
   if(id==="mVal"||id==="mDate")mLive();
   if(id==="pesBusca"){UI.pesQ=e.target.value;const pos=e.target.selectionStart;renderView();const b=$("#pesBusca");if(b){b.focus();try{b.setSelectionRange(pos,pos)}catch(_){}}}
