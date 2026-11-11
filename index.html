@@ -85,6 +85,39 @@ svg.i{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:2;
 .vh{display:flex;align-items:flex-end;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .vh .eb{font-size:.9rem;color:var(--mu);font-weight:600;margin-bottom:2px}
 .vh h1{font-size:2.15rem;font-weight:700;letter-spacing:-.015em;line-height:1.08;text-wrap:balance}
+.dtb{all:unset;cursor:pointer;display:inline;border-radius:10px;-webkit-tap-highlight-color:transparent}
+.dtb:focus-visible{outline:2px solid var(--cy);outline-offset:4px}
+.dtb .dti{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;margin-left:.3em;vertical-align:.12em;border-radius:9px;background:var(--cy-soft);color:var(--cy);font-size:.5em;border:1px solid var(--cy-line)}
+.dtb .dti svg{width:1.05em;height:1.05em}
+.dtb:active .dti{transform:scale(.94)}
+.news{display:grid;gap:14px;margin:4px 0 6px}
+.nw{display:flex;gap:14px;align-items:flex-start}
+.nw>i{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--cy-soft);color:var(--cy);border:1px solid var(--cy-line)}
+.nw>i svg{width:20px;height:20px}
+.nw b{display:block;font-size:1.05rem;margin-bottom:2px}
+.nw span{color:var(--tx2);line-height:1.45;font-size:.95rem}
+.calw{padding:2px 0 4px}
+.calh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.calh b{font-size:1.15rem;font-weight:700}
+.calg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calg .cw{text-align:center;font-size:.78rem;font-weight:700;color:var(--mu);padding:2px 0 4px}
+.kd{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-width:0;height:auto;aspect-ratio:1/1;min-height:42px;box-sizing:border-box;margin:0;border-radius:12px;border:1px solid transparent;background:var(--s2);color:var(--tx);font:inherit;cursor:pointer;padding:0}
+.kd.e{background:none;cursor:default}
+.kd b{font-size:1.02rem;font-weight:700;line-height:1}
+.kd.q2{background:color-mix(in srgb,var(--or) 9%,var(--s2))}
+.kd.td{border-color:var(--cy)}
+.kd.td b{color:var(--cy)}
+.kd i{position:absolute;bottom:6px;width:5px;height:5px;border-radius:50%;background:var(--ok)}
+.kd[aria-pressed="true"]{background:var(--cy);color:var(--cy-ink);border-color:var(--cy)}
+.kd[aria-pressed="true"] b{color:var(--cy-ink)}
+.kd[aria-pressed="true"] i{background:var(--cy-ink)}
+.kd:disabled{opacity:.32;cursor:default}
+.kd:not(:disabled):active{transform:scale(.95)}
+.cqs{display:grid;gap:6px;margin-top:14px}
+.cq{display:flex;align-items:center;gap:10px;font-size:.92rem;padding:9px 12px;border-radius:12px;background:var(--s2);flex-wrap:wrap}
+.cq .qsw{width:12px;height:12px;border-radius:4px;flex:none;background:var(--s3);border:1px solid var(--bd2)}
+.cq.q2 .qsw{background:color-mix(in srgb,var(--or) 30%,var(--s3))}
+.cq em{font-style:normal;color:var(--mu);margin-left:auto;font-size:.88rem}
 .sp{flex:1}
 .card{background:var(--s1);border:1px solid var(--bd);border-radius:16px;position:relative;min-width:0;box-shadow:var(--card-sh)}
 div.sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:26px 2px 12px}
@@ -939,6 +972,11 @@ body:has(.mw) .toast{bottom:auto;top:22px}
 :root[data-ui="light"] .tour-hole{box-shadow:0 0 0 200vmax rgba(17,26,39,.62)}
 @media (prefers-reduced-motion:reduce){.tour,.tour-hole,.tour-tip{animation:none!important;transition:none!important}}
 /* configuração inicial: Pix na equipe e quem paga */
+.bkb{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;margin-bottom:16px;border-color:color-mix(in srgb,var(--cy) 45%,transparent);background:var(--cy-soft)}
+.bkb>svg{width:1.3rem;height:1.3rem;flex:none;color:var(--cy)}
+.bkb .t{flex:1;min-width:180px;line-height:1.4}.bkb .t .k{display:block;font-size:.85rem;color:var(--mu);margin-top:2px}
+.bkb .b{display:flex;gap:8px;margin-left:auto}
+@media(max-width:560px){.bkb .b{width:100%}.bkb .b .btn{flex:1}}
 .obopt{position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;border-radius:16px;background:var(--s2);border:1.5px solid var(--bd2);text-align:left;margin-bottom:10px;transition:border-color .2s,background .2s}
 .obopt i{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--s3);color:var(--tx2)}
 .obopt i svg{width:1.35rem;height:1.35rem}
@@ -1033,6 +1071,7 @@ body:has(.mw) .toast{bottom:auto;top:22px}
  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></symbol>
  <symbol id="i-money" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></symbol>
  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 0 1 0 8M22 21c0-3-2-5-4-5.5"/></symbol>
+ <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h5"/></symbol>
  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
@@ -1122,11 +1161,19 @@ const plural=(n,a,b)=>`${n} ${n===1?a:b}`;
 const r2=v=>Math.round(v*100)/100;
 const fmtTel=t=>{const d=String(t||"").replace(/\D/g,"");return d.length===11?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length===10?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:esc(t||"")};
 function compactDays(dates){const ns=dates.map(d=>fromISO(d).getDate()).sort((a,b)=>a-b),out=[];let i=0;while(i<ns.length){let j=i;while(j+1<ns.length&&ns[j+1]===ns[j]+1)j++;out.push(j-i>=2?`${ns[i]} a ${ns[j]}`:j>i?`${ns[i]}, ${ns[j]}`:`${ns[i]}`);i=j+1}return out.join(", ").replace(/, ([^,]*)$/," e $1")}
-const filhoGen=()=>{const n=String((S&&S.settings.filhoNome)||"").trim();return !n||/^(meu )?filho\b/i.test(n)};
-const filhoN=()=>filhoGen()?"seu filho":first(S.settings.filhoNome);   // "o Lucas" / "seu filho"
-const filhoO=()=>filhoGen()?"o filho":"o "+first(S.settings.filhoNome);
-const viaFilho=()=>S&&S.settings.pagador==="filho";
-const toFilho=()=>{const n=String((S&&S.settings.filhoNome)||"").trim();return !n||/^(meu )?filho\b/i.test(n)?"pro meu filho":"pro "+first(n)};
+/* quem paga a equipe quando não é o dono: o filho ou outra pessoa (com nome e ele/ela) */
+const isOutro=()=>!!S&&S.settings.pagador==="outro";
+const filhoGen=()=>{const n=String((S&&S.settings.filhoNome)||"").trim();return !n||/^(meu )?filho\b|^pagador$/i.test(n)};
+const fem=()=>isOutro()&&!filhoGen()&&S.settings.pagadorSexo==="f";
+const gN=()=>isOutro()?"pagador":"filho";                       // palavra quando não tem nome
+const gO=()=>fem()?"a":"o",gPro=()=>fem()?"pra":"pro",gEle=()=>fem()?"ela":"ele",gDo=()=>fem()?"da":"do",gPelo=()=>fem()?"pela":"pelo";
+const pagNome=()=>filhoGen()?gN():first(S.settings.filhoNome);
+const filhoN=()=>filhoGen()?(isOutro()?"o pagador":"seu filho"):first(S.settings.filhoNome);   // "Lucas" / "seu filho"
+const filhoO=()=>filhoGen()?"o "+gN():gO()+" "+first(S.settings.filhoNome);                  // "o Lucas" / "a Maria" / "o filho"
+const doFilho=()=>filhoGen()?"do "+gN():gDo()+" "+first(S.settings.filhoNome);
+const peloFilho=()=>filhoGen()?"pelo "+gN():gPelo()+" "+first(S.settings.filhoNome);
+const viaFilho=()=>!!S&&(S.settings.pagador==="filho"||S.settings.pagador==="outro");
+const toFilho=()=>filhoGen()?(isOutro()?"pro pagador":"pro meu filho"):gPro()+" "+first(S.settings.filhoNome);
 function extenso(v){
   const U=["","um","dois","três","quatro","cinco","seis","sete","oito","nove","dez","onze","doze","treze","quatorze","quinze","dezesseis","dezessete","dezoito","dezenove"];
   const D=["","","vinte","trinta","quarenta","cinquenta","sessenta","setenta","oitenta","noventa"];
@@ -1154,7 +1201,7 @@ const daysLeft=q=>Math.round((fromISO(q.end)-fromISO(TODAY))/864e5);
 /* ================= dados ================= */
 const KEY="jj-gestao-v2",OLDKEY="jj-gestao-final-v1";
 let S;
-function blank(){return {v:2,session:null,settings:{empresa:"JJ Transporte",cnpj:"",cidade:"São Paulo",uf:"SP",foneEmpresa:"",diaria:90,limite:50,cpfRecibo:true,compPdf:true,lembrete:true,voz:true,pagador:"filho",filhoNome:"Filho (pagamentos)",filhoTel:"",filhoPix:"",logo:"",tema:"escuro",letra:"normal",forma:"PIX",onboarded:false},people:[],dias:[],vales:[],cartao:[],pagos:{},repasses:{},enviada:{},comps:{},conf:{},chat:[]}}
+function blank(){return {v:2,session:null,settings:{empresa:"JJ Transporte",cnpj:"",cidade:"São Paulo",uf:"SP",foneEmpresa:"",diaria:90,limite:50,cpfRecibo:true,compPdf:true,lembrete:true,bkLembrete:true,voz:true,pagador:"filho",filhoNome:"Filho (pagamentos)",filhoTel:"",filhoPix:"",logo:"",tema:"escuro",letra:"normal",forma:"PIX",onboarded:false},people:[],dias:[],vales:[],cartao:[],pagos:{},repasses:{},enviada:{},comps:{},conf:{},chat:[]}}
 function hello(){return {id:uid(),from:"ai",text:"Oi! Eu sou o assistente da JJ. Fale ou escreva do seu jeito, por exemplo: <b>\"hoje foram o João e o Pedro\"</b>, <b>\"o Marcos pegou 50 de vale\"</b> ou <b>\"quanto eu devo pro Pedro?\"</b>. Eu sempre mostro antes de salvar.",time:hhmm()}}
 function seed(){
   INI=null;
@@ -1379,6 +1426,11 @@ function renderView(anim){
   UI.justPaid=null;UI.justRep=null;UI.once.clear();ANIM=false;
 }
 function go(v){if(!VIEWS.includes(v))v="hoje";const a=VIEWS.indexOf(UI.view),b=VIEWS.indexOf(v);UI.dir=b>a?1:b<a?-1:0;UI.view=v;UI.armed=null;if(v==="hoje")initSel();if(v==="relatorios")UI.doc=null;if(v==="pessoas")UI.pesOpen=false;renderView(true)}
+/* backup do mês: lembra no dia 1º do mês seguinte ao último backup (ou ao começo do uso), até fazer */
+const month1After=iso=>{const d=fromISO(iso);return toISO(new Date(d.getFullYear(),d.getMonth()+1,1))};
+const bkDue=()=>month1After(S.settings.lastBackup||S.settings.inicio||TODAY);
+const bkLate=()=>!!(S.settings.onboarded&&S.settings.bkLembrete!==false&&TODAY>=bkDue()&&!(S.settings.bkSnooze&&TODAY<S.settings.bkSnooze));
+const bkBanner=()=>bkLate()?`<div class="card bkb">${I("i-down")}<span class="t"><b>Hora do backup do mês.</b> Guarde uma cópia de tudo no celular. É rapidinho.${S.settings.lastBackup?` <span class="k">Último: ${dmy(S.settings.lastBackup)}</span>`:""}</span><span class="b"><button class="btn sec sm" data-act="bkLater">Depois</button><button class="btn pri sm" data-act="backup">Fazer agora</button></span></div>`:"";
 const closeBanner=q=>{const l=daysLeft(q);return S.settings.lembrete&&q.key===qOf(TODAY).key&&l<=1&&l>=0?`<div class="card" style="display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:16px;border-color:color-mix(in srgb,var(--or) 45%,transparent);background:var(--or-soft)">${I("i-clock")}<span style="flex:1"><b>${l===0?"A quinzena fecha hoje.":"A quinzena fecha amanhã."}</b> Confira os lançamentos antes de mandar o relatório.</span></div>`:""};
 
 /* ================= ENTRADA ================= */
@@ -1456,7 +1508,10 @@ function notifPlan(){
   if(cfg.dia){for(let k=0;k<7;k++){const d=addDays(TODAY,k);if(fromISO(d).getDay()===0)continue;if(k===0&&S.dias.some(x=>x.date===d))continue;
     add(7100+k,d,cfg.hora||"18:00","Marcou quem trabalhou hoje?","Toque para lançar as diárias do dia.","hoje")}}
   if(cfg.filho&&viaFilho()){const R_=repQ(q);if(R_.sent>0&&R_.nPaid<R_.nTot){const base=addDays(R_.last.date,2),d=base>TODAY?base:addDays(TODAY,1),n=R_.nTot-R_.nPaid;
-    add(7200,d,"10:00",`Faltam ${n===1?"1 pessoa":n+" pessoas"} para marcar como paga${n>1?"s":""}`,`Quando ${filhoGen()?"o filho":first(S.settings.filhoNome)} avisar que pagou, marque no app para sair o recibo.`,"devo")}}
+    add(7200,d,"10:00",`Faltam ${n===1?"1 pessoa":n+" pessoas"} para marcar como paga${n>1?"s":""}`,`Quando ${filhoGen()?"o "+gN():first(S.settings.filhoNome)} avisar que pagou, marque no app para sair o recibo.`,"devo")}}
+  if(S.settings.bkLembrete!==false){const due=bkDue(),sn=S.settings.bkSnooze&&S.settings.bkSnooze>TODAY?S.settings.bkSnooze:null;
+    [...new Set([due,addDays(due,7),addDays(due,14),sn].filter(Boolean))].filter(d=>!sn||d>=sn).slice(0,3).forEach((d,i)=>
+      add(7300+i,d,"10:00","Hora do backup do mês","Toque para guardar uma cópia de tudo no celular. É rapidinho.","hoje"))}
   return out;
 }
 async function notifRun(){const L=PL("LocalNotifications");if(!L||!S.session||!S.settings.onboarded)return;
@@ -1564,7 +1619,7 @@ function cloudStart(){
     CLOUD.unsub=DB.F.onSnapshot(docRef(),{includeMetadataChanges:false},snap=>{
       if(snap.metadata.hasPendingWrites)return;
       const d=snap.exists()?snap.data():null;
-      if(first){first=false;
+      if(first){first=false;setTimeout(()=>whatsNew(),1600);
         if(!d){ // nuvem vazia: sobe o que já tem no aparelho
           if(S.settings.onboarded||S.people.length){S.mod=S.mod||Date.now();cloudPush(true);toast("Pronto: seus dados agora ficam guardados na nuvem.",{bolt:true})}else cloudState("ok");return}
         if((d.mod||0)>(S.mod||0)){applyRemote(d);cloudState("ok");return}
@@ -1603,13 +1658,15 @@ function vOnboarding(){
    <div class="obrow h"><span>Nome</span><span>Função</span><span>Diária (R$)</span><span>Chave Pix</span><span></span></div>
    ${UI.ob.people.map((p,i)=>`<div class="obrow"><input class="inp" data-ob="nome" data-i="${i}" value="${esc(p.nome)}" placeholder="Funcionário ${i+1}" aria-label="Nome"><select class="inp" data-ob="funcao" data-i="${i}" aria-label="Função">${["Motorista","Ajudante","Outro"].map(f=>`<option ${p.funcao===f?"selected":""}>${f}</option>`).join("")}</select><input class="inp" data-ob="diaria" data-i="${i}" value="${num(p.diaria)}" inputmode="decimal" aria-label="Diária"><input class="inp" data-ob="pix" data-i="${i}" value="${esc(p.pix||"")}" placeholder="Chave Pix (celular, CPF, e-mail…)" aria-label="Chave Pix de ${esc(p.nome||"Funcionário "+(i+1))}" autocomplete="off"><button class="iconb" data-act="obDel" data-i="${i}" aria-label="Remover">${I("i-x")}</button></div>`).join("")}
    <button class="addp" data-act="obAdd">${I("i-plus")}Adicionar outra pessoa</button>`;
-  if(st===2){const pg=UI.ob.pag||s.pagador||"filho",fg=filhoGen();
+  if(st===2){const pg=UI.ob.pag||s.pagador||"filho",fg=filhoGen(),ou=pg==="outro",sx=UI.ob.sexo||s.pagadorSexo||"m";
    const opt=(v,ic,t,d)=>`<button type="button" class="obopt" data-act="obPag" data-v="${v}" aria-pressed="${pg===v}"><i>${I(ic)}</i><span><b>${t}</b><span>${d}</span></span><em class="rd"></em></button>`;
+   const nmV=fg||(ou&&s.pagador!=="outro"&&/^filho/i.test(s.filhoNome))?"":esc(s.filhoNome);
    body=`<h2>Quem paga a equipe?</h2><p>No fim da quinzena, o app prepara o pagamento do jeito que você já faz.</p>
-   <div class="obpay" role="group" aria-label="Quem paga a equipe">${opt("filho","i-people","Meu filho paga","Mando um Pix só, com o total, e ele paga cada um.")}${opt("eu","i-pix","Eu mesmo pago","Pago cada pessoa direto, com o Pix pronto de cada uma.")}</div>
-   ${pg==="filho"?`<div class="two" style="margin-top:18px"><div><label class="fl" for="obFn">Nome do filho</label><input class="inp" id="obFn" value="${fg?"":esc(s.filhoNome)}" placeholder="Ex.: Lucas" autocomplete="off"></div>
-   <div><label class="fl" for="obFp">Chave Pix do filho</label><input class="inp" id="obFp" value="${esc(s.filhoPix||"")}" placeholder="Celular, e-mail ou CPF" autocomplete="off"><p class="hlp">É pra ela que vai o Pix com o total da quinzena.</p></div>
-   <div><label class="fl" for="obFt">WhatsApp do filho (opcional)</label><input class="inp" id="obFt" value="${esc(s.filhoTel||"")}" placeholder="(11) 90000-0000" inputmode="tel"><p class="hlp">Pra mandar a lista com o Pix de cada um direto pra ele.</p></div></div>`
+   <div class="obpay" role="group" aria-label="Quem paga a equipe">${opt("filho","i-people","Meu filho paga","Mando um Pix só, com o total, e ele paga cada um.")}${opt("outro","i-user","Outra pessoa paga","Esposa, sócio, alguém de confiança. Mando o total e a pessoa paga cada um.")}${opt("eu","i-pix","Eu mesmo pago","Pago cada pessoa direto, com o Pix pronto de cada uma.")}</div>
+   ${pg!=="eu"?`<div class="two" style="margin-top:18px"><div><label class="fl" for="obFn">${ou?"Nome de quem paga":"Nome do filho"}</label><input class="inp" id="obFn" value="${nmV}" placeholder="${ou?"Ex.: Maria":"Ex.: Lucas"}" autocomplete="off">
+    ${ou?`<div class="seg obsx" role="group" aria-label="Como chamar" style="margin-top:8px"><button type="button" data-act="obSexo" data-v="m" aria-pressed="${sx!=="f"}">Ele</button><button type="button" data-act="obSexo" data-v="f" aria-pressed="${sx==="f"}">Ela</button></div><p class="hlp">Só pro app escrever certinho ("pro Lucas", "pra Maria").</p>`:""}</div>
+   <div><label class="fl" for="obFp">${ou?"Chave Pix de quem paga":"Chave Pix do filho"}</label><input class="inp" id="obFp" value="${esc(s.filhoPix||"")}" placeholder="Celular, e-mail ou CPF" autocomplete="off"><p class="hlp">É pra essa chave que vai o Pix com o total da quinzena.</p></div>
+   <div><label class="fl" for="obFt">WhatsApp ${ou?"de quem paga":"do filho"} (opcional)</label><input class="inp" id="obFt" value="${esc(s.filhoTel||"")}" placeholder="(11) 90000-0000" inputmode="tel"><p class="hlp">Pra mandar a lista com o Pix de cada um direto pra ${ou?(sx==="f"?"ela":"ele"):"ele"}.</p></div></div>`
    :`<p class="hlp" style="margin-top:16px">Na hora de pagar, o app mostra o valor e o Pix pronto de cada pessoa.</p>`}`}
   if(st===3)body=`<h2>Regras de pagamento</h2><p>O app usa essas regras para fazer as contas sozinho.</p>
    <div class="two"><div><label class="fl" for="obDia">Diária padrão para pessoa nova (R$)</label><input class="inp" id="obDia" value="${num(s.diaria)}" inputmode="decimal"></div>
@@ -1617,9 +1674,9 @@ function vOnboarding(){
    <p class="hlp" style="margin-top:14px">Quinzenas: do dia 1 ao 15 e do 16 ao fim do mês.</p>`;
   if(st===4){const n=S.people.length,semPix=S.people.filter(x=>x.ativo&&!String(x.pix||"").trim());body=`<h2>Tudo pronto!</h2><p>${esc(s.empresa)} está configurada com ${plural(n,"pessoa","pessoas")}. Agora é só marcar quem trabalhou, na tela ou falando com o assistente.</p>
    <div class="two"><div class="card box"><h3>No dia a dia</h3><div class="kv"><span>${I("i-today")}</span><span style="flex:1">Abra "Hoje" e toque em quem veio</span></div><div class="kv"><span>${I("i-mic")}</span><span style="flex:1">Ou fale "hoje foram o João e o Pedro"</span></div><div class="kv"><span>${I("i-money")}</span><span style="flex:1">"Quanto eu devo" mostra o que pagar</span></div></div>
-   <div class="card box"><h3>Resumo</h3><div class="kv"><span>Empresa</span><b>${esc(s.empresa)}</b></div><div class="kv"><span>Pessoas</span><b>${n}</b></div><div class="kv"><span>Diária padrão</span><b>${brl(s.diaria)}</b></div><div class="kv"><span>Libera no cartão</span><b>${brl(s.limite)} por dia</b></div><div class="kv"><span>Quem paga</span><b>${s.pagador==="filho"?(filhoGen()?"Seu filho":"Seu filho, "+esc(first(s.filhoNome))):"Você mesmo"}</b></div></div></div>
+   <div class="card box"><h3>Resumo</h3><div class="kv"><span>Empresa</span><b>${esc(s.empresa)}</b></div><div class="kv"><span>Pessoas</span><b>${n}</b></div><div class="kv"><span>Diária padrão</span><b>${brl(s.diaria)}</b></div><div class="kv"><span>Libera no cartão</span><b>${brl(s.limite)} por dia</b></div><div class="kv"><span>Quem paga</span><b>${s.pagador==="filho"?(filhoGen()?"Seu filho":"Seu filho, "+esc(first(s.filhoNome))):s.pagador==="outro"?esc(s.filhoNome):"Você mesmo"}</b></div></div></div>
    ${semPix.length&&n?`<p class="hlp" style="margin-top:14px">Faltou a chave Pix de ${esc(semPix.map(x=>first(x.nome)).join(", ").replace(/, ([^,]*)$/," e $1"))}. Dá pra colocar depois, na aba Pessoas.</p>`:""}
-   ${s.pagador==="filho"&&!String(s.filhoPix||"").trim()?`<p class="hlp" style="margin-top:6px">Faltou a chave Pix do filho. Dá pra colocar depois em Ajustes › Quem paga a equipe.</p>`:""}`}
+   ${viaFilho()&&!String(s.filhoPix||"").trim()?`<p class="hlp" style="margin-top:6px">Faltou a chave Pix ${esc(doFilho())}. Dá pra colocar depois em Ajustes › Quem paga a equipe.</p>`:""}`}
   const u=S.session||{};
   return `<div class="ob"><div class="brand" style="padding:0 0 26px;justify-content:center"><div class="mark">${LOGO(30,20)}</div><div><b>JJ Gestão</b><span>Primeiro acesso${u.email?" · "+esc(u.email):""}</span></div></div>
   ${u.uid?`<button type="button" class="ob-out" data-act="sair">Usar outra conta</button>`:""}
@@ -1629,8 +1686,8 @@ function vOnboarding(){
 function obCollect(){
   if(UI.ob.step===0){S.settings.empresa=($("#obEmp").value.trim()||"JJ Transporte");S.settings.cnpj=$("#obCnpj").value.trim()}
   if(UI.ob.step===1){$$("[data-ob]").forEach(el=>{const p=UI.ob.people[+el.dataset.i];if(!p)return;const k=el.dataset.ob;p[k]=k==="diaria"?parseMoney(el.value):el.value})}
-  if(UI.ob.step===2){const s=S.settings;s.pagador=UI.ob.pag||s.pagador||"filho";
-    if($("#obFn")){const n=$("#obFn").value.trim();s.filhoNome=n||"Filho (pagamentos)";s.filhoPix=$("#obFp").value.trim();s.filhoTel=$("#obFt").value.trim()}}
+  if(UI.ob.step===2){const s=S.settings;s.pagador=UI.ob.pag||s.pagador||"filho";if(UI.ob.sexo)s.pagadorSexo=UI.ob.sexo;
+    if($("#obFn")){const n=$("#obFn").value.trim();s.filhoNome=n||(s.pagador==="outro"?"":"Filho (pagamentos)");s.filhoPix=$("#obFp").value.trim();s.filhoTel=$("#obFt").value.trim()}}
   if(UI.ob.step===3){const d=parseMoney($("#obDia").value),l=parseMoney($("#obLim").value);if(d)S.settings.diaria=d;if(l)S.settings.limite=l}
 }
 
@@ -1641,7 +1698,7 @@ function tourSteps(){return [
   {el:()=>tvis("#pgrid")||tvis(".card.empty"),t:"Quem trabalhou hoje?",d:"Toque no nome de quem veio. A pessoa fica marcada."},
   {el:()=>tvis("#savebar"),t:"Depois, salve o dia",d:"Aperte Salvar o dia. Se esquecer, o app te lembra no fim da tarde."},
   {el:()=>tvis(".acts3"),t:"Vale, cartão ou falar",d:"Deu um vale ou gastou no cartão? É aqui. Ou aperte Falar e diga do seu jeito: “dei 50 de vale pro Pedro”."},
-  {el:()=>tvis('.tabbar [data-v="devo"]')||tvis('.side [data-v="devo"]'),t:"Fim da quinzena",d:"Em Quanto devo, o app soma tudo, desconta os vales e prepara o Pix "+(viaFilho()?(filhoGen()?"pro seu filho":"pro "+esc(first(S.settings.filhoNome)))+" com o total.":"de cada pessoa.")}
+  {el:()=>tvis('.tabbar [data-v="devo"]')||tvis('.side [data-v="devo"]'),t:"Fim da quinzena",d:"Em Quanto devo, o app soma tudo, desconta os vales e prepara o Pix "+(viaFilho()?(filhoGen()&&!isOutro()?"pro seu filho":esc(toFilho()))+" com o total.":"de cada pessoa.")}
 ]}
 function tourStart(first){tourEnd(true);if(UI.view!=="hoje"){UI.view="hoje";UI.diaDate=TODAY;initSel();render()}
   hideToast();const o=document.createElement("div");o.className="tour";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-labelledby","tourT");
@@ -1699,10 +1756,11 @@ function vHoje(){
   const strip=`<div class="strip"><button class="iconb" data-act="diaQ" data-d="-1" aria-label="Quinzena anterior" ${prevOff?"disabled":""}>${I("i-l")}</button><div class="days" id="days" role="group" aria-label="Escolher o dia">${qDays(q).filter(d=>d<=TODAY).map(d=>{const w=fromISO(d).getDay(),has=S.dias.some(x=>x.date===d);return `<button class="dc ${w===0?"sun":""} ${d===TODAY?"today":""}" data-act="diaDate" data-date="${d}" aria-pressed="${d===date}" ${d>TODAY?"disabled":""} aria-label="${longDate(d)}"><span>${d===TODAY?"hoje":DS[w]}</span><b>${fromISO(d).getDate()}</b>${has?"<i></i>":""}</button>`}).join("")}</div><button class="iconb" data-act="diaQ" data-d="1" ${nextOff?"disabled":""} ${q.end>=TODAY?"disabled":""} aria-label="Próxima quinzena">${I("i-r")}</button></div>`;
   const ents=[...vd.map(v=>({k:"vale",o:v})),...cd.map(c=>({k:"cartao",o:c}))];
   return `
-  <div class="vh"><div><p class="eb">${date===TODAY?greet()+", hoje é":"Lançando outro dia"}</p><h1>${longDate(date)}</h1></div><div class="sp"></div>
+  <div class="vh"><div><p class="eb">${date===TODAY?greet()+", hoje é":"Lançando outro dia"}</p><h1><button type="button" class="dtb" data-act="cal" aria-label="${esc(longDate(date))}. Toque para abrir o calendário do mês">${longDate(date)}<span class="dti" aria-hidden="true">${I("i-cal")}</span></button></h1></div><div class="sp"></div>
    ${date!==TODAY?`<button class="btn sec sm" data-act="diaDate" data-date="${TODAY}">Voltar para hoje</button>`:""}
    <button class="pill cy" data-act="go" data-v="devo" style="min-height:40px;font-size:.95rem">${I("i-money")}Quinzena: ${brl0(Tq.aPagar)} a pagar</button></div>
   ${closeBanner(qOf(TODAY))}
+  ${bkBanner()}
   ${strip}
   <div class="sec" style="margin-top:0"><h2>Quem trabalhou?</h2><div class="selrow">${people.length?`<button class="btn sec sm" data-act="selAll">Todos</button><button class="btn sec sm" data-act="selNone">Ninguém</button>`:""}</div></div>
   ${people.length?`<div class="pgrid ${ANIM?"stag":""}" id="pgrid">${people.map(p=>pcHTML(p,ex,q)).join("")}<button class="pc add" data-act="novaPessoa">${I("i-plus")}Adicionar pessoa</button></div>`
@@ -1715,6 +1773,38 @@ function vHoje(){
   ${ents.length?`<div class="sec"><h2>Também neste dia</h2><span class="k">Toque para mudar</span></div><div class="card ents">${ents.map(({k,o})=>entHTML(k,o)).join("")}</div>`:""}
   ${saveBarHTML()}`;
 }
+/* calendário do mês: toca na data do topo, escolhe qualquer dia (até 12 meses pra trás) e lança */
+const CAL_MIN=()=>{const d=fromISO(TODAY);return new Date(d.getFullYear(),d.getMonth()-12,1)};
+function calHTML(){
+  const [y,m]=UI.calYM,last=new Date(y,m+1,0).getDate(),w0=new Date(y,m,1).getDay(),t=fromISO(TODAY);
+  const curM=y===t.getFullYear()&&m===t.getMonth(),minD=CAL_MIN(),atMin=y===minD.getFullYear()&&m===minD.getMonth();
+  const has=new Set(S.dias.map(x=>x.date)),hasX=new Set([...S.vales,...S.cartao].map(x=>x.date));
+  let cells="";for(let i=0;i<w0;i++)cells+=`<span class="kd e"></span>`;
+  for(let d=1;d<=last;d++){const iso=toISO(new Date(y,m,d)),fut=iso>TODAY,n=S.dias.filter(x=>x.date===iso).length;
+    cells+=`<button type="button" class="kd ${d>15?"q2":"q1"} ${iso===TODAY?"td":""} ${has.has(iso)||hasX.has(iso)?"has":""}" data-act="calDia" data-date="${iso}" aria-pressed="${iso===UI.diaDate}" ${fut?"disabled":""} aria-label="${esc(longDate(iso))}${n?`, ${n} ${n===1?"pessoa":"pessoas"}`:""}"><b>${d}</b>${has.has(iso)||hasX.has(iso)?"<i></i>":""}</button>`}
+  const qs=[1,2].map(h=>{const a=h===1?1:16,b=h===1?15:last,st=toISO(new Date(y,m,a)),en=toISO(new Date(y,m,b));
+    const dias=new Set(S.dias.filter(x=>x.date>=st&&x.date<=en).map(x=>x.date)).size;
+    let info;if(st>TODAY)info="Ainda não começou";else if(!dias&&!S.vales.some(x=>x.date>=st&&x.date<=en))info="Nada lançado";
+    else{const T=qTotals(qMake(y,m,h));info=`${dias} ${dias===1?"dia lançado":"dias lançados"} · ${brl0(T.aPagar)}`}
+    return `<div class="cq ${h===2?"q2":"q1"}"><span class="qsw"></span><span><b>${h===1?"1ª":"2ª"} quinzena</b> · ${a} a ${b}</span><em>${info}</em></div>`}).join("");
+  return mHead("Escolha o dia","Toque no dia para ver e lançar quem trabalhou.")+`
+  <div class="calw"><div class="calh"><button type="button" class="iconb" data-act="calMes" data-d="-1" aria-label="Mês anterior" ${atMin?"disabled":""}>${I("i-l")}</button>
+   <b>${MES[m].charAt(0).toUpperCase()+MES[m].slice(1)} de ${y}</b>
+   <button type="button" class="iconb" data-act="calMes" data-d="1" aria-label="Próximo mês" ${curM?"disabled":""}>${I("i-r")}</button></div>
+  <div class="calg" role="group" aria-label="Dias de ${MES[m]}">${["D","S","T","Q","Q","S","S"].map(x=>`<span class="cw">${x}</span>`).join("")}${cells}</div>
+  <div class="cqs">${qs}</div>
+  ${UI.diaDate!==TODAY?`<button type="button" class="btn sec" style="width:100%;margin-top:12px" data-act="calDia" data-date="${TODAY}">Voltar para hoje</button>`:""}</div>`}
+/* "O que há de novo": aparece uma vez por conta depois de cada atualização */
+const NEWS_VER="2026-11-11",NEWS_DATA="11/11/2026";
+const NEWS=[["i-cal","Calendário do mês","Toque na data, no topo da tela Hoje, para abrir o mês inteiro. Escolha qualquer dia, até de antes de instalar o app, e lance quem trabalhou."],
+ ["i-user","Outra pessoa pode pagar a equipe","Em Ajustes › Quem paga a equipe, agora tem também “Outra pessoa”, além de “Meu filho” e “Eu mesmo”."],
+ ["i-down","Lembrete de backup todo mês","No dia 1º de cada mês, o app lembra de guardar uma cópia de tudo no celular. Dá pra desligar em Ajustes."]];
+function whatsNew(force){
+  if(!force){if(!S.session||!S.settings.onboarded||(S.settings.newsSeen||"")>=NEWS_VER)return;if($(".tour")||$("#modalRoot .mw")){setTimeout(()=>whatsNew(),2500);return}
+    S.settings.newsSeen=NEWS_VER;changed()}
+  openModal(mHead("O que há de novo",`Atualização de ${NEWS_DATA}`)+`<div class="news">${NEWS.map(([ic,t,d])=>`<div class="nw"><i>${I(ic)}</i><div><b>${t}</b><span>${d}</span></div></div>`).join("")}</div>
+   <div class="mf"><button type="button" class="btn pri" style="width:100%" data-act="closeModal">Entendi</button></div>`)}
+function openCal(){const d=fromISO(UI.diaDate||TODAY);UI.calYM=[d.getFullYear(),d.getMonth()];openModal(calHTML())}
 function entHTML(k,o,withDate,noName){
   const p=o.pid?P(o.pid):null;
   const label=k==="vale"?(o.origem==="cartao"?"Vale do cartão":"Vale"):"Cartão, "+esc(String(o.obs||"refeição").toLowerCase());
@@ -1747,7 +1837,7 @@ function flowHTML(q){
     ${R_.toSend>0.004?`<button class="btn pri" data-act="repasse" data-q="${q.key}">${I("i-pix")}Pagar ${brl0(R_.toSend)}</button>`:`<button class="btn sec sm" data-act="repVer" data-q="${q.key}">Ver</button>`}</div>
    <div class="fs ${env?"done":s1?"now":""}"><i>${env?I("i-check"):"2"}</i><div class="tx"><b>Mandar a lista ${toFilho()}</b><span>${env?`Enviada em ${dm(env)}. Pode mandar de novo se mudar algo.`:"Nome, chave Pix e valor de cada um, no WhatsApp"}</span></div>
     <button class="btn wa ${env?"sm":""}" data-act="share" data-t="quinzena" data-q="${q.key}">${I("i-wa")}${env?"De novo":"Mandar"}</button></div>
-   <div class="fs ${s3?"done":env||s1?"now":""}"><i>${s3?I("i-check"):"3"}</i><div class="tx"><b>Marcar quem ${esc(fn==="seu filho"?"ele":fn)} já pagou</b><span>${s3?"Todo mundo pago. Quinzena fechada.":`${R_.nPaid} de ${R_.nTot} já pagos`}</span><div class="pbar"><i style="width:${pct}%"></i></div></div>
+   <div class="fs ${s3?"done":env||s1?"now":""}"><i>${s3?I("i-check"):"3"}</i><div class="tx"><b>Marcar quem ${esc(filhoGen()?"o "+gN():fn)} já pagou</b><span>${s3?"Todo mundo pago. Quinzena fechada.":`${R_.nPaid} de ${R_.nTot} já pagos`}</span><div class="pbar"><i style="width:${pct}%"></i></div></div>
     ${s3?`<button class="btn sec sm" data-act="openDoc" data-t="recibos" data-q="${q.key}">${I("i-doc")}Recibos</button>`:`<button class="btn mk" data-act="marcarTodos" data-q="${q.key}">${I("i-check")}Marcar todos</button>`}</div>
   </div>`;
 }
@@ -1853,7 +1943,7 @@ function perfil(p){
 
 /* ================= RELATÓRIOS ================= */
 const DOCS=[
- ["quinzena","Relatório da quinzena","i-doc","Quanto pagar a cada pessoa e o total. É o que vai para o seu filho."],
+ ["quinzena","Relatório da quinzena","i-doc","Quanto pagar a cada pessoa e o total. É o que vai para quem paga a equipe."],
  ["recibos","Recibos","i-people","Um recibo por pessoa, com dias, vales e assinatura."],
  ["cartao","Cartão do mês","i-card","Gastos com refeição por dia e por pessoa."],
  ["mensal","Fechamento do mês","i-cal","As duas quinzenas juntas: diárias, cartão e custo total."],
@@ -1930,7 +2020,7 @@ function fitPages(){
 window.addEventListener("resize",()=>{if(UI.view==="relatorios"&&UI.doc)fitPages()});
 
 /* ---------- documentos A4 (estilo C) ---------- */
-const fF=f=>f==="PIX"?"Pix":f==="Filho"?"Pix pelo "+(filhoGen()?"filho":first(S.settings.filhoNome)):String(f).split(" + ").length>1?String(f).split(" + ").map(fF).join(" + "):f;
+const fF=f=>f==="PIX"?"Pix":f==="Filho"?"Pix "+peloFilho():String(f).split(" + ").length>1?String(f).split(" + ").map(fF).join(" + "):f;
 const stampF=f=>[...new Set(String(f).split(" + ").map(x=>x==="Filho"||x==="PIX"?"PIX":fF(x).toUpperCase()))].join(" + ");
 const DCLIP=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><path d="M20 11.5l-8.3 8.3a5 5 0 0 1-7.1-7.1l8.7-8.7a3.4 3.4 0 0 1 4.8 4.8l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>`;
 function coLine(){const s=S.settings,a=[];if(s.cnpj)a.push("CNPJ "+esc(s.cnpj));const c=[s.cidade,s.uf].filter(Boolean).join(", ");if(c)a.push(esc(c));if(s.foneEmpresa)a.push(fmtTel(s.foneEmpresa));return a.join(" · ")||"Controle de diárias e pagamentos"}
@@ -2148,7 +2238,7 @@ async function makeExcel(){
   }catch(e){console.error(e);hideLoader();toast("Não consegui gerar a planilha. Confira a internet.",{err:true})}
 }
 async function backup(){showLoader("Preparando o backup");const imgs={};for(const id in S.comps){if(S.comps[id].exemplo)continue;const d=await compGet(id);if(d)imgs[id]=d}hideLoader();
-  const data=JSON.stringify(Object.assign({},S,{session:null,compImgs:imgs}));const r=await triggerDownload(new Blob([data],{type:"application/json"}),`JJ-Gestao-backup-${TODAY}.json`);toast(r==="saved"?"Backup baixado.":"Download cancelado.")}
+  const data=JSON.stringify(Object.assign({},S,{session:null,compImgs:imgs}));const r=await triggerDownload(new Blob([data],{type:"application/json"}),`JJ-Gestao-backup-${TODAY}.json`);if(r==="saved"){S.settings.lastBackup=TODAY;delete S.settings.bkSnooze;changed();notifSync();if(UI.view==="hoje"||UI.view==="ajustes")renderView();toast(`Backup guardado. O próximo lembrete é em 1º de ${MES[fromISO(bkDue()).getMonth()].toLowerCase()}.`)}else toast("Backup cancelado. Dá pra fazer depois em Ajustes.")}
 /* ---------- enviar (WhatsApp com o PDF) ---------- */
 let SHARE=null;
 const shareAllowed=()=>{try{const fp=document.permissionsPolicy||document.featurePolicy;if(fp&&typeof fp.allowsFeature==="function"&&!fp.allowsFeature("web-share"))return false}catch(e){}return true};
@@ -2194,11 +2284,12 @@ function vAjustes(){
     <label class="fl" for="sFone">Telefone da empresa (opcional)</label><input class="inp" id="sFone" data-set="foneEmpresa" value="${esc(s.foneEmpresa)}" placeholder="(11) 90000-0000" inputmode="tel">
     <p class="hlp">Aparecem no cabeçalho dos recibos e relatórios.</p>
     <label class="fl">Logo nos documentos</label><div class="logo-up"><div class="mark" style="width:52px;height:52px">${s.logo?`<img src="${s.logo}" alt="Logo">`:LOGO(34,22)}</div><div class="t"><b>${s.logo?"Logo enviado":"Logo JJ (padrão)"}</b><span>Aparece no topo dos PDFs</span></div><button class="btn sec sm" data-act="logo">Trocar</button>${s.logo?`<button class="btn sec sm" data-act="logoReset">Padrão</button>`:""}</div></div>
-   <div class="card box"><h3>Quem paga a equipe</h3>${seg("pagador",[["filho","Meu filho paga"],["eu","Eu mesmo pago"]])}
-    <p class="hlp">${s.pagador==="filho"?"Você manda um Pix só, com o total, e ele paga cada um. No app você marca quem já recebeu.":"Você paga cada pessoa direto, com o Pix pronto de cada uma."}</p>
-    <label class="fl" for="sFn">${s.pagador==="filho"?"Nome do filho":"Quem recebe o relatório da quinzena"}</label><input class="inp" id="sFn" data-set="filhoNome" value="${esc(s.filhoNome)}">
+   <div class="card box"><h3>Quem paga a equipe</h3>${seg("pagador",[["filho","Meu filho"],["outro","Outra pessoa"],["eu","Eu mesmo"]])}
+    <p class="hlp">${viaFilho()?`Você manda um Pix só, com o total, e ${filhoGen()?(isOutro()?"a pessoa":"ele"):esc(first(s.filhoNome))} paga cada um. No app você marca quem já recebeu.`:"Você paga cada pessoa direto, com o Pix pronto de cada uma."}</p>
+    <label class="fl" for="sFn">${s.pagador==="filho"?"Nome do filho":s.pagador==="outro"?"Nome de quem paga":"Quem recebe o relatório da quinzena"}</label><input class="inp" id="sFn" data-set="filhoNome" value="${esc(isOutro()&&/^filho/i.test(s.filhoNome)?"":s.filhoNome)}" ${isOutro()?'placeholder="Ex.: Maria"':""}>
+    ${isOutro()?`<div class="seg" role="group" aria-label="Como chamar" style="margin-top:8px"><button data-act="setOpt" data-k="pagadorSexo" data-v="m" aria-pressed="${s.pagadorSexo!=="f"}">Ele</button><button data-act="setOpt" data-k="pagadorSexo" data-v="f" aria-pressed="${s.pagadorSexo==="f"}">Ela</button></div>`:""}
     <label class="fl" for="sFt">WhatsApp</label><input class="inp" id="sFt" data-set="filhoTel" value="${esc(s.filhoTel)}" placeholder="(11) 90000-0000" inputmode="tel">
-    ${s.pagador==="filho"?`<label class="fl" for="sFp">Chave Pix ${filhoGen()?"do filho":"do "+esc(first(s.filhoNome))}</label><input class="inp" id="sFp" data-set="filhoPix" value="${esc(s.filhoPix)}" placeholder="Celular, e-mail, CPF ou chave aleatória"><p class="hlp" id="sFpH">${s.filhoPix?(pixKeyNorm(s.filhoPix)?"Chave "+pixKeyNorm(s.filhoPix).tipo.toLowerCase()+" válida.":"Essa chave não parece válida."):"Com a chave, o app monta o Pix pronto com o total da quinzena."}</p>`:""}</div>
+    ${viaFilho()?`<label class="fl" for="sFp">Chave Pix ${esc(doFilho())}</label><input class="inp" id="sFp" data-set="filhoPix" value="${esc(s.filhoPix)}" placeholder="Celular, e-mail, CPF ou chave aleatória"><p class="hlp" id="sFpH">${s.filhoPix?(pixKeyNorm(s.filhoPix)?"Chave "+pixKeyNorm(s.filhoPix).tipo.toLowerCase()+" válida.":"Essa chave não parece válida."):"Com a chave, o app monta o Pix pronto com o total da quinzena."}</p>`:""}</div>
    <div class="card box"><h3>Regras de pagamento</h3>
     <label class="fl" for="sDia">Diária padrão para pessoa nova</label><input class="inp" id="sDia" data-set="diaria" data-money="1" value="${num(s.diaria)}" inputmode="decimal">
     <label class="fl" for="sLim">Quanto libera no cartão, por pessoa e por dia</label><input class="inp" id="sLim" data-set="limite" data-money="1" value="${num(s.limite)}" inputmode="decimal"><p class="hlp">O que passar disso vira vale da pessoa.</p>
@@ -2212,16 +2303,18 @@ function vAjustes(){
       ${nt("fecha","Fechamento da quinzena","Na véspera e no dia, de manhã, só se faltar pagar alguém")}
       ${nt("dia","Lembrete do dia","Se o dia ainda não foi salvo. Não avisa no domingo")}
       <div class="two" style="margin:4px 0 8px"><div><label class="fl" for="nHora">Horário do lembrete do dia</label><input class="inp" type="time" id="nHora" value="${esc(c.hora||"18:00")}"></div><div></div></div>
-      ${viaFilho()?nt("filho","Pagamento pelo filho","Se, 2 dias depois do Pix, ainda tiver gente sem marcar como paga"):""}
+      ${viaFilho()?nt("filho","Pagamento "+esc(peloFilho()),"Se, 2 dias depois do Pix, ainda tiver gente sem marcar como paga"):""}
       <button class="btn sec sm" data-act="notifTeste" style="margin-top:6px">${I("i-check")}Mandar uma notificação de teste</button>`})():`<p class="hlp" style="margin-top:0">Os avisos de fechamento da quinzena e o lembrete do dia funcionam no <b>app do celular</b> (APK).</p>`}</div>
    <div class="card box"><h3>Assistente</h3>${tg("voz","Anotar por voz","Entende áudio e texto em português")}<p class="hlp">${AI_ON?`IA ligada: entende frases soltas e ${AI_IMG?"lê os comprovantes":"conversa como gente"}. Nada é salvo sem você confirmar.`:"Neste modo, entende frases simples. Com a IA (no app final, o Gemini do Google), entende frases soltas e lê os comprovantes sozinho."}</p></div>
    <div class="card box"><h3>Instalar no celular</h3>${installHTML()}</div>
-   <div class="card box"><h3>Ajuda</h3><p class="hlp" style="margin-top:0">Esqueceu onde fica alguma coisa? O tour mostra os botões principais de novo.</p><button class="btn sec sm" data-act="tourAgain" style="margin-top:10px">Ver o tour de novo</button>${(()=>{const x=aiErrGet();return x?`<p class="hlp" id="aiErr" style="margin-top:14px">Último erro da IA (${esc(new Date(x.em).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))}): <b>${esc(x.c)}</b>${x.st?" · "+esc(String(x.st)):""} · ${esc(x.model)}<br><span style="font-size:.85em;word-break:break-word">${esc(x.msg)}</span></p>`:""})()}</div>
+   <div class="card box"><h3>Ajuda</h3><p class="hlp" style="margin-top:0">Esqueceu onde fica alguma coisa? O tour mostra os botões principais de novo.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn sec sm" data-act="tourAgain">Ver o tour de novo</button><button class="btn sec sm" data-act="news">Ver as novidades</button></div>${(()=>{const x=aiErrGet();return x?`<p class="hlp" id="aiErr" style="margin-top:14px">Último erro da IA (${esc(new Date(x.em).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))}): <b>${esc(x.c)}</b>${x.st?" · "+esc(String(x.st)):""} · ${esc(x.model)}<br><span style="font-size:.85em;word-break:break-word">${esc(x.msg)}</span></p>`:""})()}</div>
    <div class="card box"><h3>Conta e dados</h3>
     <div class="kv"><span>Conta</span><b>${esc(u.email||"")}</b></div><div class="kv"><span>Login</span><span>${u.uid?"Google (de verdade)":"Simulado (protótipo)"}</span></div><div class="kv"><span>Onde os dados ficam</span><span id="cloudSt">${u.uid?cloudTxt():"Neste navegador (protótipo)"}</span></div>
+    <div class="kv"><span>Último backup</span><b>${S.settings.lastBackup?dmy(S.settings.lastBackup):"Ainda não fez"}</b></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn sec sm" data-act="backup">${I("i-down")}Baixar backup</button><button class="btn sec sm" data-act="import">Restaurar backup</button></div>
+    <div style="margin-top:10px">${tg("bkLembrete","Lembrete de backup todo mês",`No dia 1º, se ainda não tiver feito. Próximo: ${dmy(bkDue())}${NATIVE()?" (com notificação)":""}`)}</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${realAuth()?"":`<button class="btn ${UI.armed==="demo"?"dg":"sec"} sm" data-act="resetDemo">${UI.armed==="demo"?"Toque de novo para carregar":"Dados de exemplo"}</button>`}<button class="btn ${UI.armed==="zero"?"dg":"sec"} sm" data-act="resetZero">${UI.armed==="zero"?"Apaga tudo. Confirmar?":"Começar do zero"}</button><button class="btn sec sm" data-act="sair">${I("i-out")}Sair</button></div>
-    <p class="hlp" style="margin-top:12px">Na versão final, tudo fica na nuvem com backup automático e aparece no computador e no celular.</p></div>
+    <p class="hlp" style="margin-top:12px">${u.uid?"Tudo já fica salvo na nuvem da sua conta Google. O backup do mês é uma cópia extra, guardada no celular, pra garantir.":"Na versão final, tudo fica na nuvem com backup automático e aparece no computador e no celular."}</p></div>
   </div>`;
 }
 
@@ -2260,7 +2353,7 @@ function installHTML(){
 /* ================= ASSISTENTE ================= */
 function renderAsst(){
   const r=$("#asstRoot");if(!UI.asst||!S.session){r.innerHTML="";return}
-  const sug=["Hoje foram o João e o Pedro","Quanto eu devo no total?","Quem trabalhou ontem?","Quanto gastei no cartão esse mês?","Manda o relatório pro meu filho"];
+  const sug=["Hoje foram o João e o Pedro","Quanto eu devo no total?","Quem trabalhou ontem?","Quanto gastei no cartão esse mês?",viaFilho()?"Manda o relatório "+toFilho():"Manda o relatório da quinzena"];
   r.innerHTML=`<div class="asst"><div class="bk" data-act="asstClose"></div><section class="pn" role="dialog" aria-label="Assistente JJ">
    <div class="ah"><div class="mark">${LOGO(28,19)}</div><div style="flex:1;min-width:0"><h2>Assistente JJ</h2><p id="asstSt"><span class="dot"></span>${AI_ON?"IA ligada: fale do seu jeito":"Fale ou escreva do seu jeito"}</p></div><button class="sec btn sm" data-act="limparChat" aria-label="Limpar conversa">${I("i-trash")}<span class="lb">Limpar</span></button><button class="xb" data-act="asstClose" aria-label="Fechar">${I("i-x")}</button></div>
    <div class="msgs" id="msgs" aria-live="polite">${S.chat.map(msgHTML).join("")}</div>
@@ -2660,7 +2753,7 @@ function pixPayload(o){
   p+=emv("62",emv("05",String(o.txid||"").replace(/[^A-Za-z0-9]/g,"").slice(0,25)||"***"));
   p+="6304";return p+crc16(p);
 }
-const payee=()=>mctx.kind==="repasse"?{id:"filho",nome:filhoGen()?"Filho":S.settings.filhoNome,pix:S.settings.filhoPix,filho:true}:P(mctx.pid);
+const payee=()=>mctx.kind==="repasse"?{id:"filho",nome:filhoGen()?(isOutro()?"Pagador":"Filho"):S.settings.filhoNome,pix:S.settings.filhoPix,filho:true}:P(mctx.pid);
 function pixFor(pid,valor){
   const p=pid&&pid.nome?pid:P(pid),k=p&&pixKeyNorm(p.pix);if(!k)return null;
   let desc,txid;
@@ -2770,12 +2863,12 @@ function compChecks(c){
 function pixHTML(){
   const p=payee();if(!p)return "";
   if(mctx.forma==="Filho"){const k=pixKeyNorm(p.pix);return `<div class="pix noqr fil"><div style="min-width:0"><div class="who"><b>${esc(p.nome)}</b><span>${k?`Chave ${k.tipo.toLowerCase()}: ${esc(p.pix)}`:"Sem chave Pix cadastrada"}</span><span>Valor: <b style="color:var(--tx)">${mctx.valor>0?brl(mctx.valor):"digite o valor"}</b></span></div>
-    <p class="hlp" style="margin:8px 0 0">${esc(filhoN().charAt(0).toUpperCase()+filhoN().slice(1))} faz o Pix com o dinheiro que você mandou. Marque aqui quando ${filhoGen()?"ele":"ele"} avisar que pagou.</p>
+    <p class="hlp" style="margin:8px 0 0">${esc(filhoN().charAt(0).toUpperCase()+filhoN().slice(1))} faz o Pix com o dinheiro que você mandou. Marque aqui quando ${filhoGen()?(isOutro()?"a pessoa":"ele"):gEle()} avisar que pagou.</p>
     ${k?`<div class="acol" style="margin-top:10px"><button type="button" class="btn sec sm" data-act="copy" data-t="${esc(p.pix)}">${I("i-copy")}Copiar a chave</button></div>`:""}</div></div>`}
   if(mctx.forma==="Dinheiro")return `<p class="hlp" style="margin-top:10px">Pagou em dinheiro? Se quiser, anexe a foto do recibo assinado como comprovante.</p>`;
   if(mctx.forma!=="PIX")return "";
   const v=mctx.valor||0,px=pixFor(p,v);
-  if(!px)return `<div class="nokey"><b>${p.filho?`A chave Pix ${filhoGen()?"do filho":"do "+esc(first(p.nome))} ainda não foi cadastrada`:`${esc(first(p.nome))} ainda não tem chave Pix cadastrada`}</b><p class="hlp">Cadastre aqui para o app montar o código Pix com a chave e o valor certos.</p><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input class="inp" id="pixKeyIn" placeholder="Celular, e-mail, CPF ou chave aleatória" style="flex:1;min-width:200px" value="${esc(p.pix||"")}"><button type="button" class="btn sec" data-act="saveKey">Salvar chave</button></div>${p.pix?`<p class="hlp" style="color:var(--rd)">A chave cadastrada (${esc(p.pix)}) não parece válida.</p>`:""}</div>`;
+  if(!px)return `<div class="nokey"><b>${p.filho?`A chave Pix ${esc(doFilho())} ainda não foi cadastrada`:`${esc(first(p.nome))} ainda não tem chave Pix cadastrada`}</b><p class="hlp">Cadastre aqui para o app montar o código Pix com a chave e o valor certos.</p><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input class="inp" id="pixKeyIn" placeholder="Celular, e-mail, CPF ou chave aleatória" style="flex:1;min-width:200px" value="${esc(p.pix||"")}"><button type="button" class="btn sec" data-act="saveKey">Salvar chave</button></div>${p.pix?`<p class="hlp" style="color:var(--rd)">A chave cadastrada (${esc(p.pix)}) não parece válida.</p>`:""}</div>`;
   mctx.pixCode=px.code;
   const showQR=!isTouch()||UI.qrOpen,img=showQR&&v>0?qrURL(px.code,5):null;
   if(showQR&&v>0&&!img)ensureQR().then(ok=>{if(ok&&(mctx.kind==="pagar"||mctx.kind==="vale"||mctx.kind==="repasse"))renderPix()});
@@ -2837,7 +2930,7 @@ function mPagar(pid,qk,opt){
   opt=opt||{};const p=P(pid),q=qFromKey(qk),c=calc(pid,q);if(!p)return;
   const falta=c.falta>0?c.falta:Math.max(0,c.liquido),seq=opt.seq||null,last=seq&&seq.i>=seq.list.length-1;
   const vf=viaFilho(),forma=vf?"Filho":pixKeyNorm(p.pix)?"PIX":(S.settings.forma==="Filho"?"PIX":S.settings.forma||"PIX");
-  const formas=vf?[["Filho","Pelo "+(filhoGen()?"filho":first(S.settings.filhoNome))],["PIX","Pix meu"],["Dinheiro","Dinheiro"]]:[["PIX","Pix"],["Dinheiro","Dinheiro"],["Transferência","Transferência"]];
+  const formas=vf?[["Filho",(s=>s.charAt(0).toUpperCase()+s.slice(1))(peloFilho())],["PIX","Pix meu"],["Dinheiro","Dinheiro"]]:[["PIX","Pix"],["Dinheiro","Dinheiro"],["Transferência","Transferência"]];
   openModal(`${mHead(vf?`Marcar ${esc(first(p.nome))} como pago`:`Pagar ${esc(first(p.nome))}`,`${esc(p.nome)} · quinzena de ${q.label}`)}
    ${seq?`<div class="seqh"><span>Pagamento ${seq.i+1} de ${seq.list.length}</span><div class="pbar"><i style="width:${seq.i/seq.list.length*100}%"></i></div><span>${plural(seq.done,"feito","feitos")}</span></div>`:""}
    <div class="paybox"><div class="paytop"><div><span>${c.paid>0?"Falta pagar":"A pagar"}</span><b>${brl(falta)}</b></div><span>${c.paid>0?`Já pago ${brl(c.paid)} de ${brl(c.liquido)}`:`${plural(c.n,"diária","diárias")}${c.valesSum?` · menos ${brl(c.valesSum)} de vale`:""}`}</span></div>${c.paid>0?`<div class="pbar"><i style="width:${Math.min(100,c.paid/Math.max(1,c.liquido)*100)}%"></i></div>`:""}</div>
@@ -2863,7 +2956,7 @@ function mRepasse(qk,opt){opt=opt||{};
    <label class="fl">Comprovante <span style="font-weight:500">(opcional)</span></label><div id="payComp"></div>
    <label class="fl" for="mDate">Data</label><input class="inp" type="date" id="mDate" value="${TODAY}" max="${TODAY}">
    <div id="mLive"></div>
-   <div class="mf"><button type="button" class="btn sec" data-act="closeModal">Cancelar</button><button class="btn ok" type="submit">${I("i-check")}Registrar o Pix ${filhoGen()?"pro filho":"pro "+esc(first(S.settings.filhoNome))}</button></div>`,
+   <div class="mf"><button type="button" class="btn sec" data-act="closeModal">Cancelar</button><button class="btn ok" type="submit">${I("i-check")}Registrar o Pix ${filhoGen()&&!isOutro()?"pro filho":esc(toFilho())}</button></div>`,
    {kind:"repasse",qk,forma:"PIX",valor:v,falta:v,comp:null});
   renderPix();renderComp();if(opt.file)compAttach(opt.file);
 }
@@ -2878,7 +2971,7 @@ function mMarcarTodos(qk){
   const q=qFromKey(qk),L=qTotals(q).L.filter(o=>o.c.liquido>0&&!o.c.full).sort((a,b)=>a.p.nome.localeCompare(b.p.nome));
   if(!L.length){toast("Todo mundo já está marcado como pago.");return}
   UI.mt=new Set(L.map(o=>o.p.id));
-  openModal(`${mHead("Marcar como pagos",`Quem ${filhoGen()?"o filho":esc(first(S.settings.filhoNome))} já pagou · quinzena de ${q.label}`)}
+  openModal(`${mHead("Marcar como pagos",`Quem ${filhoGen()?"o "+gN():esc(first(S.settings.filhoNome))} já pagou · quinzena de ${q.label}`)}
    <div class="mtl" id="mtl"></div><div class="mtt" id="mtt"></div>
    <label class="fl" for="mDate">Data do pagamento</label><input class="inp" type="date" id="mDate" value="${TODAY}" max="${TODAY}">
    <div class="mf"><button type="button" class="btn sec" data-act="closeModal">Cancelar</button><button class="btn ok" type="submit" id="mtOk"></button></div>`,{kind:"marcarTodos",qk,list:L.map(o=>({pid:o.p.id,v:o.c.falta||Math.max(0,o.c.liquido)}))});
@@ -2988,7 +3081,7 @@ function mValorDia(pid){
 function mLive(){
   const box=$("#mLive");if(!box)return;const v=parseMoney(($("#mVal")||{}).value),date=($("#mDate")||{}).value||TODAY,pid=mctx.pid;
   if(mctx.kind==="pagar"){box.innerHTML=!v?"":v>mctx.falta+0.004?`<div class="warn">${I("i-alert")}<span>Esse valor passa do que falta pagar (${brl(mctx.falta)}).</span></div>`:v<mctx.falta-0.004?`<p class="hlp" style="margin-top:12px">Pagamento parcial: depois dele, faltam <b>${brl(r2(mctx.falta-v))}</b>.</p>`:"";return}
-  if(mctx.kind==="repasse"){box.innerHTML=!v?"":v>mctx.falta+0.004?`<p class="hlp" style="margin-top:12px">${brl(r2(v-mctx.falta))} a mais que o total. Fica com ${filhoGen()?"ele":esc(first(S.settings.filhoNome))} para a próxima.</p>`:v<mctx.falta-0.004?`<p class="hlp" style="margin-top:12px">Faltam ${brl(r2(mctx.falta-v))} para fechar o total. Dá para mandar o resto depois.</p>`:"";return}
+  if(mctx.kind==="repasse"){box.innerHTML=!v?"":v>mctx.falta+0.004?`<p class="hlp" style="margin-top:12px">${brl(r2(v-mctx.falta))} a mais que o total. Fica com ${filhoGen()?"ele":esc(gEle())} para a próxima.</p>`:v<mctx.falta-0.004?`<p class="hlp" style="margin-top:12px">Faltam ${brl(r2(mctx.falta-v))} para fechar o total. Dá para mandar o resto depois.</p>`:"";return}
   if(mctx.kind==="vale"){if(!v||!pid){box.innerHTML="";return}const q=qOf(date),c=calc(pid,q);const old=mctx.id?(S.vales.find(x=>x.id===mctx.id)||{valor:0}).valor:0;const disp=Math.max(0,c.liquido+(mctx.id&&inQ((S.vales.find(x=>x.id===mctx.id)||{}).date||"",q)?old:0));const n=esc(first(P(pid).nome));
     box.innerHTML=v>disp?`<div class="warn">${I("i-alert")}<span>Esse vale passa do que ${n} tem a receber nesta quinzena (${brl(disp)}). A diferença desconta na próxima.</span></div>`:`<p class="hlp" style="margin-top:12px">${n} tem ${brl(disp)} a receber nesta quinzena. Depois do vale, fica <b>${brl(disp-v)}</b>.</p>`}
   if(mctx.kind==="cartao"){
@@ -3056,19 +3149,29 @@ const ACT={
   loginGoogle:()=>loginGoogle(),
   demo:()=>{const sess=S.session;S=seed();S.session=sess||{modo:"google",email:"jjtransporte@gmail.com",nome:"Conta da JJ"};CIMG.clear();seedComps();changed();UI.view="hoje";UI.q=qOf(TODAY).key;UI.diaDate=TODAY;initSel();render();toast("Dados de exemplo carregados. Pode mexer à vontade.")},
   obNext:()=>{obCollect();
+    if(UI.ob.step===2&&S.settings.pagador==="outro"&&!String(S.settings.filhoNome||"").trim()){toast("Coloque o nome de quem paga a equipe.",{err:true});const i=$("#obFn");if(i)i.focus();return}
     if(UI.ob.step===1){UI.ob.people.filter(p=>String(p.nome).trim()).forEach(p=>S.people.push({id:uid(),nome:p.nome.trim(),funcao:p.funcao||"Ajudante",diaria:p.diaria||S.settings.diaria,pix:String(p.pix||"").trim(),cpf:"",tel:"",ativo:true,cor:COLORS[S.people.length%COLORS.length],desde:TODAY}));UI.ob.people=[]}
-    if(UI.ob.step===4){S.settings.onboarded=true;if(!S.settings.inicio)S.settings.inicio=TODAY;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();
+    if(UI.ob.step===4){S.settings.onboarded=true;S.settings.newsSeen=NEWS_VER;if(!S.settings.inicio)S.settings.inicio=TODAY;if(!S.chat.length)S.chat=[hello()];changed();UI.view="hoje";UI.diaDate=TODAY;initSel();render();whoosh();
       if(!S.settings.tourDone)setTimeout(()=>tourStart(true),900);else{toast("Tudo pronto. Bom trabalho!",{bolt:true});if(NATIVE())setTimeout(()=>notifAsk(),1200)}return}
     UI.ob.step++;changed();render()},
   tourNext:()=>{if(!TOUR)return;TOUR.i++;tourShow()},
   tourEnd:()=>tourEnd(),
   tourAgain:()=>{UI.view="hoje";UI.diaDate=TODAY;initSel();render();setTimeout(()=>tourStart(false),350)},
   obPag:d=>{obCollect();UI.ob.pag=d.v;S.settings.pagador=d.v;render()},
+  obSexo:d=>{obCollect();UI.ob.sexo=d.v;S.settings.pagadorSexo=d.v;render()},
   obBack:()=>{obCollect();UI.ob.step=Math.max(0,UI.ob.step-1);render()},
   obAdd:()=>{obCollect();UI.ob.people.push({nome:"",funcao:"Ajudante",diaria:S.settings.diaria});render();const ins=$$('[data-ob="nome"]');if(ins.length)ins[ins.length-1].focus()},
   obDel:d=>{obCollect();UI.ob.people.splice(+d.i,1);render()},
   // hoje
   diaDate:d=>{UI.diaDate=d.date;initSel();renderView()},
+  cal:()=>openCal(),
+  news:()=>whatsNew(true),
+  calMes:d=>{let [y,m]=UI.calYM;m+=+d.d;if(m<0){m=11;y--}if(m>11){m=0;y++}const mn=CAL_MIN(),t=fromISO(TODAY);
+    if(y*12+m<mn.getFullYear()*12+mn.getMonth()||y*12+m>t.getFullYear()*12+t.getMonth())return;UI.calYM=[y,m];openModal(calHTML())},
+  calDia:d=>{const dt=d.date;if(!dt||dt>TODAY)return;let moved=false;
+    if(INI&&dt<INI){S.settings.inicio=dt;changed();moved=true}
+    UI.diaDate=dt;initSel();closeModal();if(UI.view!=="hoje")go("hoje");else renderView();
+    if(moved)toast(`Pronto. Agora o app conta desde ${dm(dt)}.`)},
   diaQ:d=>{const q=qShift(qOf(UI.diaDate),+d.d);if(beforeStart(q))return;let nd=+d.d<0?q.end:q.start;if(nd>TODAY)nd=TODAY;UI.diaDate=nd;initSel();renderView()},
   abrirDia:d=>{UI.diaDate=d.date||TODAY;UI.view="hoje";initSel();renderView(true)},
   tgl:(d,el)=>{const id=d.id;buzz(8);if(UI.sel.has(id))UI.sel.delete(id);else UI.sel.add(id);const on=UI.sel.has(id);el.classList.remove("static");el.classList.toggle("on",on);el.setAttribute("aria-checked",on);const sb=$("#savebar");if(sb)sb.outerHTML=saveBarHTML()},
@@ -3155,6 +3258,7 @@ const ACT={
   shareComp:()=>{UI.docComp=!docAnexo();const sp=mctx.spec;if(sp)openShare(sp)},
   conf:()=>{const q=qFromKey(UI.q);S.conf[q.key]=!S.conf[q.key];changed();renderView();buzz(8)},
   backup:()=>backup(),
+  bkLater:()=>{S.settings.bkSnooze=addDays(TODAY,7);changed();notifSync();renderView();toast("Combinado. Te lembro de novo daqui a 7 dias.")},
   import:()=>$("#fileImport").click(),
   logo:()=>$("#fileLogo").click(),
   logoReset:()=>{S.settings.logo="";changed();renderView();toast("Logo padrão de volta")},
@@ -3163,7 +3267,7 @@ const ACT={
   notifAsk:()=>{notifAsk(true).then(ok=>{renderView();toast(ok?"Notificações liberadas":"O celular não liberou. Abra Configurações › Apps › JJ Gestão › Notificações.",{err:!ok})})},
   notifTeste:async()=>{const L=PL("LocalNotifications");if(!L)return;const ok=await notifAsk(true);if(!ok){renderView();toast("Libere as notificações do JJ Gestão no celular.",{err:true});return}
     try{await L.schedule({notifications:[{id:7999,title:"JJ Gestão",body:"Pronto: as notificações estão funcionando.",schedule:{at:new Date(Date.now()+4000),allowWhileIdle:true},smallIcon:"ic_stat_jj",iconColor:"#3FC9D6",extra:{go:"hoje"}}]});toast("Em 4 segundos chega uma notificação de teste.")}catch(e){toast("Não deu para agendar a notificação.",{err:true})}},
-  tgSet:d=>{S.settings[d.k]=!S.settings[d.k];changed();renderView();toast("Ajuste salvo")},
+  tgSet:d=>{S.settings[d.k]=!S.settings[d.k];changed();renderView();if(d.k==="bkLembrete")notifSync();toast("Ajuste salvo")},
   setOpt:d=>{S.settings[d.k]=d.v;changed();applyTheme();renderView();if(UI.view==="relatorios")fitPages()},
   sharedTo:d=>{const f=SHARED;SHARED=null;mPagar(d.id,d.q,{file:f})},
   sharedRep:d=>{const f=SHARED;SHARED=null;mRepasse(d.q,{file:f})},
@@ -3223,6 +3327,8 @@ setInterval(()=>{const t=toISO(new Date());if(t!==TODAY){TODAY=t;if(S.session&&S
 load();applyTheme();
 const h=(location.hash||"").slice(1);if(VIEWS.includes(h))UI.view=h;
 initSel();initAuthPre();initNative();render();splash();initAuth();initAI();initPWA();ensureQR();
+/* só nos testes automáticos (o app nunca liga isso) */
+if(window.__jjTest)window.__jj={get S(){return S},changed,go,renderView,notifPlan,whatsNew};
 })();
 
 </script>
